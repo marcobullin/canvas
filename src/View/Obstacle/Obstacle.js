@@ -1,12 +1,24 @@
 define(
 	function () {
 		var Obstacle = Backbone.View.extend({
+			img: null,
+			done: false,
+
 			render: function () {
-				window.battlefield.ctx.beginPath();
-				window.battlefield.ctx.fillStyle = 'red';
-				window.battlefield.ctx.fillRect(this.model.get('positionX'), this.model.get('positionY'), this.model.get('width'), this.model.get('height'));
-				window.battlefield.ctx.fill();
-				window.battlefield.ctx.closePath();
+				if (this.done) {
+					window.battlefield.ctx.drawImage(this.img, this.model.get('positionX'), this.model.get('positionY'), this.model.get('width'), this.model.get('height'));
+					window.battlefield.ctx.restore();
+				} else {
+					var self = this;
+					this.img = new Image();
+					this.img.onload = function () {
+						self.done = true;
+						window.battlefield.ctx.drawImage(self.img, self.model.get('positionX'), self.model.get('positionY'), self.model.get('width'), self.model.get('height'));
+						window.battlefield.ctx.restore();
+					};
+
+					this.img.src = 'images/tree.png';
+				}
 			}
 		});
 
