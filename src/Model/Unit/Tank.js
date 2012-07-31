@@ -1,7 +1,11 @@
 define(function () {
 	var Tank = Backbone.Model.extend({
 		defaults: {
-			image: 'tank.png'
+			image: 'images/tank.png',
+			sound: {
+				shot: 'sounds/laser.mp3',
+				die: 'sounds/bigboom.mp3'
+			}
 		}
 	});
 

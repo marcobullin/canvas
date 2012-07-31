@@ -1,7 +1,11 @@
 define(function () {
 	var Scout = Backbone.Model.extend({
 		defaults: {
-			image: 'scout.png'
+			image: 'images/scout.png',
+			sound: {
+				shot: 'sounds/laser.mp3',
+				die: 'sounds/boom.mp3'
+			}
 		}
 	});
 

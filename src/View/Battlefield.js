@@ -88,7 +88,7 @@ define(function () {
 					window.battlefield.ctx.restore();
 				};
 
-				this.img.src = 'battlefield.jpg';
+				this.img.src = 'images/battlefield.jpg';
 			}
 
 			for (var i = 0; i < this.items.length; i++) {

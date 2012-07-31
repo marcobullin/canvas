@@ -3,6 +3,7 @@ define(function () {
         action: null,
         img: null,
         done: false,
+        dieSound: null,
 
         getWayPoints: function (goalX, goalY) {
             var x,
@@ -66,7 +67,7 @@ define(function () {
                 matrix.push(currentPosition);
             }
 
-            wayPoints = astar(matrix, 'manhattan', false);
+            wayPoints = astar(matrix, 'manhattan', true);
 
             if (wayPoints && wayPoints.length > 0) {
                 wayPoints.shift();
@@ -149,6 +150,11 @@ define(function () {
         },
 
         destroy: function () {
+            if (!this.dieSound) {
+                this.dieSound = new Audio(this.model.get('sound').die);
+            }
+
+            this.dieSound.play();
             window.battlefield.remove(this.model.get('id'));
         },
 

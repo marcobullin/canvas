@@ -119,7 +119,7 @@ require([
 		scoutModel.set('protection', SCOUT_PROTECTION);
 		scoutModel.set('price', SCOUT_PRICE);
 		scoutModel.set('speed', SCOUT_SPEED);
-		scoutModel.set('firepower', SCOUT_FIREPOWER);
+		scoutModel.set('firepower', 2 * SCOUT_FIREPOWER);
 		scoutModel.set('firerange', SCOUT_FIRERANGE);
 		scoutModel.set('firespeed', SCOUT_FIRESPEED);
 		scoutModel.set('width', SCOUT_WIDTH);
@@ -128,7 +128,7 @@ require([
 		scoutModel.set('positionY', 450);
 		scoutModel.set('owner', 'user');
 		scoutModel.set('isAttackable', true);
-		scoutModel.set('weapon', 'MachineGun');
+		scoutModel.set('weapon', 'DoubleMachineGun');
 		scoutModel.set('type', 'unit');
 
 		var scout = new MilitaryVehicleView({

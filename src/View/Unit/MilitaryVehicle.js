@@ -2,11 +2,13 @@ define([
 	'View/Unit/Vehicle',
 	'Model/Weapon/Shot',
 	'View/Weapon/MachineGun',
-	'View/Weapon/Cannon'
+	'View/Weapon/Cannon',
+	'View/Weapon/DoubleMachineGun'
 	],
-	function (Vehicle, ShotModel, MachineGun, Cannon) {
+	function (Vehicle, ShotModel, MachineGun, Cannon, DoubleMachineGun) {
 		var MilitaryVehicle = Vehicle.extend({
 			_scanning: null,
+			shotSound: null,
 
 			initialize: function () {
 				this._scanning = window.setInterval($.proxy(this.scan, this), 500);
@@ -104,7 +106,6 @@ define([
 			},
 
 			attack: function (enemy) {
-
 				var a = Math.abs(enemy.model.get('positionY') - this.model.get('positionY')),
 					b = Math.abs(enemy.model.get('positionX') - this.model.get('positionX')),
 					a2 = a * a,
@@ -120,13 +121,11 @@ define([
 					angle = -1 * angle;
 				}
 
-				if (enemy.model.get('owner') === 'computer') {
-					$('#js-sound-a')[0].src = 'glock17.mp3';
-				} else {
-					
-						$('#js-sound-b')[0].src = 'mp5.mp3';
-					
+				if (!this.shotSound) {
+					this.shotSound = new Audio(this.model.get('sound').shot);
 				}
+
+				this.shotSound.play();
 
 				var shotModel = new ShotModel();
 				shotModel.set('owner', this.model.get('owner'));
@@ -144,6 +143,11 @@ define([
 						break;
 					case 'Cannon':
 						shot = new Cannon({
+							model: shotModel
+						});
+						break;
+					case 'DoubleMachineGun':
+						shot = new DoubleMachineGun({
 							model: shotModel
 						});
 						break;
