@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style type="text/css">
+			body {
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+		<script type="text/javascript" src="astar.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+		<script data-main="src/main" src="require-min.js"></script>
+<!--
+		<script type="text/javascript" src="underscore-min.js"></script>
+		<script type="text/javascript" src="backbone-min.js"></script>
+
+		<script type="text/javascript" src="config.js"></script>
+		<script type="text/javascript" src="Building.js"></script>
+		<script type="text/javascript" src="VehicleFactory.js"></script>
+
+		<script type="text/javascript" src="src/View/Vehicle.js"></script>
+		<script type="text/javascript" src="src/Model/MilitaryVehicle.js"></script>
+		<script type="text/javascript" src="src/View/MilitaryVehicle.js"></script>
+		<script type="text/javascript" src="src/View/Scout.js"></script>
+		<script type="text/javascript" src="src/View/Tank.js"></script>
+
+		<script type="text/javascript" src="src/Model/Battlefield.js"></script>
+		<script type="text/javascript" src="src/View/Battlefield.js"></script>
+
+		<script type="text/javascript" src="src/Model/Shot.js"></script>
+		<script type="text/javascript" src="src/View/Shot.js"></script>
+		<script type="text/javascript" src="src/View/MachineGun.js"></script>
+		<script type="text/javascript" src="src/View/Cannon.js"></script>
+-->
+		<script type="text/javascript">
+		/*
+			window.onload = function () {
+				window.battlefield = new BattlefieldView({
+					model: new BattlefieldModel()
+				});
+
+				window.battlefield.render();
+
+
+				var scoutModel = new MilitaryVehicleModel();
+				scoutModel.set('name', 'b');
+				scoutModel.set('protection', SCOUT_PROTECTION);
+				scoutModel.set('price', SCOUT_PRICE);
+				scoutModel.set('speed', SCOUT_SPEED);
+				scoutModel.set('firepower', SCOUT_FIREPOWER);
+				scoutModel.set('firerange', SCOUT_FIRERANGE);
+				scoutModel.set('firespeed', SCOUT_FIRESPEED);
+				scoutModel.set('width', SCOUT_WIDTH);
+				scoutModel.set('height', SCOUT_HEIGHT);
+				scoutModel.set('positionX', 50);
+				scoutModel.set('positionY', 50);
+				scoutModel.set('owner', 'computer');
+				scoutModel.set('isAttackable', true);
+				scoutModel.set('weapon', 'MachineGun');
+
+				var scout = new ScoutView({
+					model: scoutModel
+				});
+
+				window.battlefield.add(scout);
+
+				var tankModel = new MilitaryVehicleModel();
+				tankModel.set('name', 'a');
+				tankModel.set('protection', TANK_PROTECTION);
+				tankModel.set('price', TANK_PRICE);
+				tankModel.set('speed', TANK_SPEED);
+				tankModel.set('firepower', TANK_FIREPOWER);
+				tankModel.set('firerange', TANK_FIRERANGE);
+				tankModel.set('firespeed', TANK_FIRESPEED);
+				tankModel.set('width', TANK_WIDTH);
+				tankModel.set('height', TANK_HEIGHT);
+				tankModel.set('positionX', 150);
+				tankModel.set('positionY', 50);
+				tankModel.set('owner', 'computer');
+				tankModel.set('isAttackable', true);
+				tankModel.set('weapon', 'Cannon');
+
+				var tank = new TankView({
+					model: tankModel
+				});
+
+				window.battlefield.add(tank);
+
+
+
+
+
+
+
+				var scoutModel = new MilitaryVehicleModel();
+				scoutModel.set('name', 'a');
+				scoutModel.set('protection', SCOUT_PROTECTION);
+				scoutModel.set('price', SCOUT_PRICE);
+				scoutModel.set('speed', SCOUT_SPEED);
+				scoutModel.set('firepower', SCOUT_FIREPOWER);
+				scoutModel.set('firerange', SCOUT_FIRERANGE);
+				scoutModel.set('firespeed', SCOUT_FIRESPEED);
+				scoutModel.set('width', SCOUT_WIDTH);
+				scoutModel.set('height', SCOUT_HEIGHT);
+				scoutModel.set('positionX', 50);
+				scoutModel.set('positionY', 450);
+				scoutModel.set('owner', 'user');
+				scoutModel.set('isAttackable', true);
+				scoutModel.set('weapon', 'MachineGun');
+
+				var scout = new ScoutView({
+					model: scoutModel
+				});
+
+				window.battlefield.add(scout);
+
+				setInterval(function() {window.battlefield.update()}, 1);
+			}
+			 */
+		</script>
+	</head>
+	<body>
+		<audio autoplay="autoplay" id="js-sound-b" src="" >
+            Your browser does not support the audio element.
+        </audio>
+        <audio autoplay="autoplay" id="js-sound-a" src="" >
+            Your browser does not support the audio element.
+        </audio>
+
+	</body>
+</html>
