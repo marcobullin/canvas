@@ -76,20 +76,7 @@ define(function () {
 		},
 
 		update: function () {
-			if (this.done) {
-				window.battlefield.ctx.drawImage(this.img, 0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
-				window.battlefield.ctx.restore();
-			} else {
-				var self = this;
-				this.img = new Image();
-				this.img.onload = function () {
-					self.done = true;
-					window.battlefield.ctx.drawImage(self.img, 0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
-					window.battlefield.ctx.restore();
-				};
-
-				this.img.src = 'images/battlefield.jpg';
-			}
+			window.battlefield.ctx.drawImage(window.GameImages['map'], 0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
 
 			for (var i = 0; i < this.items.length; i++) {
 				this.items[i].render();

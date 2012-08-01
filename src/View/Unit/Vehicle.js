@@ -211,7 +211,7 @@ define(function () {
             if (this.model.get('selected')) {
                 window.battlefield.ctx.beginPath();
                 window.battlefield.ctx.arc(x + (this.model.get('width') / 2), y + (this.model.get('height') / 2), this.model.get('firerange'), 0, Math.PI*2, false);
-                window.battlefield.ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
+                window.battlefield.ctx.fillStyle = "rgba(255, 0, 0, 0.1)";
                 window.battlefield.ctx.fill();
                 window.battlefield.ctx.lineWidth = 1;
                 window.battlefield.ctx.strokeStyle = 'red';
@@ -219,29 +219,8 @@ define(function () {
                 window.battlefield.ctx.closePath();
             }
 
-            if (this.done) {
-                window.battlefield.ctx.drawImage(this.img, x, y, this.model.get('width'), this.model.get('height'));
-                window.battlefield.ctx.restore();
-                return;
-            }
-
-            this.img = new Image();
-
-            var self = this;
-
-            this.img.onload = function () {
-                self.done = true;
-                window.battlefield.ctx.translate(self.model.get('positionX') + self.model.get('width') / 2, self.model.get('positionY') + self.model.get('height') / 2);
-                window.battlefield.ctx.rotate(Math.PI );
-
-                var x = (-1 * self.model.get('width') / 2),
-                    y = (-1 * self.model.get('height') / 2);
-
-                window.battlefield.ctx.drawImage(self.img, x, y, self.model.get('width'), self.model.get('height'));
-                window.battlefield.ctx.restore();
-            };
-
-            this.img.src = this.model.get('image');
+            window.battlefield.ctx.drawImage(window.GameImages[this.model.get('imageKey')], x, y, this.model.get('width'), this.model.get('height'));
+            window.battlefield.ctx.restore();
         }
     });
 
