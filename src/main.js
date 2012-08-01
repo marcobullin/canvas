@@ -22,6 +22,10 @@ require([
 			{
 				key: 'tank',
 				src: 'images/tank.png'
+			},
+			{
+				key: 'explosion',
+				src: 'images/explosion.png'
 			}
 		];
 

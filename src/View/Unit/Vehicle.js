@@ -156,6 +156,36 @@ define(function () {
 
             this.dieSound.play();
             window.battlefield.remove(this.model.get('id'));
+            this.model.set('isDestroyed', true);
+
+            var self = this, 
+                x = 0,
+                y = 0,
+                w = 118,
+                h = 118,
+                dx = this.model.get('positionX')-54,
+                dy = this.model.get('positionY')-54,
+                dw = 118,
+                dh = 118;
+            var f = window.setInterval(function() {
+                window.battlefield.ctx.drawImage(
+                    window.GameImages['explosion'],
+                    x,
+                    y,
+                    w,
+                    h,
+                    dx,
+                    dy,
+                    dw,
+                    dh
+                );
+
+                if (x == 5 * 118) {
+                    window.clearInterval(f);
+                    return;
+                }
+                x += 118;
+            }, 10);
         },
 
         render: function () {

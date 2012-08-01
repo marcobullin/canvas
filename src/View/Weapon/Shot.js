@@ -32,7 +32,7 @@ define(function () {
 						clearInterval(action);
 						window.battlefield.remove(self.model.get('id'));
 
-						if (obstacle.model.get('isAttackable')) {
+						if (obstacle.model.get('isAttackable') && !obstacle.model.get('isDestroyed')) {
 							obstacle.model.set('protection', obstacle.model.get('protection') - self.model.get('firepower'));
 
 							if (obstacle.model.get('protection') <= 0) {
@@ -57,7 +57,8 @@ define(function () {
 					if (self.model.get('positionX') >= enemy.model.get('positionX') &&
 						self.model.get('positionX') <= (enemy.model.get('positionX') + enemy.model.get('width')) &&
 						self.model.get('positionY') >= enemy.model.get('positionY') &&
-						self.model.get('positionY') <= (enemy.model.get('positionY') + enemy.model.get('height'))
+						self.model.get('positionY') <= (enemy.model.get('positionY') + enemy.model.get('height')) &&
+						!enemy.model.get('isDestroyed')
 					) {
 						enemy.model.set('protection', enemy.model.get('protection') - self.model.get('firepower'));
 
