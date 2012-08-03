@@ -35,7 +35,7 @@ require([
 		for (var i = 0; i < images.length; i++) {
 			img = new Image();
 			img.src = images[i].src;
-			
+
 			img.onload = function (i) {
 				count += 1;
 
@@ -43,7 +43,7 @@ require([
 				if (count === images.length) {
 					start();
 				}
-			}(i)
+			}(i);
 		}
 
 		function start() {
@@ -63,6 +63,29 @@ require([
 			scoutModel.set('height', SCOUT_HEIGHT);
 			scoutModel.set('positionX', 1050);
 			scoutModel.set('positionY', 450);
+			scoutModel.set('owner', 'computer');
+			scoutModel.set('isAttackable', true);
+			scoutModel.set('weapon', 'MachineGun');
+			scoutModel.set('type', 'unit');
+
+			var scout = new MilitaryVehicleView({
+				model: scoutModel
+			});
+
+			window.battlefield.add(scout);
+
+			var scoutModel = new Scout();
+			scoutModel.set('name', 'b');
+			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('price', SCOUT_PRICE);
+			scoutModel.set('speed', SCOUT_SPEED);
+			scoutModel.set('firepower', SCOUT_FIREPOWER);
+			scoutModel.set('firerange', SCOUT_FIRERANGE);
+			scoutModel.set('firespeed', SCOUT_FIRESPEED);
+			scoutModel.set('width', SCOUT_WIDTH);
+			scoutModel.set('height', SCOUT_HEIGHT);
+			scoutModel.set('positionX', 650);
+			scoutModel.set('positionY', 200);
 			scoutModel.set('owner', 'computer');
 			scoutModel.set('isAttackable', true);
 			scoutModel.set('weapon', 'MachineGun');

@@ -4,7 +4,8 @@ define(function () {
 			imageKey: 'scout',
 			sound: {
 				shot: 'sounds/laser.mp3',
-				die: 'sounds/boom.mp3'
+				die: 'sounds/boom.mp3',
+				hit: 'sounds/hit.mp3'
 			}
 		}
 	});

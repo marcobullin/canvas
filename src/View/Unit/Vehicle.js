@@ -1,14 +1,28 @@
 define(function () {
     var Vehicle = Backbone.View.extend({
+        /**
+         * Moving action.
+         *
+         * @type action id
+         */
         action: null,
-        img: null,
-        done: false,
+
         dieSound: null,
 
+        /**
+         * This method collects possible way points to goal destination.
+         * It uses the astar algorithm.
+         *
+         * @param  {integer} goalX
+         * @param  {integer} goalY
+         *
+         * @return array
+         */
         getWayPoints: function (goalX, goalY) {
             var x,
                 y,
                 i,
+                len,
                 item,
                 blocked = false,
                 currentPosition = [],
@@ -35,7 +49,7 @@ define(function () {
                     }
 
                     // obstacles
-                    for (i = 0; i < window.battlefield.items.length; i++) {
+                    for (i = 0, len = window.battlefield.items.length; i < len; i+=1) {
                         item = window.battlefield.items[i];
 
                         if (item.model.get('type') !== 'obstacle' && item.model.get('type') !== 'unit') {
@@ -76,13 +90,20 @@ define(function () {
             return wayPoints;
         },
 
+        /**
+         * This method moves the unit/item to given position.
+         *
+         * @param  {integer} x
+         * @param  {integer} y
+         *
+         * @return void
+         */
         move: function (x, y) {
             x = Math.floor(x / 50);
             x *= 50;
 
             y = Math.floor(y / 50);
             y *= 50;
-
 
             clearInterval(this.action);
 
@@ -101,24 +122,21 @@ define(function () {
                     currentWps = wps.shift();
                 }
 
-                var directionX, directionY;
+                var directionX = 0,
+                    directionY = 0,
+                    directionPath = '';
+
                 if (currentWps.row * self.model.get('width') < self.model.get('positionX')) {
                     directionX = -self.model.get('speed');
                 } else if (currentWps.row * self.model.get('width') > self.model.get('positionX')) {
                     directionX = self.model.get('speed');
-                } else {
-                    directionX = 0;
                 }
 
                 if (currentWps.col * self.model.get('height') < self.model.get('positionY')) {
                     directionY = -self.model.get('speed');
                 } else if (currentWps.col * self.model.get('height') > self.model.get('positionY')) {
                     directionY = self.model.get('speed');
-                } else {
-                    directionY = 0;
                 }
-
-                var directionPath = '';
 
                 moving = true;
                 if (self.model.get('positionX') !== (currentWps.row * self.model.get('width'))) {
@@ -149,16 +167,27 @@ define(function () {
             }, 10);
         },
 
+        /**
+         * This method removes the unit/item from battlefield.
+         * Plays the explosion sound and renders the explosion.
+         *
+         * @return void
+         */
         destroy: function () {
             if (!this.dieSound) {
                 this.dieSound = new Audio(this.model.get('sound').die);
             }
 
             this.dieSound.play();
+
+            // removing unit/item from battlefield
             window.battlefield.remove(this.model.get('id'));
+
+            // mark unit as destroyed
             this.model.set('isDestroyed', true);
 
-            var self = this, 
+            // animate explosion
+            var self = this,
                 x = 0,
                 y = 0,
                 w = 118,
@@ -166,10 +195,12 @@ define(function () {
                 dx = this.model.get('positionX')-54,
                 dy = this.model.get('positionY')-54,
                 dw = 118,
-                dh = 118;
-            var f = window.setInterval(function() {
+                dh = 118,
+                animation;
+
+            animation = window.setInterval(function() {
                 window.battlefield.ctx.drawImage(
-                    window.GameImages['explosion'],
+                    window.GameImages.explosion,
                     x,
                     y,
                     w,
@@ -180,20 +211,27 @@ define(function () {
                     dh
                 );
 
-                if (x == 5 * 118) {
-                    window.clearInterval(f);
+                if (x === (5 * 118)) {
+                    window.clearInterval(animation);
                     return;
                 }
                 x += 118;
             }, 10);
         },
 
+        /**
+         * This method renders the unit/item in correct rotation with live bar and firerange.
+         *
+         * @return void
+         */
         render: function () {
             if (!this.model.get('id')) {
                 this.model.set('id', Math.ceil(Math.random() * 99999999999 * new Date().getTime()));
             }
 
-            var live = this.model.get('width') / 100 * this.model.get('protection');
+            var live = this.model.get('width') / 100 * this.model.get('protection'),
+                x = (-1 * this.model.get('width') / 2),
+                y = (-1 * this.model.get('height') / 2);
 
             // ROTATE
             window.battlefield.ctx.save();
@@ -227,9 +265,6 @@ define(function () {
                 default:
                     window.battlefield.ctx.rotate(2 * Math.PI);
             }
-
-            var x = (-1 * this.model.get('width') / 2),
-                y = (-1 * this.model.get('height') / 2);
 
             // LIVE
             window.battlefield.ctx.fillStyle = 'red';
