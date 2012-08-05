@@ -9,6 +9,12 @@ define(function () {
 
         dieSound: null,
 
+        moving: false,
+
+        wps: [],
+
+        currentWp: {},
+
         /**
          * This method collects possible way points to goal destination.
          * It uses the astar algorithm.
@@ -98,74 +104,125 @@ define(function () {
          *
          * @return void
          */
+        //  move: function (x, y) {
+        //     x = Math.floor(x / 50);
+        //     x *= 50;
+
+        //     y = Math.floor(y / 50);
+        //     y *= 50;
+
+        //     this.wps = this.getWayPoints(x, y);
+
+        //     this.x = x;
+        //     this.y = y;
+        // },
+
         move: function (x, y) {
-            x = Math.floor(x / 50);
-            x *= 50;
-
-            y = Math.floor(y / 50);
-            y *= 50;
-
-            clearInterval(this.action);
-
-            var wps = this.getWayPoints(x, y),
-                moving = false,
-                self = this,
-                currentWps;
-
-            this.action = setInterval(function () {
-                if ((!wps || wps.length === 0) && moving === false) {
-                    clearInterval(self.action);
-                    return;
-                }
-
-                if (!moving) {
-                    currentWps = wps.shift();
-                }
-
-                var directionX = 0,
-                    directionY = 0,
-                    directionPath = '';
-
-                if (currentWps.row * self.model.get('width') < self.model.get('positionX')) {
-                    directionX = -self.model.get('speed');
-                } else if (currentWps.row * self.model.get('width') > self.model.get('positionX')) {
-                    directionX = self.model.get('speed');
-                }
-
-                if (currentWps.col * self.model.get('height') < self.model.get('positionY')) {
-                    directionY = -self.model.get('speed');
-                } else if (currentWps.col * self.model.get('height') > self.model.get('positionY')) {
-                    directionY = self.model.get('speed');
-                }
-
-                moving = true;
-                if (self.model.get('positionX') !== (currentWps.row * self.model.get('width'))) {
-                    self.model.set('positionX', (self.model.get('positionX') + directionX));
-                    if (directionX < 0) {
-                        directionPath += 'L';
-                    } else {
-                        directionPath += 'R';
-                    }
-                }
-
-                if (self.model.get('positionY') !== (currentWps.col * self.model.get('height'))) {
-                    self.model.set('positionY', (self.model.get('positionY') + directionY));
-                    if (directionY < 0) {
-                        directionPath += 'U';
-                    } else {
-                        directionPath += 'D';
-                    }
-                }
-
-                self.model.set('direction', directionPath);
-
-                if (self.model.get('positionY') === (currentWps.col * self.model.get('height')) &&
-                    self.model.get('positionX') === (currentWps.row * self.model.get('width'))
-                ) {
-                    moving = false;
-                }
-            }, 10);
+            this.x = x - this.model.get('width') / 2;
+            this.y = y - this.model.get('height') / 2;
         },
+
+        update: function (modifier) {
+            var directionPathX = '',
+                directionPathY = '',
+                speed = this.model.get('speed') * modifier;
+
+            if (this.model.get('positionX') === this.x && 
+                this.model.get('positionY') === this.y) {
+                return;
+            }
+
+            if (this.x < this.model.get('positionX')) {
+                this.model.set('positionX', (this.model.get('positionX') - speed));
+            } 
+
+            if (this.x > this.model.get('positionX')) {
+                this.model.set('positionX', (this.model.get('positionX') + speed));
+            }
+
+            if (this.y < this.model.get('positionY')) {
+                this.model.set('positionY', (this.model.get('positionY') - speed));
+            } 
+
+            if (this.y > this.model.get('positionY')) {
+                this.model.set('positionY', (this.model.get('positionY') + speed));
+            }
+/*
+            if (this.model.get('positionX') !== this.x) {
+                this.model.set('positionX', (this.model.get('positionX') + directionX));
+                if (directionX < 0) {
+                    directionPath += 'L';
+                } else {
+                    directionPath += 'R';
+                }
+            }
+
+            if (this.model.get('positionY') !== this.y) {
+                this.model.set('positionY', (this.model.get('positionY') + directionY));
+                if (directionY < 0) {
+                    directionPath += 'U';
+                } else {
+                    directionPath += 'D';
+                }
+            }
+
+            this.model.set('direction', directionPath);
+            */
+        },
+
+        // checkPosition: function (modifier) {
+        //     if ((!this.wps || this.wps.length === 0) && this.moving === false) {
+        //         return;
+        //     }
+            
+        //     var directionX = 0,
+        //         directionY = 0,
+        //         directionPath = '',
+        //         speed = this.model.get('speed') * modifier;
+
+        //     if (!this.moving) {
+        //         this.currentWp = this.wps.shift();
+        //     }
+
+        //     if (this.currentWp.row * this.model.get('width') < this.model.get('positionX')) {
+        //         directionX = -speed;
+        //     } else if (this.currentWp.row * this.model.get('width') > this.model.get('positionX')) {
+        //         directionX = speed;
+        //     }
+
+        //     if (this.currentWp.col * this.model.get('height') < this.model.get('positionY')) {
+        //         directionY = -speed;
+        //     } else if (this.currentWp.col * this.model.get('height') > this.model.get('positionY')) {
+        //         directionY = speed;
+        //     }
+
+        //     this.moving = true;
+        //     if (this.model.get('positionX') !== (this.currentWp.row * this.model.get('width'))) {
+        //         this.model.set('positionX', (this.model.get('positionX') + directionX));
+        //         if (directionX < 0) {
+        //             directionPath += 'L';
+        //         } else {
+        //             directionPath += 'R';
+        //         }
+        //     }
+
+        //     if (this.model.get('positionY') !== (this.currentWp.col * this.model.get('height'))) {
+        //         this.model.set('positionY', (this.model.get('positionY') + directionY));
+        //         if (directionY < 0) {
+        //             directionPath += 'U';
+        //         } else {
+        //             directionPath += 'D';
+        //         }
+        //     }
+
+        //     this.model.set('direction', directionPath);
+
+        //     if (this.model.get('positionY') === (this.currentWp.col * this.model.get('height')) &&
+        //         this.model.get('positionX') === (this.currentWp.row * this.model.get('width'))
+        //     ) {
+        //         this.moving = false;
+        //     }
+        // },
 
         /**
          * This method removes the unit/item from battlefield.
@@ -224,7 +281,7 @@ define(function () {
          *
          * @return void
          */
-        render: function () {
+        render: function (modifier) {
             if (!this.model.get('id')) {
                 this.model.set('id', Math.ceil(Math.random() * 99999999999 * new Date().getTime()));
             }
@@ -232,6 +289,8 @@ define(function () {
             var live = this.model.get('width') / 100 * this.model.get('protection'),
                 x = (-1 * this.model.get('width') / 2),
                 y = (-1 * this.model.get('height') / 2);
+
+            this.update(modifier);
 
             // ROTATE
             window.battlefield.ctx.save();

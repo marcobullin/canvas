@@ -3,11 +3,13 @@ define([
 	],
 	function (Shot) {
 		var MachineGun = Shot.extend({
-			render: function () {
-				this.model.set('id', Math.ceil(Math.random() * 99999999999 * new Date().getTime()));
+			render: function (modifier) {
+				this.model.set('id', Math.ceil(Math.random() * 9999999999999 * new Date().getTime()));
 
 				var width = 2,
 					height = 6;
+
+				this.check(modifier);
 
 				window.battlefield.ctx.save();
 

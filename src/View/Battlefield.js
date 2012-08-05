@@ -76,11 +76,17 @@ define(function () {
 		},
 
 		update: function () {
+			var now = Date.now();
+			var delta = now - then;
+			var modifier = delta / 1000;
+
 			window.battlefield.ctx.drawImage(window.GameImages['map'], 0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
 
 			for (var i = 0; i < this.items.length; i++) {
-				this.items[i].render();
+				this.items[i].render(modifier);
 			}
+
+			then = now;
 		},
 
 		remove: function (id) {

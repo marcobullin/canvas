@@ -2,6 +2,70 @@ define(function () {
     var Shot = Backbone.View.extend({
         hitSound: null,
 
+        goalX: false,
+        goalY: false,
+
+        check: function (modifier) {
+            if (false === this.goalX && false === this.goalY) {
+                return;
+            }
+
+            var dx = this.goalX - this.model.get('positionX'),
+                dy = this.goalY - this.model.get('positionY'),
+                distance = Math.sqrt(dx * dx + dy * dy),
+                moves = distance / (this.model.get('firespeed') * modifier),
+                x = dx / moves,
+                y = dy / moves,
+                i,
+                obstacle;
+
+            this.model.set('positionX', this.model.get('positionX') + x);
+            this.model.set('positionY', this.model.get('positionY') + y);
+
+            // check if something is hit
+            for (i = 0; i < window.battlefield.items.length; i+=1) {
+                obstacle = window.battlefield.items[i];
+
+                if (this.model.get('positionY') >= obstacle.model.get('positionY') &&
+                    this.model.get('positionY') <= obstacle.model.get('positionY') + obstacle.model.get('height') &&
+                    this.model.get('positionX') >= obstacle.model.get('positionX') &&
+                    this.model.get('positionX') <= obstacle.model.get('positionX') + obstacle.model.get('width') &&
+                    obstacle.model.get('owner') !== this.model.get('owner')
+                ) {
+                    this.goalX = false;
+                    this.goalY = false;
+
+                    window.battlefield.remove(this.model.get('id'));
+
+                    if (obstacle.model.get('isAttackable') && !obstacle.model.get('isDestroyed')) {
+                        if (!this.hitSound) {
+                            this.hitSound = new Audio(obstacle.model.get('sound').hit);
+                        }
+
+                        this.hitSound.play();
+                        obstacle.model.set('protection', obstacle.model.get('protection') - this.model.get('firepower'));
+
+                        if (obstacle.model.get('protection') <= 0) {
+                            obstacle.destroy();
+                        }
+                    }
+
+                    return;
+                }
+            }
+
+            // shot reaches goal
+            if (this.model.get('positionY') >= this.endY1 &&
+                this.model.get('positionY') <= this.endY2 &&
+                this.model.get('positionX') >= this.endX1 &&
+                this.model.get('positionX') <= this.endX2
+            ) {
+                this.goalX = false;
+                this.goalY = false;
+                window.battlefield.remove(this.model.get('id'));
+            }
+        },
+
         /**
          * This method updates the position of the current shot and checks
          * if something is hit.
@@ -15,63 +79,17 @@ define(function () {
          *
          * @return void
          */
-        fire: function (goalX, goalY, endX1, endY1, endX2, endY2) {
+         fire: function (goalX, goalY, endX1, endY1, endX2, endY2) {
             var self = this,
                 action;
 
-            action = setInterval(function () {
-                var dx = goalX - self.model.get('positionX'),
-                    dy = goalY - self.model.get('positionY'),
-                    distance = Math.sqrt(dx * dx + dy * dy),
-                    moves = distance / self.model.get('firespeed'),
-                    x = dx / moves,
-                    y = dy / moves,
-                    i,
-                    obstacle;
+            this.goalX = goalX;
+            this.goalY = goalY;
 
-                self.model.set('positionX', self.model.get('positionX') + x);
-                self.model.set('positionY', self.model.get('positionY') + y);
-
-                // check if something is hit
-                for (i = 0; i < window.battlefield.items.length; i+=1) {
-                    obstacle = window.battlefield.items[i];
-
-                    if (self.model.get('positionY') >= obstacle.model.get('positionY') &&
-                        self.model.get('positionY') <= obstacle.model.get('positionY') + obstacle.model.get('height') &&
-                        self.model.get('positionX') >= obstacle.model.get('positionX') &&
-                        self.model.get('positionX') <= obstacle.model.get('positionX') + obstacle.model.get('width') &&
-                        obstacle.model.get('owner') !== self.model.get('owner')
-                    ) {
-                        clearInterval(action);
-                        window.battlefield.remove(self.model.get('id'));
-
-                        if (obstacle.model.get('isAttackable') && !obstacle.model.get('isDestroyed')) {
-                            if (!self.hitSound) {
-                                self.hitSound = new Audio(obstacle.model.get('sound').hit);
-                            }
-
-                            self.hitSound.play();
-                            obstacle.model.set('protection', obstacle.model.get('protection') - self.model.get('firepower'));
-
-                            if (obstacle.model.get('protection') <= 0) {
-                                obstacle.destroy();
-                            }
-                        }
-
-                        return;
-                    }
-                }
-
-                // shot reaches goal
-                if (self.model.get('positionY') >= endY1 &&
-                    self.model.get('positionY') <= endY2 &&
-                    self.model.get('positionX') >= endX1 &&
-                    self.model.get('positionX') <= endX2
-                ) {
-                    clearInterval(action);
-                    window.battlefield.remove(self.model.get('id'));
-                }
-            }, 10);
+            this.endX1 = endX1;
+            this.endY1 = endY1;
+            this.endX2 = endX2;
+            this.endY2 = endY2;
         }
     });
 

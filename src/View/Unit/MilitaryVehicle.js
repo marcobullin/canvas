@@ -9,6 +9,7 @@ define([
 		var MilitaryVehicle = Vehicle.extend({
 			_scanning: null,
 			shotSound: null,
+			counter: 0,
 
 			initialize: function () {
 				this._scanning = window.setInterval($.proxy(this.scan, this), Math.floor(Math.random() * 400 + 250));
@@ -168,6 +169,12 @@ define([
 			},
 
 			attack: function (enemy) {
+				if (this.alreadyAttacking === true) {
+					return;
+				}
+
+				this.alreadyAttacking = true;
+
 				var a = Math.abs(enemy.model.get('positionY') - this.model.get('positionY')),
 					b = Math.abs(enemy.model.get('positionX') - this.model.get('positionX')),
 					a2 = a * a,
@@ -221,8 +228,10 @@ define([
 
 				var randX = Math.floor(Math.random() * enemy.model.get('width') + enemy.model.get('positionX')),
 					randY = Math.floor(Math.random() * enemy.model.get('height') + enemy.model.get('positionY'));
-
+	
 				shot.fire(randX, randY, enemy.model.get('positionX'), enemy.model.get('positionY'), enemy.model.get('positionX') + enemy.model.get('width'), enemy.model.get('positionY') + enemy.model.get('height'));
+				
+				this.alreadyAttacking = false;
 			},
 
 			destroy: function () {

@@ -13,7 +13,11 @@ require([
 		var images = [
 			{
 				key: 'map',
-				src: 'images/battlefield2.jpg'
+				src: 'images/stone2.jpeg'
+			},
+			{
+				key: 'obstacle',
+				src: 'images/obstacle.png'
 			},
 			{
 				key: 'scout',
@@ -167,6 +171,76 @@ require([
 
 			window.battlefield.add(scout);
 
+			var scoutModel = new Scout();
+			scoutModel.set('name', 'b');
+			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('price', SCOUT_PRICE);
+			scoutModel.set('speed', SCOUT_SPEED);
+			scoutModel.set('firepower', SCOUT_FIREPOWER);
+			scoutModel.set('firerange', SCOUT_FIRERANGE);
+			scoutModel.set('firespeed', SCOUT_FIRESPEED);
+			scoutModel.set('width', SCOUT_WIDTH);
+			scoutModel.set('height', SCOUT_HEIGHT);
+			scoutModel.set('positionX', 850);
+			scoutModel.set('positionY', 450);
+			scoutModel.set('owner', 'computer');
+			scoutModel.set('isAttackable', true);
+			scoutModel.set('weapon', 'MachineGun');
+			scoutModel.set('type', 'unit');
+
+			var scout = new MilitaryVehicleView({
+				model: scoutModel
+			});
+
+			window.battlefield.add(scout);
+
+			var scoutModel = new Scout();
+			scoutModel.set('name', 'b');
+			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('price', SCOUT_PRICE);
+			scoutModel.set('speed', SCOUT_SPEED);
+			scoutModel.set('firepower', SCOUT_FIREPOWER);
+			scoutModel.set('firerange', SCOUT_FIRERANGE);
+			scoutModel.set('firespeed', SCOUT_FIRESPEED);
+			scoutModel.set('width', SCOUT_WIDTH);
+			scoutModel.set('height', SCOUT_HEIGHT);
+			scoutModel.set('positionX', 750);
+			scoutModel.set('positionY', 450);
+			scoutModel.set('owner', 'computer');
+			scoutModel.set('isAttackable', true);
+			scoutModel.set('weapon', 'MachineGun');
+			scoutModel.set('type', 'unit');
+
+			var scout = new MilitaryVehicleView({
+				model: scoutModel
+			});
+
+			window.battlefield.add(scout);
+
+
+			var scoutModel = new Scout();
+			scoutModel.set('name', 'b');
+			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('price', SCOUT_PRICE);
+			scoutModel.set('speed', SCOUT_SPEED);
+			scoutModel.set('firepower', SCOUT_FIREPOWER);
+			scoutModel.set('firerange', SCOUT_FIRERANGE);
+			scoutModel.set('firespeed', SCOUT_FIRESPEED);
+			scoutModel.set('width', SCOUT_WIDTH);
+			scoutModel.set('height', SCOUT_HEIGHT);
+			scoutModel.set('positionX', 950);
+			scoutModel.set('positionY', 550);
+			scoutModel.set('owner', 'computer');
+			scoutModel.set('isAttackable', true);
+			scoutModel.set('weapon', 'MachineGun');
+			scoutModel.set('type', 'unit');
+
+			var scout = new MilitaryVehicleView({
+				model: scoutModel
+			});
+
+			window.battlefield.add(scout);
+
 
 
 
@@ -246,7 +320,10 @@ require([
 				window.battlefield.add(obstacle);	
 			}
 			
-			setInterval(function() {window.battlefield.update()}, 1);
+			then = Date.now();
+			setInterval(function() {
+				window.battlefield.update()
+			}, 1);
 		}
 	}
 );
