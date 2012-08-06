@@ -123,6 +123,29 @@ define(function () {
         },
 
         update: function (modifier) {
+
+            var a = Math.abs(this.y - this.model.get('positionY')),
+                    b = Math.abs(this.x - this.model.get('positionX')),
+                a2 = a * a,
+                b2 = b * b,
+                c = Math.sqrt(a2 + b2),
+                angle = Math.cos(b/c) * Math.PI;
+
+            if ((this.x <= this.model.get('positionX') &&
+                this.y >= this.model.get('positionY')) ||
+                (this.x >= this.model.get('positionX') &&
+                this.y <= this.model.get('positionY'))
+            ) {
+                angle = -1 * angle;
+            }
+
+            this.model.set('angle', angle);
+
+
+
+
+
+
             var directionPathX = '',
                 directionPathY = '',
                 speed = this.model.get('speed') * modifier;
@@ -296,34 +319,36 @@ define(function () {
             window.battlefield.ctx.save();
             window.battlefield.ctx.translate(this.model.get('positionX') + this.model.get('width') / 2, this.model.get('positionY') + this.model.get('height') / 2);
 
-            switch (this.model.get('direction')) {
-                case 'L':
-                    window.battlefield.ctx.rotate(Math.PI / 2);
-                    break;
-                case 'R':
-                    window.battlefield.ctx.rotate(-Math.PI / 2);
-                    break;
-                case 'U':
-                    window.battlefield.ctx.rotate(Math.PI);
-                    break;
-                case 'D':
-                    window.battlefield.ctx.rotate(2 * Math.PI);
-                    break;
-                case 'LU':
-                    window.battlefield.ctx.rotate(3/4 * Math.PI);
-                    break;
-                case 'LD':
-                    window.battlefield.ctx.rotate(Math.PI / 4);
-                    break;
-                case 'RU':
-                    window.battlefield.ctx.rotate(-3/4 * Math.PI);
-                    break;
-                case 'RD':
-                    window.battlefield.ctx.rotate(-Math.PI / 4);
-                    break;
-                default:
-                    window.battlefield.ctx.rotate(2 * Math.PI);
-            }
+            window.battlefield.ctx.rotate(this.model.get('angle'));
+
+            // switch (this.model.get('direction')) {
+            //     case 'L':
+            //         window.battlefield.ctx.rotate(Math.PI / 2);
+            //         break;
+            //     case 'R':
+            //         window.battlefield.ctx.rotate(-Math.PI / 2);
+            //         break;
+            //     case 'U':
+            //         window.battlefield.ctx.rotate(Math.PI);
+            //         break;
+            //     case 'D':
+            //         window.battlefield.ctx.rotate(2 * Math.PI);
+            //         break;
+            //     case 'LU':
+            //         window.battlefield.ctx.rotate(3/4 * Math.PI);
+            //         break;
+            //     case 'LD':
+            //         window.battlefield.ctx.rotate(Math.PI / 4);
+            //         break;
+            //     case 'RU':
+            //         window.battlefield.ctx.rotate(-3/4 * Math.PI);
+            //         break;
+            //     case 'RD':
+            //         window.battlefield.ctx.rotate(-Math.PI / 4);
+            //         break;
+            //     default:
+            //         window.battlefield.ctx.rotate(2 * Math.PI);
+            // }
 
             // LIVE
             window.battlefield.ctx.fillStyle = 'red';
