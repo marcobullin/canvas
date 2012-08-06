@@ -12,46 +12,17 @@ define([
 			counter: 0,
 
 			initialize: function () {
+				MilitaryVehicle.__super__.initialize.apply(this, arguments);
 				this._scanning = window.setInterval($.proxy(this.scan, this), Math.floor(Math.random() * 400 + 250));
-			},
 
-			intersect: function (source_x1, source_y1, source_x2, source_y2, target_x1, target_y1, target_x2, target_y2) {
-				var source_m = (source_y2 - source_y1) / (source_x2 - source_x1),
-					target_m = (target_y2 - target_y1) / (target_x2 - target_x1),
-					n1 = source_y1 - source_m * source_x1,
-					n2 = target_y1 - target_m * target_x1,
-					x;
-
-					if (source_m !== target_m) {
-						x = (n2 - n1) / (source_m - target_m);
-					} else {
-						x = n2 - n1;
-					}
-
-					y1 = source_m * x + n1,
-					y2 = target_m * x + n2;
-
-					// enemy is left, below or left-below
-					if (x <= source_x1 &&
-						x >= source_x2 &&
-						y1 >= source_y1 &&
-						y1 <= source_y2
-					) {
-						return true;
-					}
-
-					// enemy is left, top or left-below
-					/*
-					if (x <= source_x1 &&
-						x >= source_x2 &&
-						y1 >= source_y1 &&
-						y1 <= source_y2
-					) {
-						return true;
-					}
-					 */
-
-					return false;
+				if (this.model.get('owner') === 'computer' && this.model.get('name') === 'xxx') {
+					var self = this;
+					this.test = window.setInterval(function () {
+						var x = Math.random() * BATTLEFIELD_WIDTH - self.model.get('width');
+						var y = Math.random() * BATTLEFIELD_HEIGHT - self.model.get('height');
+						self.move(x, y);
+					}, 10000);
+				}
 			},
 
 			scan: function () {
@@ -59,7 +30,7 @@ define([
 					i,
 					x1, x2, x3, x4, y1, y2, y3, y4, r2, centerX, centerY, destination1, destination2, destination3, destination4;
 
-				for (i = 0; i < items.length; i++) {
+				for (i = 0; i < items.length; i+=1) {
 					// do not attack your own units
 					if (items[i].model.get('owner') === this.model.get('owner')) {
 						continue;
@@ -112,84 +83,42 @@ define([
 			},
 
 			moveAndAttack: function (enemy) {
-				var x, y;
+				var xDst = Math.abs(enemy.model.get('positionX') - this.model.get('positionX') + this.model.get('width') / 2),
+					yDst = Math.abs(enemy.model.get('positionY') - this.model.get('positionY') + this.model.get('height') / 2),
+					a, b, c, x, y;
 
-				if (enemy.model.get('positionX') === this.model.get('positionX')) {
-					x = enemy.model.get('positionX');
+				c = Math.sqrt(xDst * xDst + yDst * yDst);
 
-					if (enemy.model.get('positionY') < this.model.get('positionY')) {
-						y = enemy.model.get('positionY') + this.model.get('firerange');
-					} else {
-						y = enemy.model.get('positionY') - this.model.get('firerange');
-					}
-
-					y = y < 0 ? 0 : y;
-
-					return this.move(x, y);
-				}
-
-				if (enemy.model.get('positionY') === this.model.get('positionY')) {
-					y = enemy.model.get('positionY');
-
-					if (enemy.model.get('positionX') < this.model.get('positionX')) {
-						x = enemy.model.get('positionX') + this.model.get('firerange');
-					} else {
-						x = enemy.model.get('positionX') - this.model.get('firerange');
-					}
-
-					x = x < 0 ? 0 : x;
-
-					return this.move(x, y);
-				}
-
-				var dx, dy;
-
-				dx = Math.abs(enemy.model.get('positionX') - this.model.get('positionX'));
-				dy = Math.abs(enemy.model.get('positionY') - this.model.get('positionY'));
-
-				var c_current = Math.sqrt(dy * dy + dx * dx);
-				var c_new = c_current - this.model.get('firerange');
-
-				if (enemy.model.get('positionX') < this.model.get('positionX')) {
-					dx = -dx;
-				} else {
-					dx = dx + enemy.model.get('width') + this.model.get('width') / 2;
-				}
-
-				if (enemy.model.get('positionY') < this.model.get('positionY')) {
-					dy = -dy;
-				} else {
-					dy = dy + enemy.model.get('width') + this.model.get('height') / 2;
-				}
-
-				x = Math.ceil(c_new/c_current * dx);
-				y = Math.ceil(c_new/c_current * dy);
-
-				return this.move(this.model.get('positionX') + x, this.model.get('positionY') + y);
-			},
-
-			attack: function (enemy) {
-				if (this.alreadyAttacking === true) {
+				// unit is already in fireposition
+				if (c <= this.model.get('firerange')) {
 					return;
 				}
 
-				this.alreadyAttacking = true;
 
-				var a = Math.abs(enemy.model.get('positionY') - this.model.get('positionY')),
-					b = Math.abs(enemy.model.get('positionX') - this.model.get('positionX')),
-					a2 = a * a,
-					b2 = b * b,
-					c = Math.sqrt(a2 + b2),
-					angle = Math.cos(b/c) * Math.PI;
+				a = xDst * (1 - this.model.get('firerange') / c);
+				b = yDst * (1 - this.model.get('firerange') / c);
 
-				if ((enemy.model.get('positionX') <= this.model.get('positionX') &&
-					enemy.model.get('positionY') >= this.model.get('positionY')) ||
-					(enemy.model.get('positionX') >= this.model.get('positionX') &&
-					enemy.model.get('positionY') <= this.model.get('positionY'))
-				) {
-					angle = -1 * angle;
+
+				if (this.model.get('positionX') < enemy.model.get('positionX')) {
+					x = this.model.get('positionX') + a;
+				} else if (this.model.get('positionX') > enemy.model.get('positionX')) {
+					x = this.model.get('positionX') - a;
+				} else {
+					x = this.model.get('positionX');
 				}
 
+				if (this.model.get('positionY') < enemy.model.get('positionY')) {
+					y = this.model.get('positionY') + b;
+				} else if (this.model.get('positionY') > enemy.model.get('positionY')) {
+					y = this.model.get('positionY') - b;
+				} else {
+					y = this.model.get('positionY');
+				}
+
+				this.move(x, y);
+			},
+
+			attack: function (enemy) {
 				if (!this.shotSound) {
 					this.shotSound = new Audio(this.model.get('sound').shot);
 				}
@@ -202,7 +131,9 @@ define([
 				shotModel.set('positionY', this.model.get('positionY') + (this.model.get('height') / 2));
 				shotModel.set('firepower', this.model.get('firepower'));
 				shotModel.set('firespeed', this.model.get('firespeed'));
-				shotModel.set('angle', angle);
+
+				var direction = Math.atan2(enemy.model.get('positionY') - this.model.get('positionY'), enemy.model.get('positionX') - this.model.get('positionX')) - Math.PI/2;
+				shotModel.set('angle', direction);
 
 				var shot = null;
 				switch (this.model.get('weapon')) {
@@ -228,10 +159,8 @@ define([
 
 				var randX = Math.floor(Math.random() * enemy.model.get('width') + enemy.model.get('positionX')),
 					randY = Math.floor(Math.random() * enemy.model.get('height') + enemy.model.get('positionY'));
-	
+
 				shot.fire(randX, randY, enemy.model.get('positionX'), enemy.model.get('positionY'), enemy.model.get('positionX') + enemy.model.get('width'), enemy.model.get('positionY') + enemy.model.get('height'));
-				
-				this.alreadyAttacking = false;
 			},
 
 			destroy: function () {

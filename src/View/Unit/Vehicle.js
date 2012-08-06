@@ -15,237 +15,59 @@ define(function () {
 
         currentWp: {},
 
-        /**
-         * This method collects possible way points to goal destination.
-         * It uses the astar algorithm.
-         *
-         * @param  {integer} goalX
-         * @param  {integer} goalY
-         *
-         * @return array
-         */
-        getWayPoints: function (goalX, goalY) {
-            var x,
-                y,
-                i,
-                len,
-                item,
-                blocked = false,
-                currentPosition = [],
-                matrix = [],
-                wayPoints,
-                currX  = Math.floor(this.model.get('positionX') / 50) * 50,
-                currY  = Math.floor(this.model.get('positionY') / 50) * 50;
+        x: 0,
+        y: 0,
 
-            for (x = 0; x < BATTLEFIELD_WIDTH; x+=this.model.get('width')) {
-                currentPosition = [];
-                for (y = 0; y < BATTLEFIELD_HEIGHT; y+=this.model.get('height')) {
-                    // start
-                    if (currX === x &&
-                        currY === y
-                    ) {
-                        currentPosition.push('s');
-                        continue;
-                    }
-
-                    // goal
-                    if (x === goalX && y === goalY) {
-                        currentPosition.push('g');
-                        continue;
-                    }
-
-                    // obstacles
-                    for (i = 0, len = window.battlefield.items.length; i < len; i+=1) {
-                        item = window.battlefield.items[i];
-
-                        if (item.model.get('type') !== 'obstacle' && item.model.get('type') !== 'unit') {
-                            continue;
-                        }
-
-                        if (item.model.get('id') === this.model.get('id')) {
-                            continue;
-                        }
-
-                        if (x === item.model.get('positionX') &&
-                            y === item.model.get('positionY')
-                        ) {
-                            currentPosition.push('u');
-                            blocked = true;
-                            break;
-                        }
-                    }
-
-                    // somethin is in the way
-                    if (blocked) {
-                        blocked = false;
-                        continue;
-                    }
-
-                    currentPosition.push('w');
-                }
-
-                matrix.push(currentPosition);
-            }
-
-            wayPoints = astar(matrix, 'manhattan', true);
-
-            if (wayPoints && wayPoints.length > 0) {
-                wayPoints.shift();
-            }
-
-            return wayPoints;
+        initialize: function () {
+            this.x = this.model.get('positionX');
+            this.y = this.model.get('positionY');
         },
-
-        /**
-         * This method moves the unit/item to given position.
-         *
-         * @param  {integer} x
-         * @param  {integer} y
-         *
-         * @return void
-         */
-        //  move: function (x, y) {
-        //     x = Math.floor(x / 50);
-        //     x *= 50;
-
-        //     y = Math.floor(y / 50);
-        //     y *= 50;
-
-        //     this.wps = this.getWayPoints(x, y);
-
-        //     this.x = x;
-        //     this.y = y;
-        // },
 
         move: function (x, y) {
             this.x = x - this.model.get('width') / 2;
             this.y = y - this.model.get('height') / 2;
+
+            var direction = Math.atan2(this.y - this.model.get('positionY'), this.x - this.model.get('positionX')) - Math.PI/2;
+            this.model.set('direction', direction);
         },
 
         update: function (modifier) {
+            var speed = this.model.get('speed') * modifier,
+                speedX, speedY,
+                a = Math.abs(this.x - this.model.get('positionX')) / speed,
+                b = Math.abs(this.y - this.model.get('positionY')) / speed;
 
-            var a = Math.abs(this.y - this.model.get('positionY')),
-                    b = Math.abs(this.x - this.model.get('positionX')),
-                a2 = a * a,
-                b2 = b * b,
-                c = Math.sqrt(a2 + b2),
-                angle = Math.cos(b/c) * Math.PI;
-
-            if ((this.x <= this.model.get('positionX') &&
-                this.y >= this.model.get('positionY')) ||
-                (this.x >= this.model.get('positionX') &&
-                this.y <= this.model.get('positionY'))
-            ) {
-                angle = -1 * angle;
+            // set right speed for x and y distance
+            if (a >= b) {
+                speedX = speed;
+                speedY = (b / a) * speed;
+            } else {
+                speedX = (a / b) * speed;
+                speedY = speed;
             }
 
-            this.model.set('angle', angle);
-
-
-
-
-
-
-            var directionPathX = '',
-                directionPathY = '',
-                speed = this.model.get('speed') * modifier;
-
-            if (this.model.get('positionX') === this.x && 
-                this.model.get('positionY') === this.y) {
-                return;
-            }
-
+            // setting new postion
             if (this.x < this.model.get('positionX')) {
-                this.model.set('positionX', (this.model.get('positionX') - speed));
-            } 
+                this.model.set('positionX', (this.model.get('positionX') - speedX));
+            }
 
             if (this.x > this.model.get('positionX')) {
-                this.model.set('positionX', (this.model.get('positionX') + speed));
+                this.model.set('positionX', (this.model.get('positionX') + speedX));
             }
 
             if (this.y < this.model.get('positionY')) {
-                this.model.set('positionY', (this.model.get('positionY') - speed));
-            } 
+                this.model.set('positionY', (this.model.get('positionY') - speedY));
+            }
 
             if (this.y > this.model.get('positionY')) {
-                this.model.set('positionY', (this.model.get('positionY') + speed));
+                this.model.set('positionY', (this.model.get('positionY') + speedY));
             }
-/*
-            if (this.model.get('positionX') !== this.x) {
-                this.model.set('positionX', (this.model.get('positionX') + directionX));
-                if (directionX < 0) {
-                    directionPath += 'L';
-                } else {
-                    directionPath += 'R';
-                }
-            }
-
-            if (this.model.get('positionY') !== this.y) {
-                this.model.set('positionY', (this.model.get('positionY') + directionY));
-                if (directionY < 0) {
-                    directionPath += 'U';
-                } else {
-                    directionPath += 'D';
-                }
-            }
-
-            this.model.set('direction', directionPath);
-            */
         },
 
-        // checkPosition: function (modifier) {
-        //     if ((!this.wps || this.wps.length === 0) && this.moving === false) {
-        //         return;
-        //     }
-            
-        //     var directionX = 0,
-        //         directionY = 0,
-        //         directionPath = '',
-        //         speed = this.model.get('speed') * modifier;
-
-        //     if (!this.moving) {
-        //         this.currentWp = this.wps.shift();
-        //     }
-
-        //     if (this.currentWp.row * this.model.get('width') < this.model.get('positionX')) {
-        //         directionX = -speed;
-        //     } else if (this.currentWp.row * this.model.get('width') > this.model.get('positionX')) {
-        //         directionX = speed;
-        //     }
-
-        //     if (this.currentWp.col * this.model.get('height') < this.model.get('positionY')) {
-        //         directionY = -speed;
-        //     } else if (this.currentWp.col * this.model.get('height') > this.model.get('positionY')) {
-        //         directionY = speed;
-        //     }
-
-        //     this.moving = true;
-        //     if (this.model.get('positionX') !== (this.currentWp.row * this.model.get('width'))) {
-        //         this.model.set('positionX', (this.model.get('positionX') + directionX));
-        //         if (directionX < 0) {
-        //             directionPath += 'L';
-        //         } else {
-        //             directionPath += 'R';
-        //         }
-        //     }
-
-        //     if (this.model.get('positionY') !== (this.currentWp.col * this.model.get('height'))) {
-        //         this.model.set('positionY', (this.model.get('positionY') + directionY));
-        //         if (directionY < 0) {
-        //             directionPath += 'U';
-        //         } else {
-        //             directionPath += 'D';
-        //         }
-        //     }
-
-        //     this.model.set('direction', directionPath);
-
-        //     if (this.model.get('positionY') === (this.currentWp.col * this.model.get('height')) &&
-        //         this.model.get('positionX') === (this.currentWp.row * this.model.get('width'))
-        //     ) {
-        //         this.moving = false;
-        //     }
-        // },
+        hit: function () {
+            var sound = new Audio(this.model.get('sound').hit);
+            sound.play();
+        },
 
         /**
          * This method removes the unit/item from battlefield.
@@ -319,36 +141,7 @@ define(function () {
             window.battlefield.ctx.save();
             window.battlefield.ctx.translate(this.model.get('positionX') + this.model.get('width') / 2, this.model.get('positionY') + this.model.get('height') / 2);
 
-            window.battlefield.ctx.rotate(this.model.get('angle'));
-
-            // switch (this.model.get('direction')) {
-            //     case 'L':
-            //         window.battlefield.ctx.rotate(Math.PI / 2);
-            //         break;
-            //     case 'R':
-            //         window.battlefield.ctx.rotate(-Math.PI / 2);
-            //         break;
-            //     case 'U':
-            //         window.battlefield.ctx.rotate(Math.PI);
-            //         break;
-            //     case 'D':
-            //         window.battlefield.ctx.rotate(2 * Math.PI);
-            //         break;
-            //     case 'LU':
-            //         window.battlefield.ctx.rotate(3/4 * Math.PI);
-            //         break;
-            //     case 'LD':
-            //         window.battlefield.ctx.rotate(Math.PI / 4);
-            //         break;
-            //     case 'RU':
-            //         window.battlefield.ctx.rotate(-3/4 * Math.PI);
-            //         break;
-            //     case 'RD':
-            //         window.battlefield.ctx.rotate(-Math.PI / 4);
-            //         break;
-            //     default:
-            //         window.battlefield.ctx.rotate(2 * Math.PI);
-            // }
+            window.battlefield.ctx.rotate(this.model.get('direction'));
 
             // LIVE
             window.battlefield.ctx.fillStyle = 'red';

@@ -1,11 +1,13 @@
 define(function () {
     var Shot = Backbone.View.extend({
-        hitSound: null,
-
         goalX: false,
         goalY: false,
+        endX1: false,
+        endY1: false,
+        endX2: false,
+        endY2: false,
 
-        check: function (modifier) {
+        update: function (modifier) {
             if (false === this.goalX && false === this.goalY) {
                 return;
             }
@@ -36,13 +38,8 @@ define(function () {
                     this.goalY = false;
 
                     window.battlefield.remove(this.model.get('id'));
-
                     if (obstacle.model.get('isAttackable') && !obstacle.model.get('isDestroyed')) {
-                        if (!this.hitSound) {
-                            this.hitSound = new Audio(obstacle.model.get('sound').hit);
-                        }
-
-                        this.hitSound.play();
+                        obstacle.hit();
                         obstacle.model.set('protection', obstacle.model.get('protection') - this.model.get('firepower'));
 
                         if (obstacle.model.get('protection') <= 0) {
@@ -80,9 +77,6 @@ define(function () {
          * @return void
          */
          fire: function (goalX, goalY, endX1, endY1, endX2, endY2) {
-            var self = this,
-                action;
-
             this.goalX = goalX;
             this.goalY = goalY;
 

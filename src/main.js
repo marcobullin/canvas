@@ -102,15 +102,15 @@ require([
 			window.battlefield.add(scout);
 
 			var tankModel = new Tank();
-			tankModel.set('name', 'a');
+			tankModel.set('name', 'xxx');
 			tankModel.set('protection', TANK_PROTECTION);
 			tankModel.set('price', TANK_PRICE);
 			tankModel.set('speed', TANK_SPEED);
 			tankModel.set('firepower', TANK_FIREPOWER);
 			tankModel.set('firerange', TANK_FIRERANGE);
 			tankModel.set('firespeed', TANK_FIRESPEED);
-			tankModel.set('width', TANK_WIDTH);
-			tankModel.set('height', TANK_HEIGHT);
+			tankModel.set('width', TANK_WIDTH * 2);
+			tankModel.set('height', TANK_HEIGHT * 2);
 			tankModel.set('positionX', 950);
 			tankModel.set('positionY', 250);
 			tankModel.set('owner', 'computer');
@@ -305,20 +305,20 @@ require([
 
 
 
-			for (var i = 0; i < OBSTACLES.length; i++) {
-				var model = new ObstacleModel();
-				model.set('width', 50);
-				model.set('height', 50);
-				model.set('positionX', OBSTACLES[i].x * 50);
-				model.set('positionY', OBSTACLES[i].y * 50);
-				model.set('type', 'obstacle');
+			// for (var i = 0; i < OBSTACLES.length; i++) {
+			// 	var model = new ObstacleModel();
+			// 	model.set('width', 50);
+			// 	model.set('height', 50);
+			// 	model.set('positionX', OBSTACLES[i].x * 50);
+			// 	model.set('positionY', OBSTACLES[i].y * 50);
+			// 	model.set('type', 'obstacle');
 
-				var obstacle = new ObstacleView({
-					model: model
-				});
+			// 	var obstacle = new ObstacleView({
+			// 		model: model
+			// 	});
 
-				window.battlefield.add(obstacle);	
-			}
+			// 	window.battlefield.add(obstacle);	
+			// }
 			
 			then = Date.now();
 			setInterval(function() {

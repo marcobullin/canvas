@@ -6,7 +6,7 @@ define([
 			render: function (modifier) {
 				this.model.set('id', Math.ceil(Math.random() * 99999999999 * new Date().getTime()));
 
-				this.check(modifier);
+				this.update(modifier);
 				
 				window.battlefield.ctx.save();
 

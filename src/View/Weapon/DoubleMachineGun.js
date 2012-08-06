@@ -9,7 +9,7 @@ define([
 				var width = 2,
 					height = 10;
 
-				this.check(modifier);
+				this.update(modifier);
 
 				window.battlefield.ctx.save();
 
