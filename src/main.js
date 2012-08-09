@@ -51,6 +51,28 @@ require([
 		}
 
 		function start() {
+			window.Global = {};
+			// Handle keyboard controls
+			window.Global.keysDown = {};
+
+			addEventListener("keydown", function (e) {
+				window.Global.keysDown[e.keyCode] = true;
+			}, false);
+
+			addEventListener("keyup", function (e) {
+				delete window.Global.keysDown[e.keyCode];
+			}, false);
+
+
+
+
+
+
+
+
+
+
+
 
 			window.battlefield = new Battlefield();
 			window.battlefield.render();
@@ -261,6 +283,75 @@ require([
 			scoutModel.set('height', SCOUT_HEIGHT);
 			scoutModel.set('positionX', 50);
 			scoutModel.set('positionY', 300);
+			scoutModel.set('owner', 'user');
+			scoutModel.set('isAttackable', true);
+			scoutModel.set('weapon', 'DoubleMachineGun');
+			scoutModel.set('type', 'unit');
+
+			var scout = new MilitaryVehicleView({
+				model: scoutModel
+			});
+
+			window.battlefield.add(scout);
+
+			var scoutModel = new Scout();
+			scoutModel.set('name', 'xxx');
+			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('price', SCOUT_PRICE);
+			scoutModel.set('speed', SCOUT_SPEED);
+			scoutModel.set('firepower', 2 * SCOUT_FIREPOWER);
+			scoutModel.set('firerange', SCOUT_FIRERANGE);
+			scoutModel.set('firespeed', SCOUT_FIRESPEED);
+			scoutModel.set('width', SCOUT_WIDTH);
+			scoutModel.set('height', SCOUT_HEIGHT);
+			scoutModel.set('positionX', 50);
+			scoutModel.set('positionY', 350);
+			scoutModel.set('owner', 'user');
+			scoutModel.set('isAttackable', true);
+			scoutModel.set('weapon', 'DoubleMachineGun');
+			scoutModel.set('type', 'unit');
+
+			var scout = new MilitaryVehicleView({
+				model: scoutModel
+			});
+
+			window.battlefield.add(scout);
+
+			var scoutModel = new Scout();
+			scoutModel.set('name', 'xxx');
+			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('price', SCOUT_PRICE);
+			scoutModel.set('speed', SCOUT_SPEED);
+			scoutModel.set('firepower', 2 * SCOUT_FIREPOWER);
+			scoutModel.set('firerange', SCOUT_FIRERANGE);
+			scoutModel.set('firespeed', SCOUT_FIRESPEED);
+			scoutModel.set('width', SCOUT_WIDTH);
+			scoutModel.set('height', SCOUT_HEIGHT);
+			scoutModel.set('positionX', 50);
+			scoutModel.set('positionY', 400);
+			scoutModel.set('owner', 'user');
+			scoutModel.set('isAttackable', true);
+			scoutModel.set('weapon', 'DoubleMachineGun');
+			scoutModel.set('type', 'unit');
+
+			var scout = new MilitaryVehicleView({
+				model: scoutModel
+			});
+
+			window.battlefield.add(scout);
+
+			var scoutModel = new Scout();
+			scoutModel.set('name', 'xxx');
+			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('price', SCOUT_PRICE);
+			scoutModel.set('speed', SCOUT_SPEED);
+			scoutModel.set('firepower', 2 * SCOUT_FIREPOWER);
+			scoutModel.set('firerange', SCOUT_FIRERANGE);
+			scoutModel.set('firespeed', SCOUT_FIRESPEED);
+			scoutModel.set('width', SCOUT_WIDTH);
+			scoutModel.set('height', SCOUT_HEIGHT);
+			scoutModel.set('positionX', 50);
+			scoutModel.set('positionY', 450);
 			scoutModel.set('owner', 'user');
 			scoutModel.set('isAttackable', true);
 			scoutModel.set('weapon', 'DoubleMachineGun');
