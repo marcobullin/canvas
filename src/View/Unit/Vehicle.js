@@ -64,9 +64,27 @@ define(function () {
             }
         },
 
-        hit: function () {
+        hit: function (firepower) {
             var sound = new Audio(this.model.get('sound').hit);
             sound.play();
+
+            if (this.model.get('shield') > 0) {
+                window.battlefield.ctx.drawImage(window.GameImages[this.model.get('shieldImage')], this.model.get('positionX') - 25, this.model.get('positionY') - 25, 100, 100);
+
+                this.model.set('shield', this.model.get('shield') - firepower);
+
+                if (this.model.get('shield') >= 0) {
+                    return;
+                }
+
+                firepower = Math.abs(this.model.get('shield'));
+            }
+
+            this.model.set('protection', this.model.get('protection') - firepower);
+
+            if (this.model.get('protection') <= 0) {
+                this.destroy();
+            }
         },
 
         /**
@@ -132,6 +150,7 @@ define(function () {
             }
 
             var live = this.model.get('width') / 100 * this.model.get('protection'),
+                shield = this.model.get('width') / 100 * this.model.get('shield'),
                 x = (-1 * this.model.get('width') / 2),
                 y = (-1 * this.model.get('height') / 2);
 
@@ -148,6 +167,10 @@ define(function () {
             window.battlefield.ctx.fillRect(x, y - 4, this.model.get('width'), 4);
             window.battlefield.ctx.fillStyle = 'green';
             window.battlefield.ctx.fillRect(x, y - 4, live, 4);
+
+            // SHIELD
+            window.battlefield.ctx.fillStyle = '#115cb1';
+            window.battlefield.ctx.fillRect(x, y - 8, shield, 4);
 
             // FIRERANGE
             if (this.model.get('selected')) {

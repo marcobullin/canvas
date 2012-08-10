@@ -39,12 +39,7 @@ define(function () {
 
                     window.battlefield.remove(this.model.get('id'));
                     if (obstacle.model.get('isAttackable') && !obstacle.model.get('isDestroyed')) {
-                        obstacle.hit();
-                        obstacle.model.set('protection', obstacle.model.get('protection') - this.model.get('firepower'));
-
-                        if (obstacle.model.get('protection') <= 0) {
-                            obstacle.destroy();
-                        }
+                        obstacle.hit(this.model.get('firepower'));
                     }
 
                     return;

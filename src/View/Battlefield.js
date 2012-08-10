@@ -31,8 +31,9 @@ define(function () {
                     y >= this.items[i].model.get('positionY') &&
                     y <= (this.items[i].model.get('positionY') + this.items[i].model.get('height'))
                 ) {
-                    // user clicked an enemy
+
                     if ('user' !== this.items[i].model.get('owner')) {
+                        // MOVE AND ATTACK
                         if (this.selectedItems.length > 0) {
                             for (j in this.selectedItems) {
                                 this.selectedItems[j].model.set('attackEnemy', this.items[i].model.get('id'));
@@ -42,7 +43,7 @@ define(function () {
                             return;
                         }
 
-                    // user clicked an unit
+                    // SELECT AN UNIT
                     } else {
                         // deselect previous item
                         if (this.selectedItems.length > 0 && ! (17 in window.Global.keysDown)) {
@@ -61,10 +62,33 @@ define(function () {
                 }
             }
 
+            // MOVE
             if (this.selectedItems.length > 0 && false === clickedAnItem) {
+                
+
                 for (j in this.selectedItems) {
+                    var yh = y -50,
+                    xh = x -50;
                     this.selectedItems[j].model.set('attackEnemy', false);
                     this.selectedItems[j].move(x, y);
+
+                    // BLOCK FORMATION
+                    if (j % 2) {
+                        y+=50;
+                        x-=50;
+                    } else {
+                        x+=50;
+                    }
+
+                    if (y > BATTLEFIELD_HEIGHT) {
+                        yh -= 50;
+                        y = yh;
+                    }
+
+                    if (x > BATTLEFIELD_WIDTH) {
+                        xh += 50;
+                        x = xh;
+                    }
                 }
             }
         },

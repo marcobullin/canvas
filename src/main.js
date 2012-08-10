@@ -30,6 +30,10 @@ require([
 			{
 				key: 'explosion',
 				src: 'images/explosion.png'
+			},
+			{
+				key: 'shield',
+				src: 'images/shield.png'
 			}
 		];
 
@@ -80,6 +84,7 @@ require([
 			var scoutModel = new Scout();
 			scoutModel.set('name', 'b');
 			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('shield', SCOUT_SHIELD);
 			scoutModel.set('price', SCOUT_PRICE);
 			scoutModel.set('speed', SCOUT_SPEED);
 			scoutModel.set('firepower', SCOUT_FIREPOWER);
@@ -103,6 +108,7 @@ require([
 			var scoutModel = new Scout();
 			scoutModel.set('name', 'b');
 			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('shield', SCOUT_SHIELD);
 			scoutModel.set('price', SCOUT_PRICE);
 			scoutModel.set('speed', SCOUT_SPEED);
 			scoutModel.set('firepower', SCOUT_FIREPOWER);
@@ -126,6 +132,7 @@ require([
 			var tankModel = new Tank();
 			tankModel.set('name', 'xxx');
 			tankModel.set('protection', TANK_PROTECTION);
+			tankModel.set('shield', TANK_SHIELD);
 			tankModel.set('price', TANK_PRICE);
 			tankModel.set('speed', TANK_SPEED);
 			tankModel.set('firepower', TANK_FIREPOWER);
@@ -149,6 +156,7 @@ require([
 			var scoutModel = new Scout();
 			scoutModel.set('name', 'b');
 			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('shield', SCOUT_SHIELD);
 			scoutModel.set('price', SCOUT_PRICE);
 			scoutModel.set('speed', SCOUT_SPEED);
 			scoutModel.set('firepower', SCOUT_FIREPOWER);
@@ -173,6 +181,7 @@ require([
 			var scoutModel = new Scout();
 			scoutModel.set('name', 'b');
 			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('shield', SCOUT_SHIELD);
 			scoutModel.set('price', SCOUT_PRICE);
 			scoutModel.set('speed', SCOUT_SPEED);
 			scoutModel.set('firepower', SCOUT_FIREPOWER);
@@ -196,6 +205,7 @@ require([
 			var scoutModel = new Scout();
 			scoutModel.set('name', 'b');
 			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('shield', SCOUT_SHIELD);
 			scoutModel.set('price', SCOUT_PRICE);
 			scoutModel.set('speed', SCOUT_SPEED);
 			scoutModel.set('firepower', SCOUT_FIREPOWER);
@@ -219,6 +229,7 @@ require([
 			var scoutModel = new Scout();
 			scoutModel.set('name', 'b');
 			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('shield', SCOUT_SHIELD);
 			scoutModel.set('price', SCOUT_PRICE);
 			scoutModel.set('speed', SCOUT_SPEED);
 			scoutModel.set('firepower', SCOUT_FIREPOWER);
@@ -243,6 +254,7 @@ require([
 			var scoutModel = new Scout();
 			scoutModel.set('name', 'b');
 			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('shield', SCOUT_SHIELD);
 			scoutModel.set('price', SCOUT_PRICE);
 			scoutModel.set('speed', SCOUT_SPEED);
 			scoutModel.set('firepower', SCOUT_FIREPOWER);
@@ -274,6 +286,7 @@ require([
 			var scoutModel = new Scout();
 			scoutModel.set('name', 'xxx');
 			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('shield', SCOUT_SHIELD);
 			scoutModel.set('price', SCOUT_PRICE);
 			scoutModel.set('speed', SCOUT_SPEED);
 			scoutModel.set('firepower', 2 * SCOUT_FIREPOWER);
@@ -297,6 +310,7 @@ require([
 			var scoutModel = new Scout();
 			scoutModel.set('name', 'xxx');
 			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('shield', SCOUT_SHIELD);
 			scoutModel.set('price', SCOUT_PRICE);
 			scoutModel.set('speed', SCOUT_SPEED);
 			scoutModel.set('firepower', 2 * SCOUT_FIREPOWER);
@@ -320,6 +334,7 @@ require([
 			var scoutModel = new Scout();
 			scoutModel.set('name', 'xxx');
 			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('shield', SCOUT_SHIELD);
 			scoutModel.set('price', SCOUT_PRICE);
 			scoutModel.set('speed', SCOUT_SPEED);
 			scoutModel.set('firepower', 2 * SCOUT_FIREPOWER);
@@ -343,6 +358,7 @@ require([
 			var scoutModel = new Scout();
 			scoutModel.set('name', 'xxx');
 			scoutModel.set('protection', SCOUT_PROTECTION);
+			scoutModel.set('shield', SCOUT_SHIELD);
 			scoutModel.set('price', SCOUT_PRICE);
 			scoutModel.set('speed', SCOUT_SPEED);
 			scoutModel.set('firepower', 2 * SCOUT_FIREPOWER);
@@ -366,6 +382,7 @@ require([
 			var tankModel = new Tank();
 			tankModel.set('name', 'a');
 			tankModel.set('protection', TANK_PROTECTION);
+			tankModel.set('shield', TANK_SHIELD);
 			tankModel.set('price', TANK_PRICE);
 			tankModel.set('speed', TANK_SPEED);
 			tankModel.set('firepower', TANK_FIREPOWER);
