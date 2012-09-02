@@ -111,7 +111,9 @@ define(function () {
             window.battlefield.ctx.drawImage(window.GameImages['map'], 0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
 
             for (var i = 0; i < this.items.length; i++) {
-                this.items[i].render(modifier);
+                //this.items[i].render(modifier);
+
+                this.items[i].draw(modifier);
             }
 
             then = now;
