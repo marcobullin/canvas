@@ -15,6 +15,43 @@ define(function () {
             this.model.set('direction', direction);
         },
 
+        moveAndAttack: function (enemy) {
+            var xDst = Math.abs(enemy.model.get('positionX') - this.model.get('positionX') + this.model.get('width') / 2),
+                yDst = Math.abs(enemy.model.get('positionY') - this.model.get('positionY') + this.model.get('height') / 2),
+                a, b, c, x, y;
+
+            c = Math.sqrt(xDst * xDst + yDst * yDst);
+
+            var weapons = this.model.get('weapons');
+            // unit is already in fireposition
+            for (var i in weapons) {
+                if (c <= weapons[i].model.get('firerange')) {
+                    return;
+                }
+
+                a = xDst * (1 - weapons[i].model.get('firerange') / c);
+                b = yDst * (1 - weapons[i].model.get('firerange') / c);
+
+                if (weapons[i].model.get('positionX') < enemy.model.get('positionX')) {
+                    x = weapons[i].model.get('positionX') + a;
+                } else if (weapons[i].model.get('positionX') > enemy.model.get('positionX')) {
+                    x = weapons[i].model.get('positionX') - a;
+                } else {
+                    x = weapons[i].model.get('positionX');
+                }
+
+                if (weapons[i].model.get('positionY') < enemy.model.get('positionY')) {
+                    y = weapons[i].model.get('positionY') + b;
+                } else if (weapons[i].model.get('positionY') > enemy.model.get('positionY')) {
+                    y = weapons[i].model.get('positionY') - b;
+                } else {
+                    y = weapons[i].model.get('positionY');
+                }
+                break;
+            }
+            this.move(x, y);
+        },
+
         hit: function (firepower) {
             // var sound = new Audio(this.model.get('sound').hit);
             // sound.play();

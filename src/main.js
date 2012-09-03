@@ -408,6 +408,64 @@ require([
 			// window.battlefield.add(tank);
 
 
+			for (var i = 1; i <= 5; i++) {
+				var spaceship = new SpaceShip();
+				spaceship.set('width', 50);
+				spaceship.set('height', 50);
+				spaceship.set('armor', 100);
+				spaceship.set('shield', 100);
+				spaceship.set('speed', 128);
+				spaceship.set('positionX', 200);
+				spaceship.set('positionY', i * 50);
+				spaceship.set('owner', 'user');
+				spaceship.set('isAttackable', true);
+				spaceship.set('type', 'unit');
+				spaceship.set('image', 'scout');
+				spaceship.set('shieldImage', 'shield');
+				
+				var laser = new Weapon();
+				laser.set('coordX', -25);
+				laser.set('coordY', 0);
+				laser.set('firepower', SCOUT_FIREPOWER);
+				laser.set('firerange', SCOUT_FIRERANGE);
+				laser.set('firespeed', SCOUT_FIRESPEED);
+				laser.set('type', 'MachineGun');
+				laser.set('owner', 'user');
+				laser.set('width', 4);
+				laser.set('height', 4);
+
+				var weapon = new WeaponView({
+	                model: laser,
+	                spaceship: spaceship
+	            });
+
+				spaceship.addWeapon(weapon);
+
+				var laser = new Weapon();
+				laser.set('coordX', 25);
+				laser.set('coordY', 0);
+				laser.set('firepower', SCOUT_FIREPOWER);
+				laser.set('firerange', SCOUT_FIRERANGE);
+				laser.set('firespeed', SCOUT_FIRESPEED);
+				laser.set('type', 'MachineGun');
+				laser.set('owner', 'user');
+				laser.set('width', 4);
+				laser.set('height', 4);
+
+				var weapon = new WeaponView({
+	                model: laser,
+	                spaceship: spaceship
+	            });
+
+				spaceship.addWeapon(weapon);
+
+				var human = new HumanFighter({
+					model: spaceship
+				});
+
+				window.battlefield.add(human);
+			}
+
 
 
 			var spaceship = new SpaceShip();
@@ -417,7 +475,7 @@ require([
 			spaceship.set('shield', 100);
 			spaceship.set('speed', 128);
 			spaceship.set('positionX', 100);
-			spaceship.set('positionY', 100);
+			spaceship.set('positionY', 300);
 			spaceship.set('owner', 'user');
 			spaceship.set('isAttackable', true);
 			spaceship.set('type', 'unit');
@@ -427,9 +485,10 @@ require([
 			var laser = new Weapon();
 			laser.set('coordX', -25);
 			laser.set('coordY', 0);
-			laser.set('firepower', SCOUT_FIREPOWER);
+			laser.set('firepower', TANK_FIREPOWER);
 			laser.set('firerange', TANK_FIRERANGE);
-			laser.set('firespeed', SCOUT_FIRESPEED);
+			laser.set('firespeed', TANK_FIRESPEED);
+			laser.set('type', 'Cannon');
 			laser.set('owner', 'user');
 			laser.set('width', 4);
 			laser.set('height', 4);
@@ -444,9 +503,10 @@ require([
 						var laser = new Weapon();
 			laser.set('coordX', -25);
 			laser.set('coordY', -25);
-			laser.set('firepower', SCOUT_FIREPOWER);
+			laser.set('firepower', TANK_FIREPOWER);
 			laser.set('firerange', TANK_FIRERANGE);
-			laser.set('firespeed', SCOUT_FIRESPEED);
+			laser.set('firespeed', TANK_FIRESPEED);
+			laser.set('type', 'Cannon');
 			laser.set('owner', 'user');
 			laser.set('width', 4);
 			laser.set('height', 4);
@@ -463,8 +523,9 @@ require([
 			laser.set('coordX', 25);
 			laser.set('coordY', -25);
 			laser.set('firepower', SCOUT_FIREPOWER);
-			laser.set('firerange', TANK_FIRERANGE);
+			laser.set('firerange', SCOUT_FIRERANGE);
 			laser.set('firespeed', SCOUT_FIRESPEED);
+			laser.set('type', 'MachineGun');
 			laser.set('owner', 'user');
 			laser.set('width', 4);
 			laser.set('height', 4);
@@ -484,6 +545,7 @@ require([
 			laser.set('firepower', SCOUT_FIREPOWER);
 			laser.set('firerange', SCOUT_FIRERANGE);
 			laser.set('firespeed', SCOUT_FIRESPEED);
+			laser.set('type', 'DoubleMachineGun');
 			laser.set('owner', 'user');
 			laser.set('width', 4);
 			laser.set('height', 4);
@@ -495,71 +557,79 @@ require([
 
 			spaceship.addWeapon(weapon);
 
-			var humanFighter = new HumanFighter({
+			var human = new HumanFighter({
 				model: spaceship
 			});
 
-			window.battlefield.add(humanFighter);
+			window.battlefield.add(human);
 
 
 
 
 
+			window.setInterval(function () {
 
-			var spaceship = new SpaceShip();
-			spaceship.set('width', 100);
-			spaceship.set('height', 100);
-			spaceship.set('armor', 100);
-			spaceship.set('shield', 100);
-			spaceship.set('speed', 128);
-			spaceship.set('positionX', 400);
-			spaceship.set('positionY', 400);
-			spaceship.set('owner', 'computer');
-			spaceship.set('isAttackable', true);
-			spaceship.set('type', 'unit');
-			spaceship.set('image', 'tank');
-			spaceship.set('shieldImage', 'shield');
+				var randY = Math.floor(Math.random() * 1000);
 
-			var laser = new Weapon();
-			laser.set('coordX', -25);
-			laser.set('coordY', 0);
-			laser.set('firepower', SCOUT_FIREPOWER);
-			laser.set('firerange', SCOUT_FIRERANGE);
-			laser.set('firespeed', SCOUT_FIRESPEED);
-			laser.set('owner', 'computer');
-			laser.set('width', 4);
-			laser.set('height', 4);
-			var weapon = new WeaponView({
-                model: laser,
-                spaceship: spaceship
-            });
+				var spaceship = new SpaceShip();
+				spaceship.set('width', 50);
+				spaceship.set('height', 50);
+				spaceship.set('armor', 100);
+				spaceship.set('shield', 100);
+				spaceship.set('speed', 128);
+				spaceship.set('positionX', 2100);
+				spaceship.set('positionY', randY);
+				spaceship.set('owner', 'computer');
+				spaceship.set('isAttackable', true);
+				spaceship.set('type', 'unit');
+				spaceship.set('image', 'tank');
+				spaceship.set('shieldImage', 'shield');
 
-			spaceship.addWeapon(weapon);
+				var laser = new Weapon();
+				laser.set('coordX', -25);
+				laser.set('coordY', 0);
+				laser.set('firepower', SCOUT_FIREPOWER);
+				laser.set('firerange', SCOUT_FIRERANGE);
+				laser.set('firespeed', SCOUT_FIRESPEED);
+				laser.set('owner', 'computer');
+				laser.set('type', 'DoubleMachineGun');
+				laser.set('width', 4);
+				laser.set('height', 4);
+				var weapon = new WeaponView({
+	                model: laser,
+	                spaceship: spaceship
+	            });
 
-			var laser = new Weapon();
-			laser.set('coordX', 25);
-			laser.set('coordY', 0);
-			laser.set('firepower', SCOUT_FIREPOWER);
-			laser.set('firerange', SCOUT_FIRERANGE);
-			laser.set('firespeed', SCOUT_FIRESPEED);
-			laser.set('owner', 'computer');
-			laser.set('width', 4);
-			laser.set('height', 4);
+				spaceship.addWeapon(weapon);
 
-			
-            var weapon = new WeaponView({
-                model: laser,
-                spaceship: spaceship
-            });
+				var laser = new Weapon();
+				laser.set('coordX', 25);
+				laser.set('coordY', 0);
+				laser.set('firepower', SCOUT_FIREPOWER);
+				laser.set('firerange', SCOUT_FIRERANGE);
+				laser.set('firespeed', SCOUT_FIRESPEED);
+				laser.set('owner', 'computer');
+				laser.set('type', 'DoubleMachineGun');
 
-			spaceship.addWeapon(weapon);
+				laser.set('width', 4);
+				laser.set('height', 4);
 
-			var humanFighter = new HumanFighter({
-				model: spaceship
-			});
+				
+	            var weapon = new WeaponView({
+	                model: laser,
+	                spaceship: spaceship
+	            });
 
-			window.battlefield.add(humanFighter);
+				spaceship.addWeapon(weapon);
 
+				var humanFighter = new HumanFighter({
+					model: spaceship
+				});
+
+				window.battlefield.add(humanFighter);
+
+				window.setTimeout(function() {humanFighter.moveAndAttack(human);}, 500);
+			}, 5000);
 
 
 

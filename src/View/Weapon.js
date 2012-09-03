@@ -1,9 +1,11 @@
 define(
     [
     'Model/Weapon/Shot',
-    'View/Weapon/MachineGun'
+    'View/Weapon/MachineGun',
+    'View/Weapon/Cannon',
+    'View/Weapon/DoubleMachineGun'
     ],
-    function (ShotModel, MachineGun) {
+    function (ShotModel, MachineGun, Cannon, DoubleMachineGun) {
 	var View = View || {};
 
 	View.Weapon = Backbone.View.extend({
@@ -92,9 +94,25 @@ define(
             var direction = Math.atan2(enemy.model.get('positionY') - this.model.get('positionY'), enemy.model.get('positionX') - this.model.get('positionX')) - Math.PI/2;
             shotModel.set('angle', direction);
 
-            var shot = new MachineGun({
-                model: shotModel
-            });
+            var shot = null;
+            switch (this.model.get('type')) {
+                case 'MachineGun':
+                    shot = new MachineGun({
+                        model: shotModel
+                    });
+                    break;
+                case 'Cannon':
+                    shot = new Cannon({
+                        model: shotModel
+                    });
+                    break;
+                case 'DoubleMachineGun':
+                    shot = new DoubleMachineGun({
+                        model: shotModel
+                    });
+                    break;
+                default: return;
+            }
         
             window.battlefield.add(shot);
 
