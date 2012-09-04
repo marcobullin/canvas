@@ -572,8 +572,8 @@ require([
 				var randY = Math.floor(Math.random() * 1000);
 
 				var spaceship = new SpaceShip();
-				spaceship.set('width', 50);
-				spaceship.set('height', 50);
+				spaceship.set('width', 100);
+				spaceship.set('height', 100);
 				spaceship.set('armor', 100);
 				spaceship.set('shield', 100);
 				spaceship.set('speed', 128);
