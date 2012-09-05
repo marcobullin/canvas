@@ -16,7 +16,7 @@ define(function () {
 
         add: function (item) {
             this.items.push(item);
-            item.render();
+            item.draw();
         },
 
         onClick: function (event) {

@@ -36,8 +36,24 @@ require([
 				src: 'images/tank.png'
 			},
 			{
+				key: 'battleship',
+				src: 'images/battleship.png'
+			},
+			{
 				key: 'explosion',
 				src: 'images/explosion.png'
+			},
+			{
+				key: 'laser',
+				src: 'images/laser.png'
+			},
+			{
+				key: 'doublelaser',
+				src: 'images/doublelaser.png'
+			},
+			{
+				key: 'cannon',
+				src: 'images/cannon.png'
 			},
 			{
 				key: 'shield',
@@ -62,6 +78,45 @@ require([
 			}(i);
 		}
 
+		function createShip(data) {
+			var spaceship = new SpaceShip();
+			spaceship.set('width',  		data.width);
+			spaceship.set('height', 		data.height);
+			spaceship.set('armor',  		data.armor);
+			spaceship.set('shield', 		data.shield);
+			spaceship.set('speed', 			data.speed);
+			spaceship.set('positionX', 		data.positionX);
+			spaceship.set('positionY', 		data.positionY);
+			spaceship.set('owner', 			data.owner);
+			spaceship.set('isAttackable', 	data.isAttackable);
+			spaceship.set('type', 			data.type); // bomber, scout, ...
+
+			for (var i in data.weapons) {
+				var weapon = new Weapon();
+				weapon.set('coordX', 		data.weapons[i].coordX);
+				weapon.set('coordY', 		data.weapons[i].coordY);
+				weapon.set('firerange', 	data.weapons[i].firerange);
+				weapon.set('firespeed', 	data.weapons[i].firespeed);
+				weapon.set('firepower', 		data.weapons[i].firepower);
+				weapon.set('type', 			data.weapons[i].type);
+				weapon.set('owner', 			data.owner);
+				weapon.set('width', 			data.weapons[i].width);
+				weapon.set('height', 		data.weapons[i].width);
+
+				var weaponView = new WeaponView({
+	                model: weapon,
+	                spaceship: spaceship
+	            });
+
+				spaceship.addWeapon(weaponView);
+			}
+
+			var ship = new HumanFighter({
+				model: spaceship
+			});
+			return ship;
+		}
+
 		function start() {
 			window.Global = {};
 			// Handle keyboard controls
@@ -75,573 +130,261 @@ require([
 				delete window.Global.keysDown[e.keyCode];
 			}, false);
 
-
-
-
-
-
-
-
-
-
-
-
 			window.battlefield = new Battlefield();
 			window.battlefield.render();
 
-			// var scoutModel = new Scout();
-			// scoutModel.set('name', 'b');
-			// scoutModel.set('protection', SCOUT_PROTECTION);
-			// scoutModel.set('shield', SCOUT_SHIELD);
-			// scoutModel.set('price', SCOUT_PRICE);
-			// scoutModel.set('speed', SCOUT_SPEED);
-			// scoutModel.set('firepower', SCOUT_FIREPOWER);
-			// scoutModel.set('firerange', SCOUT_FIRERANGE);
-			// scoutModel.set('firespeed', SCOUT_FIRESPEED);
-			// scoutModel.set('width', SCOUT_WIDTH);
-			// scoutModel.set('height', SCOUT_HEIGHT);
-			// scoutModel.set('positionX', 1050);
-			// scoutModel.set('positionY', 450);
-			// scoutModel.set('owner', 'computer');
-			// scoutModel.set('isAttackable', true);
-			// scoutModel.set('weapon', 'MachineGun');
-			// scoutModel.set('type', 'unit');
-
-			// var scout = new MilitaryVehicleView({
-			// 	model: scoutModel
-			// });
-
-			// window.battlefield.add(scout);
-
-			// var scoutModel = new Scout();
-			// scoutModel.set('name', 'b');
-			// scoutModel.set('protection', SCOUT_PROTECTION);
-			// scoutModel.set('shield', SCOUT_SHIELD);
-			// scoutModel.set('price', SCOUT_PRICE);
-			// scoutModel.set('speed', SCOUT_SPEED);
-			// scoutModel.set('firepower', SCOUT_FIREPOWER);
-			// scoutModel.set('firerange', SCOUT_FIRERANGE);
-			// scoutModel.set('firespeed', SCOUT_FIRESPEED);
-			// scoutModel.set('width', SCOUT_WIDTH);
-			// scoutModel.set('height', SCOUT_HEIGHT);
-			// scoutModel.set('positionX', 650);
-			// scoutModel.set('positionY', 200);
-			// scoutModel.set('owner', 'computer');
-			// scoutModel.set('isAttackable', true);
-			// scoutModel.set('weapon', 'MachineGun');
-			// scoutModel.set('type', 'unit');
-
-			// var scout = new MilitaryVehicleView({
-			// 	model: scoutModel
-			// });
-
-			// window.battlefield.add(scout);
-
-			// var tankModel = new Tank();
-			// tankModel.set('name', 'xxx');
-			// tankModel.set('protection', TANK_PROTECTION);
-			// tankModel.set('shield', TANK_SHIELD);
-			// tankModel.set('price', TANK_PRICE);
-			// tankModel.set('speed', TANK_SPEED);
-			// tankModel.set('firepower', TANK_FIREPOWER);
-			// tankModel.set('firerange', TANK_FIRERANGE);
-			// tankModel.set('firespeed', TANK_FIRESPEED);
-			// tankModel.set('width', TANK_WIDTH * 2);
-			// tankModel.set('height', TANK_HEIGHT * 2);
-			// tankModel.set('positionX', 950);
-			// tankModel.set('positionY', 250);
-			// tankModel.set('owner', 'computer');
-			// tankModel.set('isAttackable', true);
-			// tankModel.set('weapon', 'Cannon');
-			// tankModel.set('type', 'unit');
-
-			// var tank = new MilitaryVehicleView({
-			// 	model: tankModel
-			// });
-
-			// window.battlefield.add(tank);
-
-			// var scoutModel = new Scout();
-			// scoutModel.set('name', 'b');
-			// scoutModel.set('protection', SCOUT_PROTECTION);
-			// scoutModel.set('shield', SCOUT_SHIELD);
-			// scoutModel.set('price', SCOUT_PRICE);
-			// scoutModel.set('speed', SCOUT_SPEED);
-			// scoutModel.set('firepower', SCOUT_FIREPOWER);
-			// scoutModel.set('firerange', SCOUT_FIRERANGE);
-			// scoutModel.set('firespeed', SCOUT_FIRESPEED);
-			// scoutModel.set('width', SCOUT_WIDTH);
-			// scoutModel.set('height', SCOUT_HEIGHT);
-			// scoutModel.set('positionX', 950);
-			// scoutModel.set('positionY', 600);
-			// scoutModel.set('owner', 'computer');
-			// scoutModel.set('isAttackable', true);
-			// scoutModel.set('weapon', 'MachineGun');
-			// scoutModel.set('type', 'unit');
-
-			// var scout = new MilitaryVehicleView({
-			// 	model: scoutModel
-			// });
-
-			// window.battlefield.add(scout);
-
-
-			// var scoutModel = new Scout();
-			// scoutModel.set('name', 'b');
-			// scoutModel.set('protection', SCOUT_PROTECTION);
-			// scoutModel.set('shield', SCOUT_SHIELD);
-			// scoutModel.set('price', SCOUT_PRICE);
-			// scoutModel.set('speed', SCOUT_SPEED);
-			// scoutModel.set('firepower', SCOUT_FIREPOWER);
-			// scoutModel.set('firerange', SCOUT_FIRERANGE);
-			// scoutModel.set('firespeed', SCOUT_FIRESPEED);
-			// scoutModel.set('width', SCOUT_WIDTH);
-			// scoutModel.set('height', SCOUT_HEIGHT);
-			// scoutModel.set('positionX', 950);
-			// scoutModel.set('positionY', 450);
-			// scoutModel.set('owner', 'computer');
-			// scoutModel.set('isAttackable', true);
-			// scoutModel.set('weapon', 'MachineGun');
-			// scoutModel.set('type', 'unit');
-
-			// var scout = new MilitaryVehicleView({
-			// 	model: scoutModel
-			// });
-
-			// window.battlefield.add(scout);
-
-			// var scoutModel = new Scout();
-			// scoutModel.set('name', 'b');
-			// scoutModel.set('protection', SCOUT_PROTECTION);
-			// scoutModel.set('shield', SCOUT_SHIELD);
-			// scoutModel.set('price', SCOUT_PRICE);
-			// scoutModel.set('speed', SCOUT_SPEED);
-			// scoutModel.set('firepower', SCOUT_FIREPOWER);
-			// scoutModel.set('firerange', SCOUT_FIRERANGE);
-			// scoutModel.set('firespeed', SCOUT_FIRESPEED);
-			// scoutModel.set('width', SCOUT_WIDTH);
-			// scoutModel.set('height', SCOUT_HEIGHT);
-			// scoutModel.set('positionX', 850);
-			// scoutModel.set('positionY', 450);
-			// scoutModel.set('owner', 'computer');
-			// scoutModel.set('isAttackable', true);
-			// scoutModel.set('weapon', 'MachineGun');
-			// scoutModel.set('type', 'unit');
-
-			// var scout = new MilitaryVehicleView({
-			// 	model: scoutModel
-			// });
-
-			// window.battlefield.add(scout);
-
-			// var scoutModel = new Scout();
-			// scoutModel.set('name', 'b');
-			// scoutModel.set('protection', SCOUT_PROTECTION);
-			// scoutModel.set('shield', SCOUT_SHIELD);
-			// scoutModel.set('price', SCOUT_PRICE);
-			// scoutModel.set('speed', SCOUT_SPEED);
-			// scoutModel.set('firepower', SCOUT_FIREPOWER);
-			// scoutModel.set('firerange', SCOUT_FIRERANGE);
-			// scoutModel.set('firespeed', SCOUT_FIRESPEED);
-			// scoutModel.set('width', SCOUT_WIDTH);
-			// scoutModel.set('height', SCOUT_HEIGHT);
-			// scoutModel.set('positionX', 750);
-			// scoutModel.set('positionY', 450);
-			// scoutModel.set('owner', 'computer');
-			// scoutModel.set('isAttackable', true);
-			// scoutModel.set('weapon', 'MachineGun');
-			// scoutModel.set('type', 'unit');
-
-			// var scout = new MilitaryVehicleView({
-			// 	model: scoutModel
-			// });
-
-			// window.battlefield.add(scout);
-
-
-			// var scoutModel = new Scout();
-			// scoutModel.set('name', 'b');
-			// scoutModel.set('protection', SCOUT_PROTECTION);
-			// scoutModel.set('shield', SCOUT_SHIELD);
-			// scoutModel.set('price', SCOUT_PRICE);
-			// scoutModel.set('speed', SCOUT_SPEED);
-			// scoutModel.set('firepower', SCOUT_FIREPOWER);
-			// scoutModel.set('firerange', SCOUT_FIRERANGE);
-			// scoutModel.set('firespeed', SCOUT_FIRESPEED);
-			// scoutModel.set('width', SCOUT_WIDTH);
-			// scoutModel.set('height', SCOUT_HEIGHT);
-			// scoutModel.set('positionX', 950);
-			// scoutModel.set('positionY', 550);
-			// scoutModel.set('owner', 'computer');
-			// scoutModel.set('isAttackable', true);
-			// scoutModel.set('weapon', 'MachineGun');
-			// scoutModel.set('type', 'unit');
-
-			// var scout = new MilitaryVehicleView({
-			// 	model: scoutModel
-			// });
-
-			// window.battlefield.add(scout);
-
-
-
-
-
-
-
-
-
-			// var scoutModel = new Scout();
-			// scoutModel.set('name', 'xxx');
-			// scoutModel.set('protection', SCOUT_PROTECTION);
-			// scoutModel.set('shield', SCOUT_SHIELD);
-			// scoutModel.set('price', SCOUT_PRICE);
-			// scoutModel.set('speed', SCOUT_SPEED);
-			// scoutModel.set('firepower', 2 * SCOUT_FIREPOWER);
-			// scoutModel.set('firerange', SCOUT_FIRERANGE);
-			// scoutModel.set('firespeed', SCOUT_FIRESPEED);
-			// scoutModel.set('width', SCOUT_WIDTH);
-			// scoutModel.set('height', SCOUT_HEIGHT);
-			// scoutModel.set('positionX', 50);
-			// scoutModel.set('positionY', 300);
-			// scoutModel.set('owner', 'user');
-			// scoutModel.set('isAttackable', true);
-			// scoutModel.set('weapon', 'DoubleMachineGun');
-			// scoutModel.set('type', 'unit');
-
-			// var scout = new MilitaryVehicleView({
-			// 	model: scoutModel
-			// });
-
-			// window.battlefield.add(scout);
-
-			// var scoutModel = new Scout();
-			// scoutModel.set('name', 'xxx');
-			// scoutModel.set('protection', SCOUT_PROTECTION);
-			// scoutModel.set('shield', SCOUT_SHIELD);
-			// scoutModel.set('price', SCOUT_PRICE);
-			// scoutModel.set('speed', SCOUT_SPEED);
-			// scoutModel.set('firepower', 2 * SCOUT_FIREPOWER);
-			// scoutModel.set('firerange', SCOUT_FIRERANGE);
-			// scoutModel.set('firespeed', SCOUT_FIRESPEED);
-			// scoutModel.set('width', SCOUT_WIDTH);
-			// scoutModel.set('height', SCOUT_HEIGHT);
-			// scoutModel.set('positionX', 50);
-			// scoutModel.set('positionY', 350);
-			// scoutModel.set('owner', 'user');
-			// scoutModel.set('isAttackable', true);
-			// scoutModel.set('weapon', 'DoubleMachineGun');
-			// scoutModel.set('type', 'unit');
-
-			// var scout = new MilitaryVehicleView({
-			// 	model: scoutModel
-			// });
-
-			// window.battlefield.add(scout);
-
-			// var scoutModel = new Scout();
-			// scoutModel.set('name', 'xxx');
-			// scoutModel.set('protection', SCOUT_PROTECTION);
-			// scoutModel.set('shield', SCOUT_SHIELD);
-			// scoutModel.set('price', SCOUT_PRICE);
-			// scoutModel.set('speed', SCOUT_SPEED);
-			// scoutModel.set('firepower', 2 * SCOUT_FIREPOWER);
-			// scoutModel.set('firerange', SCOUT_FIRERANGE);
-			// scoutModel.set('firespeed', SCOUT_FIRESPEED);
-			// scoutModel.set('width', SCOUT_WIDTH);
-			// scoutModel.set('height', SCOUT_HEIGHT);
-			// scoutModel.set('positionX', 50);
-			// scoutModel.set('positionY', 400);
-			// scoutModel.set('owner', 'user');
-			// scoutModel.set('isAttackable', true);
-			// scoutModel.set('weapon', 'DoubleMachineGun');
-			// scoutModel.set('type', 'unit');
-
-			// var scout = new MilitaryVehicleView({
-			// 	model: scoutModel
-			// });
-
-			// window.battlefield.add(scout);
-
-			// var scoutModel = new Scout();
-			// scoutModel.set('name', 'xxx');
-			// scoutModel.set('protection', SCOUT_PROTECTION);
-			// scoutModel.set('shield', SCOUT_SHIELD);
-			// scoutModel.set('price', SCOUT_PRICE);
-			// scoutModel.set('speed', SCOUT_SPEED);
-			// scoutModel.set('firepower', 2 * SCOUT_FIREPOWER);
-			// scoutModel.set('firerange', SCOUT_FIRERANGE);
-			// scoutModel.set('firespeed', SCOUT_FIRESPEED);
-			// scoutModel.set('width', SCOUT_WIDTH);
-			// scoutModel.set('height', SCOUT_HEIGHT);
-			// scoutModel.set('positionX', 50);
-			// scoutModel.set('positionY', 450);
-			// scoutModel.set('owner', 'user');
-			// scoutModel.set('isAttackable', true);
-			// scoutModel.set('weapon', 'DoubleMachineGun');
-			// scoutModel.set('type', 'unit');
-
-			// var scout = new MilitaryVehicleView({
-			// 	model: scoutModel
-			// });
-
-			// window.battlefield.add(scout);
-
-			// var tankModel = new Tank();
-			// tankModel.set('name', 'a');
-			// tankModel.set('protection', TANK_PROTECTION);
-			// tankModel.set('shield', TANK_SHIELD);
-			// tankModel.set('price', TANK_PRICE);
-			// tankModel.set('speed', TANK_SPEED);
-			// tankModel.set('firepower', TANK_FIREPOWER);
-			// tankModel.set('firerange', TANK_FIRERANGE);
-			// tankModel.set('firespeed', TANK_FIRESPEED);
-			// tankModel.set('width', TANK_WIDTH);
-			// tankModel.set('height', TANK_HEIGHT);
-			// tankModel.set('positionX', 150);
-			// tankModel.set('positionY', 300);
-			// tankModel.set('owner', 'user');
-			// tankModel.set('isAttackable', true);
-			// tankModel.set('weapon', 'Cannon');
-			// tankModel.set('type', 'unit');
-
-			// var tank = new MilitaryVehicleView({
-			// 	model: tankModel
-			// });
-
-			// window.battlefield.add(tank);
-
 
 			for (var i = 1; i <= 5; i++) {
-				var spaceship = new SpaceShip();
-				spaceship.set('width', 50);
-				spaceship.set('height', 50);
-				spaceship.set('armor', 100);
-				spaceship.set('shield', 100);
-				spaceship.set('speed', 128);
-				spaceship.set('positionX', 200);
-				spaceship.set('positionY', i * 50);
-				spaceship.set('owner', 'user');
-				spaceship.set('isAttackable', true);
-				spaceship.set('type', 'unit');
-				if (i % 2){
-					spaceship.set('image', 'bomber');
-				}else {
-					spaceship.set('image', 'scout');
+				if (i % 2) {
+					var ship = createShip({
+						width: 50,
+						height: 50,
+						armor:100,
+						shield: 100,
+						speed: SCOUT_SPEED,
+						positionX: 50,
+						positionY: i * 50,
+						owner: 'user',
+						isAttackable: true,
+						type: 'scout',
+						weapons: [
+							{
+								coordX: -15,
+								coordY: 0,
+								firerange: SCOUT_FIRERANGE,
+								firespeed: SCOUT_FIRESPEED,
+								firepower: SCOUT_FIREPOWER,
+								type: 'laser',
+								width: 4,
+								height: 4
+							},
+							{
+								coordX: 15,
+								coordY: 0,
+								firerange: SCOUT_FIRERANGE,
+								firespeed: SCOUT_FIRESPEED,
+								firepower: SCOUT_FIREPOWER,
+								type: 'laser',
+								width: 4,
+								height: 4
+							}
+						]
+					});
+				} else {
+					var ship = createShip({
+						width: 50,
+						height: 50,
+						armor: 100,
+						shield: 100,
+						speed: SCOUT_SPEED,
+						positionX: 50,
+						positionY: i * 50,
+						owner: 'user',
+						isAttackable: true,
+						type: 'bomber',
+						weapons: [
+							{
+								coordX: -17,
+								coordY: 0,
+								firerange: SCOUT_FIRERANGE,
+								firespeed: SCOUT_FIRESPEED,
+								firepower: 2 * SCOUT_FIREPOWER,
+								type: 'doublelaser',
+								width: 6,
+								height: 6
+							},
+							{
+								coordX: 17,
+								coordY: 0,
+								firerange: SCOUT_FIRERANGE,
+								firespeed: SCOUT_FIRESPEED,
+								firepower: 2 * SCOUT_FIREPOWER,
+								type: 'doublelaser',
+								width: 6,
+								height: 6
+							}
+						]
+					});
 				}
-				spaceship.set('shieldImage', 'shield');
-				
-				var laser = new Weapon();
-				laser.set('coordX', -20);
-				laser.set('coordY', 0);
-				laser.set('firepower', SCOUT_FIREPOWER);
-				laser.set('firerange', SCOUT_FIRERANGE);
-				laser.set('firespeed', SCOUT_FIRESPEED);
-				laser.set('type', 'MachineGun');
-				laser.set('owner', 'user');
-				laser.set('width', 4);
-				laser.set('height', 4);
 
-				var weapon = new WeaponView({
-	                model: laser,
-	                spaceship: spaceship
-	            });
-
-				spaceship.addWeapon(weapon);
-
-				var laser = new Weapon();
-				laser.set('coordX', 25);
-				laser.set('coordY', 0);
-				laser.set('firepower', SCOUT_FIREPOWER);
-				laser.set('firerange', SCOUT_FIRERANGE);
-				laser.set('firespeed', SCOUT_FIRESPEED);
-				laser.set('type', 'MachineGun');
-				laser.set('owner', 'user');
-				laser.set('width', 4);
-				laser.set('height', 4);
-
-				var weapon = new WeaponView({
-	                model: laser,
-	                spaceship: spaceship
-	            });
-
-				spaceship.addWeapon(weapon);
-
-				var human = new HumanFighter({
-					model: spaceship
-				});
-
-				window.battlefield.add(human);
+				window.battlefield.add(ship);
 			}
 
 
-
-			var spaceship = new SpaceShip();
-			spaceship.set('width', 100);
-			spaceship.set('height', 100);
-			spaceship.set('armor', 100);
-			spaceship.set('shield', 100);
-			spaceship.set('speed', 128);
-			spaceship.set('positionX', 100);
-			spaceship.set('positionY', 300);
-			spaceship.set('owner', 'user');
-			spaceship.set('isAttackable', true);
-			spaceship.set('type', 'unit');
-			spaceship.set('image', 'tank');
-			spaceship.set('shieldImage', 'shield');
-			
-			var laser = new Weapon();
-			laser.set('coordX', -25);
-			laser.set('coordY', 0);
-			laser.set('firepower', TANK_FIREPOWER);
-			laser.set('firerange', TANK_FIRERANGE);
-			laser.set('firespeed', TANK_FIRESPEED);
-			laser.set('type', 'Cannon');
-			laser.set('owner', 'user');
-			laser.set('width', 4);
-			laser.set('height', 4);
-
-			var weapon = new WeaponView({
-                model: laser,
-                spaceship: spaceship
-            });
-
-			spaceship.addWeapon(weapon);
-
-						var laser = new Weapon();
-			laser.set('coordX', -25);
-			laser.set('coordY', -25);
-			laser.set('firepower', TANK_FIREPOWER);
-			laser.set('firerange', TANK_FIRERANGE);
-			laser.set('firespeed', TANK_FIRESPEED);
-			laser.set('type', 'Cannon');
-			laser.set('owner', 'user');
-			laser.set('width', 4);
-			laser.set('height', 4);
-
-			var weapon = new WeaponView({
-                model: laser,
-                spaceship: spaceship
-            });
-
-			spaceship.addWeapon(weapon);
-
-
-			var laser = new Weapon();
-			laser.set('coordX', 25);
-			laser.set('coordY', -25);
-			laser.set('firepower', SCOUT_FIREPOWER);
-			laser.set('firerange', SCOUT_FIRERANGE);
-			laser.set('firespeed', SCOUT_FIRESPEED);
-			laser.set('type', 'DoubleMachineGun');
-			laser.set('owner', 'user');
-			laser.set('width', 4);
-			laser.set('height', 4);
-
-			var weapon = new WeaponView({
-                model: laser,
-                spaceship: spaceship
-            });
-
-			spaceship.addWeapon(weapon);
-
-
-
-			var laser = new Weapon();
-			laser.set('coordX', 25);
-			laser.set('coordY', 0);
-			laser.set('firepower', SCOUT_FIREPOWER);
-			laser.set('firerange', SCOUT_FIRERANGE);
-			laser.set('firespeed', SCOUT_FIRESPEED);
-			laser.set('type', 'DoubleMachineGun');
-			laser.set('owner', 'user');
-			laser.set('width', 4);
-			laser.set('height', 4);
-
-			var weapon = new WeaponView({
-                model: laser,
-                spaceship: spaceship
-            });
-
-			spaceship.addWeapon(weapon);
-
-			var human = new HumanFighter({
-				model: spaceship
+			var mothership = createShip({
+				width: 100,
+				height: 100,
+				armor: 500,
+				shield: 1000,
+				speed: SCOUT_SPEED,
+				positionX: 100,
+				positionY: 350,
+				owner: 'user',
+				isAttackable: true,
+				type: 'tank',
+				weapons: [
+					{
+						coordX: -30,
+						coordY: -38,
+						firerange: TANK_FIRERANGE,
+						firespeed: TANK_FIRESPEED,
+						firepower: TANK_FIREPOWER,
+						type: 'cannon',
+						width: 8,
+						height: 8
+					},
+					{
+						coordX: 30,
+						coordY: -38,
+						firerange: TANK_FIRERANGE,
+						firespeed: TANK_FIRESPEED,
+						firepower: TANK_FIREPOWER,
+						type: 'cannon',
+						width: 8,
+						height: 8
+					},
+					{
+						coordX: 0,
+						coordY: -38,
+						firerange: SCOUT_FIRERANGE,
+						firespeed: SCOUT_FIRESPEED,
+						firepower: SCOUT_FIREPOWER,
+						type: 'doublelaser',
+						width: 6,
+						height: 6
+					},
+					{
+						coordX: 0,
+						coordY: 45,
+						firerange: SCOUT_FIRERANGE,
+						firespeed: SCOUT_FIRESPEED,
+						firepower: SCOUT_FIREPOWER,
+						type: 'doublelaser',
+						width: 6,
+						height: 6
+					}
+				]
 			});
+			window.battlefield.add(mothership);
 
-			window.battlefield.add(human);
-
-
-
-
-
-			window.setInterval(function () {
-
-				var randY = Math.floor(Math.random() * 1000);
-
-				var spaceship = new SpaceShip();
-				spaceship.set('width', 50);
-				spaceship.set('height', 50);
-				spaceship.set('armor', 100);
-				spaceship.set('shield', 100);
-				spaceship.set('speed', 128);
-				spaceship.set('positionX', 2100);
-				spaceship.set('positionY', randY);
-				spaceship.set('owner', 'computer');
-				spaceship.set('isAttackable', true);
-				spaceship.set('type', 'unit');
-				spaceship.set('image', 'bomber');
-				spaceship.set('shieldImage', 'shield');
-
-				var laser = new Weapon();
-				laser.set('coordX', -25);
-				laser.set('coordY', 0);
-				laser.set('firepower', SCOUT_FIREPOWER);
-				laser.set('firerange', SCOUT_FIRERANGE);
-				laser.set('firespeed', SCOUT_FIRESPEED);
-				laser.set('owner', 'computer');
-				laser.set('type', 'MachineGun');
-				laser.set('width', 4);
-				laser.set('height', 4);
-				var weapon = new WeaponView({
-	                model: laser,
-	                spaceship: spaceship
-	            });
-
-				spaceship.addWeapon(weapon);
-
-				var laser = new Weapon();
-				laser.set('coordX', 25);
-				laser.set('coordY', 0);
-				laser.set('firepower', SCOUT_FIREPOWER);
-				laser.set('firerange', SCOUT_FIRERANGE);
-				laser.set('firespeed', SCOUT_FIRESPEED);
-				laser.set('owner', 'computer');
-				laser.set('type', 'MachineGun');
-
-				laser.set('width', 4);
-				laser.set('height', 4);
-
-				
-	            var weapon = new WeaponView({
-	                model: laser,
-	                spaceship: spaceship
-	            });
-
-				spaceship.addWeapon(weapon);
-
-				var humanFighter = new HumanFighter({
-					model: spaceship
-				});
-
-				window.battlefield.add(humanFighter);
-
-				window.setTimeout(function() {humanFighter.moveAndAttack(human);}, 500);
-			}, 5000);
+			var battleship = createShip({
+				width: 100,
+				height: 50,
+				armor: 200,
+				shield: 500,
+				speed: SCOUT_SPEED,
+				positionX: 200,
+				positionY: 350,
+				owner: 'user',
+				isAttackable: true,
+				type: 'battleship',
+				weapons: [
+					{
+						coordX: -34,
+						coordY: -10,
+						firerange: SCOUT_FIRERANGE,
+						firespeed: SCOUT_FIRESPEED,
+						firepower: SCOUT_FIREPOWER,
+						type: 'doublelaser',
+						width: 6,
+						height: 6
+					},
+					{
+						coordX: -15,
+						coordY: -11,
+						firerange: SCOUT_FIRERANGE,
+						firespeed: SCOUT_FIRESPEED,
+						firepower: SCOUT_FIREPOWER,
+						type: 'doublelaser',
+						width: 6,
+						height: 6
+					},
+					{
+						coordX: 15,
+						coordY: -11,
+						firerange: SCOUT_FIRERANGE,
+						firespeed: SCOUT_FIRESPEED,
+						firepower: SCOUT_FIREPOWER,
+						type: 'doublelaser',
+						width: 6,
+						height: 6
+					},
+					{
+						coordX: 34,
+						coordY: -10,
+						firerange: SCOUT_FIRERANGE,
+						firespeed: SCOUT_FIRESPEED,
+						firepower: SCOUT_FIREPOWER,
+						type: 'doublelaser',
+						width: 6,
+						height: 6
+					},
+					{
+						coordX: 0,
+						coordY: 24,
+						firerange: SCOUT_FIRERANGE,
+						firespeed: SCOUT_FIRESPEED,
+						firepower: SCOUT_FIREPOWER,
+						type: 'laser',
+						width: 4,
+						height: 4
+					}
+				]
+			});
+			window.battlefield.add(battleship);
 
 
 
-			// for (var i = 0; i < OBSTACLES.length; i++) {
+
+
+
+			window.setTimeout(function () {
+				for (var i = 0; i < 10; i++) {
+					var randY = Math.floor(Math.random() * 1000);
+					var randX = Math.floor(Math.random() * 1500 + 1500);
+
+					var ship = createShip({
+						width: 50,
+						height: 50,
+						armor: 100,
+						shield: 100,
+						speed: SCOUT_SPEED,
+						positionX: randX,
+						positionY: randY,
+						owner: 'computer',
+						isAttackable: true,
+						type: 'bomber',
+						weapons: [
+							{
+								coordX: -17,
+								coordY: 0,
+								firerange: SCOUT_FIRERANGE,
+								firespeed: SCOUT_FIRESPEED,
+								firepower: 2 * SCOUT_FIREPOWER,
+								type: 'doublelaser',
+								width: 6,
+								height: 6
+							},
+							{
+								coordX: 17,
+								coordY: 0,
+								firerange: SCOUT_FIRERANGE,
+								firespeed: SCOUT_FIRESPEED,
+								firepower: 2 * SCOUT_FIREPOWER,
+								type: 'doublelaser',
+								width: 6,
+								height: 6
+							}
+						]
+					});
+
+					window.battlefield.add(ship);
+
+					ship.move(mothership.model.get('positionX'), mothership.model.get('positionY'));
+				}
+			}, 15000);
+
+ 			// for (var i = 0; i < OBSTACLES.length; i++) {
 			// 	var model = new ObstacleModel();
 			// 	model.set('width', 50);
 			// 	model.set('height', 50);

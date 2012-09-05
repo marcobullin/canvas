@@ -71,10 +71,11 @@ define(
                  destination3 < r2 ||
                  destination4 < r2
                 ) {
-                 this.attack(items[i]);
-                 break;
+                    this.attack(items[i]);
+                    return;
                 }
             }
+            this.direction = null;
         },
 
         attack: function (enemy) {
@@ -90,23 +91,30 @@ define(
             shotModel.set('positionY', this.model.get('positionY') + (this.model.get('height') / 2));
             shotModel.set('firepower', this.model.get('firepower'));
             shotModel.set('firespeed', this.model.get('firespeed'));
+            shotModel.set('owner', this.options.spaceship.get('owner'));
 
             var direction = Math.atan2(enemy.model.get('positionY') - this.model.get('positionY'), enemy.model.get('positionX') - this.model.get('positionX')) - Math.PI/2;
             shotModel.set('angle', direction);
 
+this.direction = direction;
+            
+
+
+
+
             var shot = null;
             switch (this.model.get('type')) {
-                case 'MachineGun':
+                case 'laser':
                     shot = new MachineGun({
                         model: shotModel
                     });
                     break;
-                case 'Cannon':
+                case 'cannon':
                     shot = new Cannon({
                         model: shotModel
                     });
                     break;
-                case 'DoubleMachineGun':
+                case 'doublelaser':
                     shot = new DoubleMachineGun({
                         model: shotModel
                     });
@@ -134,26 +142,30 @@ define(
             this.model.set('positionX', newX);
             this.model.set('positionY', newY);
 
-            if (this.options.spaceship.get('selected')) {
-                window.battlefield.ctx.beginPath();
-                window.battlefield.ctx.arc(this.model.get('positionX'), this.model.get('positionY'), this.model.get('firerange'), 0, Math.PI*2, false);
-                window.battlefield.ctx.fillStyle = "rgba(255, 0, 0, 0.1)";
-                window.battlefield.ctx.fill();
-                window.battlefield.ctx.lineWidth = 1;
-                window.battlefield.ctx.strokeStyle = 'red';
-                window.battlefield.ctx.stroke();
-                window.battlefield.ctx.closePath();
+            // if (this.options.spaceship.get('selected')) {
+            //     window.battlefield.ctx.beginPath();
+            //     window.battlefield.ctx.arc(this.model.get('positionX'), this.model.get('positionY'), this.model.get('firerange'), 0, Math.PI*2, false);
+            //     window.battlefield.ctx.fillStyle = "rgba(255, 0, 0, 0.1)";
+            //     window.battlefield.ctx.fill();
+            //     window.battlefield.ctx.lineWidth = 1;
+            //     window.battlefield.ctx.strokeStyle = 'red';
+            //     window.battlefield.ctx.stroke();
+            //     window.battlefield.ctx.closePath();
+            // }
+
+            window.battlefield.ctx.save();
+
+            //window.battlefield.ctx.translate(this.model.get('positionX'), this.model.get('positionY'));
+            if (this.direction) {
+                window.battlefield.ctx.translate(this.model.get('positionX'), this.model.get('positionY'));
+                window.battlefield.ctx.rotate(this.direction);
+            } else {
+                window.battlefield.ctx.translate(this.model.get('positionX'), this.model.get('positionY'));
+                window.battlefield.ctx.rotate(this.options.spaceship.get('direction'));
             }
-/*
-            window.battlefield.ctx.beginPath();
-            window.battlefield.ctx.arc(this.model.get('positionX'), this.model.get('positionY'), this.model.get('width'), 0, Math.PI*2, false);
-            window.battlefield.ctx.fillStyle = "DarkGray";
-            window.battlefield.ctx.fill();
-            window.battlefield.ctx.lineWidth = 1;
-            window.battlefield.ctx.strokeStyle = 'DarkGray';
-            window.battlefield.ctx.stroke();
-            window.battlefield.ctx.closePath();
-*/
+            window.battlefield.ctx.drawImage(window.GameImages[this.model.get('type')], -10, -10, 20, 20);
+            window.battlefield.ctx.restore();
+
 		}
 	});
 

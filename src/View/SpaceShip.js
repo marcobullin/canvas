@@ -5,6 +5,8 @@ define(function () {
 		    this.model.set('id', Math.ceil(Math.random() * 99999999999 * new Date().getTime()));
             this.x = this.model.get('positionX');
             this.y = this.model.get('positionY');
+            this.totalShield = this.model.get('shield');
+            this.totalArmor = this.model.get('armor');
         },
 
         move: function (x, y) {
@@ -57,7 +59,7 @@ define(function () {
             // sound.play();
 
             if (this.model.get('shield') > 0) {
-                window.battlefield.ctx.drawImage(window.GameImages[this.model.get('shieldImage')], this.model.get('positionX') - 25, this.model.get('positionY') - 25, 100, 100);
+                window.battlefield.ctx.drawImage(window.GameImages['shield'], this.model.get('positionX') - 25, this.model.get('positionY') - 25, 100, 100);
 
                 this.model.set('shield', this.model.get('shield') - firepower);
 
@@ -110,7 +112,7 @@ define(function () {
                 this.model.set('positionY', (this.model.get('positionY') + speedY));
             }
         },
-        
+
         destroy: function () {
             // if (!this.dieSound) {
             //     this.dieSound = new Audio(this.model.get('sound').die);
@@ -159,13 +161,23 @@ define(function () {
         },
 
         draw: function (modifier) {
-		    var armor = this.model.get('width') / 100 * this.model.get('armor'),
-                shield = this.model.get('width') / 100 * this.model.get('shield'),
+		    var armor = this.model.get('width') / 100 * (this.model.get('armor') / this.totalArmor * 100),
+                shield = this.model.get('width') / 100 *(this.model.get('shield') / this.totalShield * 100),
                 x = (-1 * this.model.get('width') / 2),
                 y = (-1 * this.model.get('height') / 2);
 
             this.updatePosition(modifier);
 
+            if (this.model.get('selected')) {
+                window.battlefield.ctx.beginPath();
+                window.battlefield.ctx.arc(this.model.get('positionX') + this.model.get('width')/2, this.model.get('positionY') + this.model.get('height')/2, this.model.get('width')/2 + 2, 0, Math.PI*2, false);
+                window.battlefield.ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
+                window.battlefield.ctx.fill();
+                window.battlefield.ctx.lineWidth = 1;
+                window.battlefield.ctx.strokeStyle = 'green';
+                window.battlefield.ctx.stroke();
+                window.battlefield.ctx.closePath();
+            }
             // ROTATE
             window.battlefield.ctx.save();
             window.battlefield.ctx.translate(this.model.get('positionX') + this.model.get('width') / 2, this.model.get('positionY') + this.model.get('height') / 2);
@@ -181,7 +193,10 @@ define(function () {
             window.battlefield.ctx.fillStyle = '#115cb1';
             window.battlefield.ctx.fillRect(x, y - 8, shield, 4);
 
-            window.battlefield.ctx.drawImage(window.GameImages[this.model.get('image')], x, y, this.model.get('width'), this.model.get('height'));
+            
+
+
+            window.battlefield.ctx.drawImage(window.GameImages[this.model.get('type')], x, y, this.model.get('width'), this.model.get('height'));
             window.battlefield.ctx.restore();
             
             // WEAPONS
