@@ -144,15 +144,16 @@ define(
                 window.battlefield.ctx.stroke();
                 window.battlefield.ctx.closePath();
             }
-
+/*
             window.battlefield.ctx.beginPath();
             window.battlefield.ctx.arc(this.model.get('positionX'), this.model.get('positionY'), this.model.get('width'), 0, Math.PI*2, false);
-            window.battlefield.ctx.fillStyle = "blue";
+            window.battlefield.ctx.fillStyle = "DarkGray";
             window.battlefield.ctx.fill();
             window.battlefield.ctx.lineWidth = 1;
-            window.battlefield.ctx.strokeStyle = 'blue';
+            window.battlefield.ctx.strokeStyle = 'DarkGray';
             window.battlefield.ctx.stroke();
             window.battlefield.ctx.closePath();
+*/
 		}
 	});
 

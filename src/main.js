@@ -28,6 +28,10 @@ require([
 				src: 'images/scout.png'
 			},
 			{
+				key: 'bomber',
+				src: 'images/bomber.png'
+			},
+			{
 				key: 'tank',
 				src: 'images/tank.png'
 			},
@@ -420,11 +424,15 @@ require([
 				spaceship.set('owner', 'user');
 				spaceship.set('isAttackable', true);
 				spaceship.set('type', 'unit');
-				spaceship.set('image', 'scout');
+				if (i % 2){
+					spaceship.set('image', 'bomber');
+				}else {
+					spaceship.set('image', 'scout');
+				}
 				spaceship.set('shieldImage', 'shield');
 				
 				var laser = new Weapon();
-				laser.set('coordX', -25);
+				laser.set('coordX', -20);
 				laser.set('coordY', 0);
 				laser.set('firepower', SCOUT_FIREPOWER);
 				laser.set('firerange', SCOUT_FIRERANGE);
@@ -479,7 +487,7 @@ require([
 			spaceship.set('owner', 'user');
 			spaceship.set('isAttackable', true);
 			spaceship.set('type', 'unit');
-			spaceship.set('image', 'scout');
+			spaceship.set('image', 'tank');
 			spaceship.set('shieldImage', 'shield');
 			
 			var laser = new Weapon();
@@ -525,7 +533,7 @@ require([
 			laser.set('firepower', SCOUT_FIREPOWER);
 			laser.set('firerange', SCOUT_FIRERANGE);
 			laser.set('firespeed', SCOUT_FIRESPEED);
-			laser.set('type', 'MachineGun');
+			laser.set('type', 'DoubleMachineGun');
 			laser.set('owner', 'user');
 			laser.set('width', 4);
 			laser.set('height', 4);
@@ -572,8 +580,8 @@ require([
 				var randY = Math.floor(Math.random() * 1000);
 
 				var spaceship = new SpaceShip();
-				spaceship.set('width', 100);
-				spaceship.set('height', 100);
+				spaceship.set('width', 50);
+				spaceship.set('height', 50);
 				spaceship.set('armor', 100);
 				spaceship.set('shield', 100);
 				spaceship.set('speed', 128);
@@ -582,7 +590,7 @@ require([
 				spaceship.set('owner', 'computer');
 				spaceship.set('isAttackable', true);
 				spaceship.set('type', 'unit');
-				spaceship.set('image', 'tank');
+				spaceship.set('image', 'bomber');
 				spaceship.set('shieldImage', 'shield');
 
 				var laser = new Weapon();
@@ -592,7 +600,7 @@ require([
 				laser.set('firerange', SCOUT_FIRERANGE);
 				laser.set('firespeed', SCOUT_FIRESPEED);
 				laser.set('owner', 'computer');
-				laser.set('type', 'DoubleMachineGun');
+				laser.set('type', 'MachineGun');
 				laser.set('width', 4);
 				laser.set('height', 4);
 				var weapon = new WeaponView({
@@ -609,7 +617,7 @@ require([
 				laser.set('firerange', SCOUT_FIRERANGE);
 				laser.set('firespeed', SCOUT_FIRESPEED);
 				laser.set('owner', 'computer');
-				laser.set('type', 'DoubleMachineGun');
+				laser.set('type', 'MachineGun');
 
 				laser.set('width', 4);
 				laser.set('height', 4);
