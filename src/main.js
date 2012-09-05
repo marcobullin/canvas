@@ -384,20 +384,23 @@ require([
 				}
 			}, 15000);
 
- 			// for (var i = 0; i < OBSTACLES.length; i++) {
-			// 	var model = new ObstacleModel();
-			// 	model.set('width', 50);
-			// 	model.set('height', 50);
-			// 	model.set('positionX', OBSTACLES[i].x * 50);
-			// 	model.set('positionY', OBSTACLES[i].y * 50);
-			// 	model.set('type', 'obstacle');
+ 			window.setInterval(function () {
+ 				var randY = Math.floor(Math.random() * 1000);
+				var randX = Math.floor(Math.random() * 1500);
+				var model = new ObstacleModel();
+				model.set('width', 100);
+				model.set('height', 100);
+				model.set('positionX', randX);
+				model.set('positionY', randY);
+				model.set('type', 'obstacle');
 
-			// 	var obstacle = new ObstacleView({
-			// 		model: model
-			// 	});
+				var obstacle = new ObstacleView({
+					model: model
+				});
 
-			// 	window.battlefield.add(obstacle);	
-			// }
+				window.battlefield.add(obstacle);
+				obstacle.move(randX, -50);
+			}, 4000);
 			
 			then = Date.now();
 			setInterval(function() {
