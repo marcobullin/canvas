@@ -11,6 +11,11 @@ define(
 	View.Weapon = Backbone.View.extend({
         initialize: function () {
             this._scanning = window.setInterval($.proxy(this.scan, this), Math.floor(Math.random() * 400 + 50));
+
+            var self = this;
+            $('body').on('gameOver', function () {
+                clearInterval(self._scanning);
+            });
         },
 
         scan: function () {
@@ -23,14 +28,14 @@ define(
                 i,
                 x1, x2, x3, x4, y1, y2, y3, y4, r2, centerX, centerY, destination1, destination2, destination3, destination4;
 
-            // if (this.model.get('attackEnemy')) {
-            //     var enemy = this.getEnemyById(this.model.get('attackEnemy'));
+            if (this.model.get('attackEnemy')) {
+                var enemy = this.getEnemyById(this.model.get('attackEnemy'));
 
-            //     if (enemy && this.inRange(enemy)) {
-            //         this.attack(enemy);
-            //         return;
-            //     }
-            // }
+                if (enemy && this.inRange(enemy)) {
+                    this.attack(enemy);
+                    return;
+                }
+            }
 
             for (i = 0; i < items.length; i+=1) {
                 // do not attack your own units
@@ -79,11 +84,11 @@ define(
         },
 
         attack: function (enemy) {
-            // if (!this.shotSound) {
-            //     this.shotSound = new Audio(this.model.get('sound').shot);
-            // }
+            if (!this.shotSound) {
+                this.shotSound = new Audio(this.model.get('sound'));
+            }
 
-            // this.shotSound.play();
+            this.shotSound.play();
 
             var shotModel = new ShotModel();
             shotModel.set('owner', this.model.get('owner'));
@@ -93,7 +98,7 @@ define(
             shotModel.set('firespeed', this.model.get('firespeed'));
             shotModel.set('owner', this.options.spaceship.get('owner'));
 
-            var direction = Math.atan2(enemy.model.get('positionY') - this.model.get('positionY'), enemy.model.get('positionX') - this.model.get('positionX')) - Math.PI/2;
+            var direction = Math.atan2(enemy.model.get('positionY') + enemy.model.get('height')/2 - this.model.get('positionY'), enemy.model.get('positionX') + enemy.model.get('width')/2 - this.model.get('positionX')) - Math.PI/2;
             shotModel.set('angle', direction);
 
 this.direction = direction;
@@ -163,7 +168,7 @@ this.direction = direction;
                 window.battlefield.ctx.translate(this.model.get('positionX'), this.model.get('positionY'));
                 window.battlefield.ctx.rotate(this.options.spaceship.get('direction'));
             }
-            window.battlefield.ctx.drawImage(window.GameImages[this.model.get('type')], -10, -10, 20, 20);
+            window.battlefield.ctx.drawImage(window.GameImages[this.model.get('type')], -this.model.get('width')/2, -this.model.get('height')/2, this.model.get('width'), this.model.get('height'));
             window.battlefield.ctx.restore();
 
 		}

@@ -13,7 +13,7 @@ define([
 
 				window.battlefield.ctx.save();
 
-				window.battlefield.ctx.translate(this.model.get('positionX') + width/2, this.model.get('positionY') + height/2);
+				window.battlefield.ctx.translate(this.model.get('positionX') + width/2 - 15, this.model.get('positionY') + height/2 - 15);
 				window.battlefield.ctx.rotate(this.model.get('angle'));
 
 				window.battlefield.ctx.beginPath();

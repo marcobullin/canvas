@@ -50,7 +50,7 @@ define(
                 this.updatePosition(modifier);
 				window.battlefield.ctx.beginPath();
                 window.battlefield.ctx.arc(this.model.get('positionX') + this.model.get('width')/2, this.model.get('positionY') + this.model.get('height')/2, this.model.get('width')/2 + 2, 0, Math.PI*2, false);
-                window.battlefield.ctx.fillStyle = "rgba(100, 100, 100, 0.8)";
+                window.battlefield.ctx.fillStyle = "rgba(100, 100, 100, 1)";
                 window.battlefield.ctx.fill();
                 window.battlefield.ctx.closePath();
 				window.battlefield.ctx.restore();

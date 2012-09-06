@@ -7,6 +7,20 @@ define(function () {
             this.y = this.model.get('positionY');
             this.totalShield = this.model.get('shield');
             this.totalArmor = this.model.get('armor');
+
+            if (this.model.get('owner') === 'computer' && this.model.get('type') !== 'mothership') {
+                var self = this;
+                window.setInterval(function () {
+                    var randX = Math.floor(Math.random() * 1400);
+                    var randY = Math.floor(Math.random() * 900);
+
+                    if (randX > 1500) {
+                        randX = 1300;
+                    }
+
+                    self.move(randX, randY);
+                }, 10000);
+            }
         },
 
         move: function (x, y) {
@@ -55,8 +69,11 @@ define(function () {
         },
 
         hit: function (firepower) {
-            // var sound = new Audio(this.model.get('sound').hit);
-            // sound.play();
+            if (!this.hitSound) {
+                this.hitSound = new Audio(this.model.get('soundHit'));
+            }
+
+            this.hitSound.play();
 
             if (this.model.get('shield') > 0) {
                 window.battlefield.ctx.drawImage(window.GameImages['shield'], this.model.get('positionX') - 25, this.model.get('positionY') - 25, 100, 100);
@@ -114,11 +131,11 @@ define(function () {
         },
 
         destroy: function () {
-            // if (!this.dieSound) {
-            //     this.dieSound = new Audio(this.model.get('sound').die);
-            // }
+            if (!this.dieSound) {
+                this.dieSound = new Audio(this.model.get('soundDestroy'));
+            }
 
-            // this.dieSound.play();
+            this.dieSound.play();
 
             // removing unit/item from battlefield
             window.battlefield.remove(this.model.get('id'));
@@ -158,6 +175,17 @@ define(function () {
                 }
                 x += 118;
             }, 10);
+
+            if (this.model.get('type') === 'mothership') {
+                $('body').trigger('gameOver');
+                if (this.model.get('owner') === 'user') {
+                    alert('you loose');
+                    $('body').trigger('newLevel', [window.level]);
+                } else {
+                    alert('you won');
+                    $('body').trigger('newLevel', [++window.level]);
+                }
+            }
         },
 
         draw: function (modifier) {
