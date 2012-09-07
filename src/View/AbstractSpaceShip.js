@@ -31,7 +31,7 @@ define([
                 index,
                 key;
             for (index in weapons) {
-                key = weapons[index].coordX + '_' + weapons[index].coordX;
+                key = weapons[index].coordX + '_' + weapons[index].coordY;
 
                 this.scaning[key] = window.setInterval($.proxy(this.scan, this, weapons[index]), Math.floor(Math.random() * 400 + 50));
              }
@@ -253,7 +253,7 @@ define([
 
             // removing unit/item from battlefield
             window.battlefield.remove(this.model.get('id'));
-
+console.log(this.scaning);
             // clean all weapon scanings
             for (var i in this.scaning) {
                 window.clearInterval(this.scaning[i]);
