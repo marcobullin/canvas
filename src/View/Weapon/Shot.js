@@ -39,7 +39,18 @@ define(function () {
 
                     window.battlefield.remove(this.model.get('id'));
                     if (obstacle.model.get('isAttackable') && !obstacle.model.get('isDestroyed')) {
-                        obstacle.hit(this.model.get('firepower'));
+                        var firepower = this.model.get('firepower');
+                        if (obstacle.model.get('currentShield') > 0) {
+                            obstacle.model.set('currentShield', obstacle.model.get('currentShield') - firepower);
+
+                            if (obstacle.model.get('currentShield') < 0) {
+                                firepower = Math.abs(obstacle.model.get('currentShield'));
+                                obstacle.model.set('currentArmor', obstacle.model.get('currentArmor') - firepower);
+                            }
+                        } else {
+                            obstacle.model.set('currentArmor', obstacle.model.get('currentArmor') - firepower);
+                        }
+
                     }
 
                     return;
