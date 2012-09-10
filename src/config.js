@@ -52,7 +52,7 @@ var BATTLEFIELD_WIDTH = 1500,
 		},
 		5: {
 			user: ['mothership', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'destroyer'],
-			enemy: ['mothership', 'alienHeavyFighter', 'frigate', 'frigate']
+			enemy: ['mothership', 'alienHeavyFighter', 'alienFrigate', 'alienFrigate']
 		},
 		6: {
 			user: ['mothership', 'destroyer', 'destroyer', 'destroyer', 'destroyer'],
