@@ -31,7 +31,9 @@ define(
                 // let weapons scan for enemies
                 var weapons = this.model.get('weapons'),
                     index,
+                    self = this,
                     key;
+
                 for (index in weapons) {
                     if (weapons.hasOwnProperty(index)) {
                         key = weapons[index].coordX + '_' + weapons[index].coordY;
@@ -39,6 +41,21 @@ define(
                         this.scaning[key] = window.setInterval($.proxy(this.scan, this, weapons[index]), Math.floor(Math.random() *1000 + 1000))// * 4000 + 50));
                     }
                 }
+
+                this.model.on('follow', function (enemy) {
+                    var x = enemy.get('destinationPositionX') + enemy.get('width') + Math.round(Math.random() * 200 + 50),
+                        y = enemy.get('destinationPositionY') + enemy.get('height') + Math.round(Math.random() * 200 + 50);
+                    //var x = enemy.get('positionX') - (followerNumber * 50),
+                    //    y = enemy.get('positionY') + 100;
+
+                    if (x > BATTLEFIELD_WIDTH) {
+                        x = BATTLEFIELD_WIDTH - self.model.get('width');
+                    }
+                    if (y > BATTLEFIELD_HEIGHT) {
+                        y = BATTLEFIELD_HEIGHT - self.model.get('height');
+                    }
+                    self.move(x, y);
+                });
             },
 
             /**
@@ -68,45 +85,78 @@ define(
                     destination4,
                     attacking = false;
 
-                for (i in items) {
-                    if (items.hasOwnProperty(i)) {
-                        // do not attack your own units
-                        if (items[i].model.get('owner') === this.model.get('owner')) {
-                            continue;
-                        }
+                var enemy = this.model.get('follow');
+                if (enemy) {
+                    x1 = enemy.get('positionX');
+                    y1 = enemy.get('positionY');
 
-                        // item is not attackable
-                        if (!items[i].model.get('isAttackable')) {
-                            continue;
-                        }
+                    x2 = enemy.get('positionX') + enemy.get('width');
+                    y2 = enemy.get('positionY');
 
-                        x1 = items[i].model.get('positionX');
-                        y1 = items[i].model.get('positionY');
+                    x3 = enemy.get('positionX') + enemy.get('width');
+                    y3 = enemy.get('positionY') + enemy.get('height');
 
-                        x2 = items[i].model.get('positionX') + items[i].model.get('width');
-                        y2 = items[i].model.get('positionY');
+                    x4 = enemy.get('positionX');
+                    y4 = enemy.get('positionY') + enemy.get('height');
 
-                        x3 = items[i].model.get('positionX') + items[i].model.get('width');
-                        y3 = items[i].model.get('positionY') + items[i].model.get('height');
+                    r2 = weapon.firerange * weapon.firerange;
 
-                        x4 = items[i].model.get('positionX');
-                        y4 = items[i].model.get('positionY') + items[i].model.get('height');
+                    centerX = weapon.positionX + weapon.width / 2;
+                    centerY = weapon.positionY + weapon.height / 2;
 
-                        r2 = weapon.firerange * weapon.firerange;
+                    destination1 = (x1 - centerX) * (x1 - centerX) + (y1 - centerY) * (y1 - centerY);
+                    destination2 = (x2 - centerX) * (x2 - centerX) + (y2 - centerY) * (y2 - centerY);
+                    destination3 = (x3 - centerX) * (x3 - centerX) + (y3 - centerY) * (y3 - centerY);
+                    destination1 = (x4 - centerX) * (x4 - centerX) + (y4 - centerY) * (y4 - centerY);
 
-                        centerX = weapon.positionX + weapon.width / 2;
-                        centerY = weapon.positionY + weapon.height / 2;
+                    // check if one of this points is in range
+                    if (destination1 < r2 || destination2 < r2 || destination3 < r2 || destination4 < r2) {
+                        this.attack(enemy, weapon);
+                        attacking = true;
+                    }
+                }
 
-                        destination1 = (x1 - centerX) * (x1 - centerX) + (y1 - centerY) * (y1 - centerY);
-                        destination2 = (x2 - centerX) * (x2 - centerX) + (y2 - centerY) * (y2 - centerY);
-                        destination3 = (x3 - centerX) * (x3 - centerX) + (y3 - centerY) * (y3 - centerY);
-                        destination1 = (x4 - centerX) * (x4 - centerX) + (y4 - centerY) * (y4 - centerY);
+                if (!attacking) {
+                    for (i in items) {
+                        if (items.hasOwnProperty(i)) {
+                            // do not attack your own units
+                            if (items[i].model.get('owner') === this.model.get('owner')) {
+                                continue;
+                            }
 
-                        // check if one of this points is in range
-                        if (destination1 < r2 || destination2 < r2 || destination3 < r2 || destination4 < r2) {
-                            this.attack(items[i].model, weapon);
-                            attacking = true;
-                            break;
+                            // item is not attackable
+                            if (!items[i].model.get('isAttackable')) {
+                                continue;
+                            }
+
+                            x1 = items[i].model.get('positionX');
+                            y1 = items[i].model.get('positionY');
+
+                            x2 = items[i].model.get('positionX') + items[i].model.get('width');
+                            y2 = items[i].model.get('positionY');
+
+                            x3 = items[i].model.get('positionX') + items[i].model.get('width');
+                            y3 = items[i].model.get('positionY') + items[i].model.get('height');
+
+                            x4 = items[i].model.get('positionX');
+                            y4 = items[i].model.get('positionY') + items[i].model.get('height');
+
+                            r2 = weapon.firerange * weapon.firerange;
+
+                            centerX = weapon.positionX + weapon.width / 2;
+                            centerY = weapon.positionY + weapon.height / 2;
+
+                            destination1 = (x1 - centerX) * (x1 - centerX) + (y1 - centerY) * (y1 - centerY);
+                            destination2 = (x2 - centerX) * (x2 - centerX) + (y2 - centerY) * (y2 - centerY);
+                            destination3 = (x3 - centerX) * (x3 - centerX) + (y3 - centerY) * (y3 - centerY);
+                            destination1 = (x4 - centerX) * (x4 - centerX) + (y4 - centerY) * (y4 - centerY);
+
+                            // check if one of this points is in range
+                            if (destination1 < r2 || destination2 < r2 || destination3 < r2 || destination4 < r2) {
+                                this.attack(items[i].model, weapon);
+                                attacking = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -136,6 +186,12 @@ define(
                 ) - Math.PI / 2;
 
                 this.model.set('direction', direction);
+
+                var follower = this.model.get('follower'),
+                    i;
+                for (i in follower) {
+                    follower[i].trigger('follow', this.model);
+                }
             },
 
             /**
@@ -177,8 +233,20 @@ define(
 
                 this.hitSound.play();
 
+                var unitId = $('#action_bar').attr('data-unitid');
+                if (unitId == this.model.get('id')) {
+                    var armor = (this.model.get('currentArmor') / this.model.get('maxArmor') * 100);
+                    $('#currentArmor').css({height: armor});
+                }
+
                 if (value <= 0) {
                     model.set('isDestroyed', true);
+
+                    if (unitId == this.model.get('id')) {
+                        $('#spaceship').hide();
+                        $('#armor').hide();
+                        $('#weapons').hide();
+                    }
                 }
             },
 
@@ -313,6 +381,12 @@ define(
                 // clean all weapon scanings
                 this.stopScaning();
 
+                var follower = this.model.get('follower');
+                for (i in follower) {
+                    follower[i].set('follow', null);
+                }
+                this.model.set('follower', []);
+
                 // display explosion
                 animation = window.setInterval(function () {
                     window.battlefield.ctx.drawImage(
@@ -398,7 +472,7 @@ define(
              */
             draw: function (modifier) {
                 var armor = this.model.get('width') / 100 * (this.model.get('currentArmor') / this.model.get('maxArmor') * 100),
-                    shield = this.model.get('width') / 100 * (this.model.get('currentShield') / this.model.get('maxShield') * 100),
+                    shield = 0,//this.model.get('width') / 100 * (this.model.get('currentShield') / this.model.get('maxShield') * 100),
                     x = (-1 * this.model.get('width') / 2),
                     y = (-1 * this.model.get('height') / 2),
                     weapons = this.model.get('weapons'),

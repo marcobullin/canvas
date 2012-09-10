@@ -1,6 +1,6 @@
 define(function () {
     var Model = Model || {};
-    Model.HumanHeavyFighter = Backbone.Model.extend({
+    Model.AlienHeavyFighter = Backbone.Model.extend({
         defaults: {
             width: 50,
             height: 50,
@@ -12,15 +12,15 @@ define(function () {
             maxShield: 100,
             speed: SCOUT_SPEED,
             isAttackable: true,
-            type: 'heavyFighter',
+            type: 'alienHeavyFighter',
             soundDestroy: 'sounds/boom.mp3',
             soundHit: 'sounds/hit.mp3'
         },
         initialize: function () {
             this.set('weapons', [
                 {
-                    coordX: -17,
-                    coordY: 0,
+                    coordX: -15,
+                    coordY: -10,
                     firerange: SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: 2 * SCOUT_FIREPOWER,
@@ -30,8 +30,8 @@ define(function () {
                     height: 25
                 },
                 {
-                    coordX: 17,
-                    coordY: 0,
+                    coordX: 15,
+                    coordY: -10,
                     firerange: SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: 2 * SCOUT_FIREPOWER,
@@ -65,5 +65,5 @@ define(function () {
         }
     });
 
-    return Model.HumanHeavyFighter;
+    return Model.AlienHeavyFighter;
 });

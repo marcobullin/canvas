@@ -8,9 +8,12 @@ require([
 	'../order!Model/HumanFrigate',
 	'../order!Model/HumanHeavyFighter',
 	'../order!Model/HumanLightFighter',
-	'../order!Model/HumanMothership'
+	'../order!Model/HumanMothership',
+	'../order!Model/AlienLightFighter',
+	'../order!Model/AlienHeavyFighter',
+	'../order!Model/AlienFrigate'
 	],
-	function (_, Backbone, config, Battlefield, SpaceShip, HumanDestroyer, HumanFrigate, HumanHeavyFighter, HumanLightFighter, HumanMothership) {
+	function (_, Backbone, config, Battlefield, SpaceShip, HumanDestroyer, HumanFrigate, HumanHeavyFighter, HumanLightFighter, HumanMothership, AlienLightFighter, AlienHeavyFighter, AlienFrigate) {
 		var images = [
 			{
 				key: 'map',
@@ -59,7 +62,19 @@ require([
 			{
 				key: 'shield',
 				src: 'images/shield.png'
-			}
+			},
+			{
+				key: 'alienLightFighter',
+				src: 'images/alienLightFighter.png'
+			},
+			{
+				key: 'alienHeavyFighter',
+				src: 'images/alienHeavyFighter.png'
+			},
+			{
+				key: 'alienFrigate',
+				src: 'images/alienFrigate.png'
+			},
 		];
 
 		var img = null,
@@ -97,6 +112,15 @@ require([
 					break;
 				case 'mothership':
 					model = new HumanMothership();
+					break;
+				case 'alienLightFighter':
+					model = new AlienLightFighter();
+					break;
+				case 'alienHeavyFighter':
+					model = new AlienHeavyFighter();
+					break;
+				case 'alienFrigate':
+					model = new AlienFrigate();
 					break;
 			}
 

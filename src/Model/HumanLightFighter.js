@@ -4,6 +4,8 @@ define(function () {
         defaults: {
             width: 50,
             height: 50,
+            originalWidth: 100,
+            originalHeight: 100,
             currentArmor:  100,
             maxArmor:  100,
             currentShield: 100,
@@ -40,6 +42,27 @@ define(function () {
                     height: 20
                 }
             ]);
+        },
+
+        addFollower: function (enemyModel) {
+            var follower = _.clone(this.get('follower')) || [];
+            follower.push(enemyModel);
+
+            this.set('follower', follower);
+        },
+
+        removeFollower: function (enemyModel) {
+            var follower = _.clone(this.get('follower')) || [],
+                i;
+
+            for (i in follower) {
+                if (enemyModel === follower[i]) {
+                    console.log('removing...');
+                    delete follower[i];
+                }
+            }
+
+            this.set('follower', follower);
         }
     });
 

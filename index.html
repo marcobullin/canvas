@@ -3,8 +3,64 @@
 	<head>
 		<style type="text/css">
 			body {
+				padding: 0;
+			}
+
+			canvas {
+				margin-bottom: 120px;
+			}
+
+			ul {
+				list-style: none;
+			}
+
+			#action_bar {
+				position: fixed;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				height: 120px;
+				background-color: #ccc;
+			}
+
+			#spaceship {
+				float: left;
+				padding: 0 5px;
+				border-right: 1px solid silver;
+				display: none;
+			}
+
+			#weapons {
 				margin: 0;
 				padding: 0;
+				float: left;
+				width: 50px;
+				display: none;
+			}
+
+			#weapons li {
+				float: left;
+			}
+
+			#armor {
+				border-right: 1px solid silver;
+				width: 10px;
+				height: 100px;
+				float: left;
+				background-color: red;
+				display: none;
+			}
+
+			#currentArmor {
+				width: 10px;
+				height: 100px;
+				background-color: green;
+			}
+
+			.ship_properties {
+				height: 100px;
+				margin: 10px;
+				border: 1px solid silver;
 			}
 		</style>
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
@@ -14,5 +70,16 @@
 		<script data-main="src/main" src="require-min.js"></script>
 	</head>
 	<body data-role="page">
+		<div id="action_bar" data-unitid="">
+			<div class="ship_properties">
+				<div id="armor">
+					<div id="currentArmor">
+					</div>
+				</div>
+				<img width="100" height="100" id="spaceship"/>
+				<ul id="weapons"></ul>
+				<br style="clear: both"/>
+			</div>
+		</div>
 	</body>
 </html>

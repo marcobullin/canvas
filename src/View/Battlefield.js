@@ -20,12 +20,14 @@ define(function () {
         },
 
         onClick: function (event) {
-            var x = event.clientX,
-                y = event.clientY,
+            var x = event.clientX + window.scrollX,
+                y = event.clientY + window.scrollY,
                 i, j,
                 clickedAnItem = false;
 
             for (i = 0; i < this.items.length; i++) {
+
+                // AN UNIT WAS CLICKED
                 if (x >= this.items[i].model.get('positionX') &&
                     x <= (this.items[i].model.get('positionX') + this.items[i].model.get('width')) &&
                     y >= this.items[i].model.get('positionY') &&
@@ -36,11 +38,18 @@ define(function () {
                         // MOVE AND ATTACK
                         if (this.selectedItems.length > 0) {
                             for (j in this.selectedItems) {
-                                this.selectedItems[j].model.set('attackEnemy', this.items[i].model.get('id'));
-                                // move to enemy and attack them
-                                this.selectedItems[j].moveAndAttack(this.items[i]);
+                                if (this.selectedItems[j].model.get('follow')) {
+                                    var enemy = this.selectedItems[j].model.get('follow');
+                                    enemy.removeFollower(this.selectedItems[j].model);
+                                }
+
+                                this.selectedItems[j].model.set('follow', this.items[i].model);
+                                this.items[i].model.addFollower(this.selectedItems[j].model);
+
+                                this.selectedItems[j].model.trigger('follow', this.items[i].model);
                             }
-                            return;
+                            clickedAnItem = true;
+                            //return;
                         }
 
                     // SELECT AN UNIT
@@ -53,6 +62,24 @@ define(function () {
                                 delete this.selectedItems[j];
                             }
                         }
+
+                        $('#action_bar').attr('data-unitid', this.items[i].model.get('id'));
+                        $('#spaceship').attr('src', window.GameImages[this.items[i].model.get('type')].src);
+                        $('#spaceship').attr('width', this.items[i].model.get('originalWidth'));
+                        $('#spaceship').attr('height', this.items[i].model.get('originalHeight'));
+                        $('#spaceship').show();
+
+                        var weapons = this.items[i].model.get('weapons'),
+                            index,
+                            html = [];
+                        for (index in weapons) {
+                            html.push('<li><img width="25" height="25" src="' + window.GameImages[weapons[index].type].src + '"></li>');
+                        }
+
+                        $('#weapons').html(html.join('')).show();
+                        var armor = (this.items[i].model.get('currentArmor') / this.items[i].model.get('maxArmor') * 100);
+                        $('#currentArmor').css({height: armor});
+                        $('#armor').show();
 
                         this.selectedItems.push(this.items[i]);
                         this.items[i].model.set('selected', true);
@@ -67,6 +94,12 @@ define(function () {
                 
 
                 for (j in this.selectedItems) {
+                    if (this.selectedItems[j].model.get('follow')) {
+                        var enemy = this.selectedItems[j].model.get('follow');
+                        enemy.removeFollower(this.selectedItems[j].model);
+                        this.selectedItems[j].model.set('follow', null);
+                    }
+
                     var yh = y -50,
                     xh = x -50;
                     this.selectedItems[j].model.set('attackEnemy', false);

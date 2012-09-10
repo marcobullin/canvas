@@ -1,18 +1,18 @@
 define(function () {
     var Model = Model || {};
-    Model.Mothership = Backbone.Model.extend({
+    Model.AlienFrigate = Backbone.Model.extend({
         defaults: {
-            width: 200,
-            height: 200,
+            width: 100,
+            height: 100,
             originalWidth: 100,
             originalHeight: 100,
-            currentArmor:  500,
-            maxArmor:  500,
-            currentShield: 1000,
-            maxShield: 1000,
-            speed: 20,
+            currentArmor:  200,
+            maxArmor:  200,
+            currentShield: 500,
+            maxShield: 500,
+            speed: TANK_SPEED / 2,
             isAttackable: true,
-            type: 'mothership',
+            type: 'alienFrigate',
             soundDestroy: 'sounds/bigboom.mp3',
             soundHit: 'sounds/hit.mp3'
         },
@@ -20,48 +20,70 @@ define(function () {
         initialize: function () {
             this.set('weapons', [
                 {
-                    coordX: 0,
-                    coordY: -90,
-                    firerange: 2 * SCOUT_FIRERANGE,
-                    firespeed: SCOUT_FIRESPEED,
-                    firepower: SCOUT_FIREPOWER,
-                    type: 'laser',
-                    sound: 'sounds/laser.mp3',
-                    width: 30,
-                    height: 30
-                },
-                {
-                    coordX: 0,
-                    coordY: 90,
-                    firerange: 2 * SCOUT_FIRERANGE,
-                    firespeed: SCOUT_FIRESPEED,
-                    firepower: SCOUT_FIREPOWER,
-                    type: 'laser',
-                    sound: 'sounds/laser.mp3',
-                    width: 30,
-                    height: 30
-                },
-                {
-                    coordX: -90,
-                    coordY: 0,
-                    firerange: 2 * SCOUT_FIRERANGE,
-                    firespeed: SCOUT_FIRESPEED,
-                    firepower: SCOUT_FIREPOWER,
-                    type: 'laser',
-                    sound: 'sounds/laser.mp3',
-                    width: 30,
-                    height: 30
-                },
-                {
-                    coordX: 80,
+                    coordX: -25,
                     coordY: -30,
-                    firerange: 2 * SCOUT_FIRERANGE,
+                    firerange: TANK_FIRERANGE,
+                    firespeed: TANK_FIRESPEED,
+                    firepower: TANK_FIREPOWER,
+                    type: 'cannon',
+                    sound: 'sounds/laser.mp3',
+                    width: 30,
+                    height: 30
+                },
+                {
+                    coordX: 25,
+                    coordY: -30,
+                    firerange: TANK_FIRERANGE,
+                    firespeed: TANK_FIRESPEED,
+                    firepower: TANK_FIREPOWER,
+                    type: 'cannon',
+                    sound: 'sounds/laser.mp3',
+                    width: 30,
+                    height: 30
+                },
+                {
+                    coordX: 30,
+                    coordY: 15,
+                    firerange: SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: SCOUT_FIREPOWER,
                     type: 'laser',
                     sound: 'sounds/laser.mp3',
-                    width: 30,
-                    height: 30
+                    width: 25,
+                    height: 25
+                },
+                {
+                    coordX: -30,
+                    coordY: 15,
+                    firerange: SCOUT_FIRERANGE,
+                    firespeed: SCOUT_FIRESPEED,
+                    firepower: SCOUT_FIREPOWER,
+                    type: 'laser',
+                    sound: 'sounds/laser.mp3',
+                    width: 25,
+                    height: 25
+                },
+                {
+                    coordX: 15,
+                    coordY: 15,
+                    firerange: SCOUT_FIRERANGE,
+                    firespeed: SCOUT_FIRESPEED,
+                    firepower: SCOUT_FIREPOWER,
+                    type: 'laser',
+                    sound: 'sounds/laser.mp3',
+                    width: 25,
+                    height: 25
+                },
+                {
+                    coordX: -15,
+                    coordY: 15,
+                    firerange: SCOUT_FIRERANGE,
+                    firespeed: SCOUT_FIRESPEED,
+                    firepower: SCOUT_FIREPOWER,
+                    type: 'laser',
+                    sound: 'sounds/laser.mp3',
+                    width: 25,
+                    height: 25
                 }
             ]);
         },
@@ -88,5 +110,5 @@ define(function () {
         }
     });
 
-    return Model.Mothership;
+    return Model.AlienFrigate;
 });

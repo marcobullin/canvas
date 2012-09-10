@@ -1,6 +1,6 @@
 define(function () {
     var Model = Model || {};
-    Model.HumanHeavyFighter = Backbone.Model.extend({
+    Model.AlienLightFighter = Backbone.Model.extend({
         defaults: {
             width: 50,
             height: 50,
@@ -12,35 +12,36 @@ define(function () {
             maxShield: 100,
             speed: SCOUT_SPEED,
             isAttackable: true,
-            type: 'heavyFighter',
+            type: 'alienLightFighter',
             soundDestroy: 'sounds/boom.mp3',
             soundHit: 'sounds/hit.mp3'
         },
+
         initialize: function () {
             this.set('weapons', [
                 {
-                    coordX: -17,
-                    coordY: 0,
+                    coordX: -7,
+                    coordY: -5,
                     firerange: SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
-                    firepower: 2 * SCOUT_FIREPOWER,
+                    firepower: SCOUT_FIREPOWER,
                     sound: 'sounds/laser.mp3',
-                    type: 'doublelaser',
-                    width: 25,
-                    height: 25
+                    type: 'laser',
+                    width: 20,
+                    height: 20
                 },
                 {
-                    coordX: 17,
-                    coordY: 0,
+                    coordX: 7,
+                    coordY: -5,
                     firerange: SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
-                    firepower: 2 * SCOUT_FIREPOWER,
+                    firepower: SCOUT_FIREPOWER,
                     sound: 'sounds/laser.mp3',
-                    type: 'doublelaser',
-                    width: 25,
-                    height: 25
+                    type: 'laser',
+                    width: 20,
+                    height: 20
                 }
-            ])
+            ]);
         },
 
         addFollower: function (enemyModel) {
@@ -65,5 +66,5 @@ define(function () {
         }
     });
 
-    return Model.HumanHeavyFighter;
+    return Model.AlienLightFighter;
 });
