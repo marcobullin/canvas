@@ -26,6 +26,9 @@ define(function () {
 
             // check if something is hit
             for (i = 0; i < window.battlefield.items.length; i+=1) {
+                if (!window.battlefield.items.hasOwnProperty(i)) {
+                    continue;
+                }
                 obstacle = window.battlefield.items[i];
 
                 if (this.model.get('positionY') >= obstacle.model.get('positionY') &&

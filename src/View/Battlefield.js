@@ -7,7 +7,7 @@ define(function () {
         selectedItems: [],
 
         events: {
-            'click canvas': 'onClick'
+            'tap canvas': 'onClick'
         },
 
         initialize: function () {
@@ -106,14 +106,15 @@ define(function () {
         update: function () {
             var now = Date.now(),
                 delta = now - then,
-                modifier = delta / 1000;
+                modifier = delta / 1000,
+                i;
 
             window.battlefield.ctx.drawImage(window.GameImages['map'], 0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
 
-            for (var i = 0; i < this.items.length; i++) {
-                //this.items[i].render(modifier);
-
-                this.items[i].draw(modifier);
+            for (i in this.items) {
+                if (this.items.hasOwnProperty(i)) {
+                    this.items[i].draw(modifier);
+                }
             }
 
             then = now;

@@ -130,7 +130,19 @@ require([
 			window.battlefield.render();
 
 			window.level = 1;
-			$('body').on('newLevel', function () {
+			$('[data-role="page"]').on('game_over', function (event, model) {
+				for (var i in window.battlefield.items) {
+
+					if (window.battlefield.items[i].model.get('isAttackable')) {
+						window.battlefield.items[i].stopScaning();
+					}
+				}
+				if (model.get('owner') === 'computer') {
+					alert('You Won!');
+					window.level += 1;
+				} else {
+					alert('You LOSE!');
+				}
 				run();
 			});
 			run();
@@ -143,6 +155,7 @@ require([
 
 		function run(level) {
 			window.battlefield.items = [];
+			clearInterval(this.action);
 
 			/**
 			 * USER
@@ -173,6 +186,21 @@ require([
 
 				window.battlefield.add(spaceship);
 			}
+
+
+
+			this.action = setInterval(function () {
+				for (var i in window.battlefield.items) {
+					if (!window.battlefield.items.hasOwnProperty(i)) {
+                        continue;
+                    }
+					var randX = Math.round(Math.random() * 1400);
+					var randY = Math.round(Math.random() * 800);
+					if (window.battlefield.items[i].model.get('isAttackable') && window.battlefield.items[i].model.get('owner') === 'computer' && window.battlefield.items[i].model.get('type') !== 'mothership') {
+						window.battlefield.items[i].move(randX, randY);
+					}
+				}
+			}, 10000);
 		}
 	}
 );
