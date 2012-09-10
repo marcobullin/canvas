@@ -36,7 +36,7 @@ var BATTLEFIELD_WIDTH = 1500,
 	LEVEL = {
 		1: {
 			user: ['mothership', 'lightFighter', 'lightFighter', 'lightFighter', 'heavyFighter', 'heavyFighter'],
-			enemy: ['mothership', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienHeavyFighter', 'alienFrigate']
+			enemy: ['mothership', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienHeavyFighter']
 		},
 		2: {
 			user: ['mothership', 'lightFighter', 'lightFighter', 'lightFighter', 'heavyFighter', 'heavyFighter', 'destroyer'],
@@ -44,11 +44,11 @@ var BATTLEFIELD_WIDTH = 1500,
 		},
 		3: {
 			user: ['mothership', 'lightFighter', 'heavyFighter', 'heavyFighter', 'heavyFighter', 'heavyFighter', 'destroyer'],
-			enemy: ['mothership', 'alienLightFighter', 'alienLightFighter', 'frigate']
+			enemy: ['mothership', 'alienLightFighter', 'alienLightFighter', 'alienFrigate']
 		},
 		4: {
 			user: ['mothership', 'heavyFighter', 'heavyFighter', 'frigate', 'destroyer'],
-			enemy: ['mothership', 'alienLightFighter', 'alienLightFighter', 'frigate', 'frigate']
+			enemy: ['mothership', 'alienLightFighter', 'alienLightFighter', 'alienFrigate', 'alienFrigate']
 		},
 		5: {
 			user: ['mothership', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'destroyer'],
@@ -56,6 +56,6 @@ var BATTLEFIELD_WIDTH = 1500,
 		},
 		6: {
 			user: ['mothership', 'destroyer', 'destroyer', 'destroyer', 'destroyer'],
-			enemy: ['mothership', 'alienHeavyFighter', 'alienHeavyFighter', 'frigate', 'frigate']
+			enemy: ['mothership', 'alienHeavyFighter', 'alienHeavyFighter', 'alienFrigate', 'alienFrigate']
 		}
 	};
