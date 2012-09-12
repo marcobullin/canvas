@@ -4,7 +4,7 @@ define([
 	function (Shot) {
 		var DoubleMachineGun = Shot.extend({
 			draw: function (modifier) {
-				this.model.set('id', Math.ceil(Math.random() * 99999999999 * new Date().getTime()));
+				//this.model.set('id', Math.ceil(Math.random() * 99999999999 * new Date().getTime()));
 
 				var width = 2,
 					height = 10;

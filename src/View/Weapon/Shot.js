@@ -40,7 +40,7 @@ define(function () {
                     this.goalX = false;
                     this.goalY = false;
 
-                    window.battlefield.remove(this.model.get('id'));
+                    window.battlefield.removeObject(this.model.get('id'));
                     if (obstacle.model.get('isAttackable') && !obstacle.model.get('isDestroyed')) {
                         var firepower = this.model.get('firepower');
                         // if (obstacle.model.get('currentShield') > 0) {
@@ -68,7 +68,7 @@ define(function () {
             ) {
                 this.goalX = false;
                 this.goalY = false;
-                window.battlefield.remove(this.model.get('id'));
+                window.battlefield.removeObject(this.model.get('id'));
             }
         },
 

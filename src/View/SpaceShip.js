@@ -18,7 +18,7 @@ define(
              */
             initialize: function () {
                 // unique ID
-                this.model.set('id', Math.ceil(Math.random() * 99999999999 * new Date().getTime()));
+                //this.model.set('id', Math.ceil(Math.random() * 99999999999 * new Date().getTime()));
 
                 // events
                 this.model.on('change:isDestroyed', $.proxy(this.onDestroy, this));
@@ -227,15 +227,15 @@ define(
              * @return void
              */
             onHitArmor: function (model, value) {
-                if (!this.hitSound) {
-                    this.hitSound = new Audio(this.model.get('soundHit'));
-                }
+                // if (!this.hitSound) {
+                //     this.hitSound = new Audio(this.model.get('soundHit'));
+                // }
 
-                this.hitSound.play();
+                // this.hitSound.play();
 
                 var unitId = $('#action_bar').attr('data-unitid');
                 if (unitId == this.model.get('id')) {
-                    var armor = (this.model.get('currentArmor') / this.model.get('maxArmor') * 100);
+                    var armor = 100 - (this.model.get('currentArmor') / this.model.get('maxArmor') * 100);
                     $('#currentArmor').css({height: armor});
                 }
 
@@ -271,6 +271,7 @@ define(
                     randX = Math.floor(Math.random() * enemy.get('width') + enemy.get('positionX')),
                     randY = Math.floor(Math.random() * enemy.get('height') + enemy.get('positionY'));
 
+                shotModel.set('id', ++window.counter);
                 shotModel.set('owner', this.model.get('owner'));
                 shotModel.set('positionX', weapon.positionX + (weapon.width / 2));
                 shotModel.set('positionY', weapon.positionY + (weapon.height / 2));
@@ -299,7 +300,7 @@ define(
                 default: return;
                 }
 
-                window.battlefield.add(shot);
+                window.battlefield.addObject(shot);
 
                 shot.fire(randX, randY, enemy.get('positionX'), enemy.get('positionY'), enemy.get('positionX') + enemy.get('width'), enemy.get('positionY') + enemy.get('height'));
             },

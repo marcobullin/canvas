@@ -1,3 +1,13 @@
+window.requestAnimationFrame = (function(){
+  return  window.requestAnimationFrame       || 
+          window.webkitRequestAnimationFrame || 
+          window.mozRequestAnimationFrame    || 
+          window.oRequestAnimationFrame      || 
+          window.msRequestAnimationFrame     || 
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
 require([
 	'../order!../underscore-min',
 	'../order!../backbone-min',
@@ -124,6 +134,7 @@ require([
 					break;
 			}
 
+			model.set('id', window.counter);
 			model.set('positionX', x);
 			model.set('positionY', y);
 			model.set('destinationPositionX', x);
@@ -134,6 +145,7 @@ require([
 				model: model
 			});
 
+			++window.counter;
 			return ship;
 		}
 
@@ -154,7 +166,9 @@ require([
 			window.battlefield.render();
 
 			window.level = 1;
+			window.counter = 1;
 			$('[data-role="page"]').on('game_over', function (event, model) {
+				window.counter = 1;
 				for (var i in window.battlefield.items) {
 
 					if (window.battlefield.items[i].model.get('isAttackable')) {
@@ -172,9 +186,7 @@ require([
 			run();
 
 			then = Date.now();
-			setInterval(function() {
-				window.battlefield.update()
-			}, 1);
+			window.battlefield.update();
 		}
 
 		function run(level) {

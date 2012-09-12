@@ -3,6 +3,7 @@ define(function () {
         el: 'body',
 
         items: [],
+        objects: [],
 
         selectedItems: [],
 
@@ -11,12 +12,29 @@ define(function () {
         },
 
         initialize: function () {
+            var canvas = document.createElement('canvas'),
+                ctx = canvas.getContext('2d');
+
+            canvas.width = BATTLEFIELD_WIDTH;
+            canvas.height = BATTLEFIELD_HEIGHT;
+            canvas.style.zIndex = 0;
+            canvas.style.position = 'absolute';
+
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
+
+            this.el.appendChild(canvas);
             _.bindAll(this, 'onClick');
         },
 
         add: function (item) {
             this.items.push(item);
             item.draw();
+        },
+
+        addObject: function (obj) {
+            this.objects.push(obj);
+            obj.draw();
         },
 
         onClick: function (event) {
@@ -77,7 +95,7 @@ define(function () {
                         }
 
                         $('#weapons').html(html.join('')).show();
-                        var armor = (this.items[i].model.get('currentArmor') / this.items[i].model.get('maxArmor') * 100);
+                        var armor = 100 - (this.items[i].model.get('currentArmor') / this.items[i].model.get('maxArmor') * 100);
                         $('#currentArmor').css({height: armor});
                         $('#armor').show();
 
@@ -132,6 +150,8 @@ define(function () {
 
             this.canvas.width = BATTLEFIELD_WIDTH;
             this.canvas.height = BATTLEFIELD_HEIGHT;
+            this.canvas.style.zIndex = 1;
+            this.canvas.style.position = 'absolute';
 
             this.el.appendChild(this.canvas);
         },
@@ -142,21 +162,38 @@ define(function () {
                 modifier = delta / 1000,
                 i;
 
-            window.battlefield.ctx.drawImage(window.GameImages['map'], 0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
+            window.battlefield.ctx.clearRect(0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
 
-            for (i in this.items) {
-                if (this.items.hasOwnProperty(i)) {
-                    this.items[i].draw(modifier);
+            for (i in window.battlefield.objects) {
+                if (window.battlefield.objects.hasOwnProperty(i)) {
+                    window.battlefield.objects[i].draw(modifier);
+                }
+            }
+
+            for (i in window.battlefield.items) {
+                if (window.battlefield.items.hasOwnProperty(i)) {
+                    window.battlefield.items[i].draw(modifier);
                 }
             }
 
             then = now;
+            requestAnimationFrame(window.battlefield.update);
         },
+
 
         remove: function (id) {
             for (var i = 0; i < this.items.length; i++) {
                 if (id === this.items[i].model.get('id')) {
                     this.items.splice(i, 1);
+                    break;
+                }
+            }
+        },
+
+        removeObject: function (id) {
+            for (var i = 0; i < this.objects.length; i++) {
+                if (id === this.objects[i].model.get('id')) {
+                    this.objects.splice(i, 1);
                     break;
                 }
             }
