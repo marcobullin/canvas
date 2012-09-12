@@ -1,11 +1,12 @@
 define(
     [
         'Model/Weapon/Shot',
-        'View/Weapon/MachineGun',
-        'View/Weapon/Cannon',
-        'View/Weapon/DoubleMachineGun'
+        'View/Weapon/Laser',
+        'View/Weapon/BigLaser',
+        'View/Weapon/DoubleLaser',
+        'View/Weapon/Missile'
     ],
-    function (ShotModel, MachineGun, Cannon, DoubleMachineGun) {
+    function (ShotModel, Laser, BigLaser, DoubleLaser, Missile) {
         'use strict';
         var View = View || {};
         View.SpaceShip = Backbone.View.extend({
@@ -17,9 +18,6 @@ define(
              * @return void
              */
             initialize: function () {
-                // unique ID
-                //this.model.set('id', Math.ceil(Math.random() * 99999999999 * new Date().getTime()));
-
                 // events
                 this.model.on('change:isDestroyed', $.proxy(this.onDestroy, this));
                 this.model.on('change:currentShield', $.proxy(this.onHitShield, this));
@@ -38,7 +36,7 @@ define(
                     if (weapons.hasOwnProperty(index)) {
                         key = weapons[index].coordX + '_' + weapons[index].coordY;
 
-                        this.scaning[key] = window.setInterval($.proxy(this.scan, this, weapons[index]), Math.floor(Math.random() *1000 + 1000))// * 4000 + 50));
+                        this.scaning[key] = window.setInterval($.proxy(this.scan, this, weapons[index]), Math.floor(Math.random() * 1000 +  weapons[index].firefrequence))// * 4000 + 50));
                     }
                 }
 
@@ -278,29 +276,55 @@ define(
                 shotModel.set('firepower', weapon.firepower);
                 shotModel.set('firespeed', weapon.firespeed);
                 shotModel.set('angle', direction);
+                shotModel.set('weapon', weapon.type);
+                shotModel.set('enemy', enemy);
+
+                if (weapon.type === 'rocketlauncher') {
+                    shotModel.set('isUnit', false);
+                    shotModel.set('width', 20);
+                    shotModel.set('height', 20);
+                    shotModel.set('isAttackable', true);
+                    shotModel.set('currentArmor', 4);
+                    shotModel.set('isDestroyed', false);
+                    shotModel.on('change:currentArmor', function (model, value) {
+                        if (value <= 0) {
+                            shotModel.set('isDestroyed', true);
+                            window.battlefield.remove(shotModel.get('id'));
+                        }
+                    });
+                }
 
                 weapon.direction = direction;
 
                 switch (weapon.type) {
                 case 'laser':
-                    shot = new MachineGun({
+                    shot = new Laser({
                         model: shotModel
                     });
                     break;
-                case 'cannon':
-                    shot = new Cannon({
+                case 'BigLaser':
+                    shot = new BigLaser({
                         model: shotModel
                     });
                     break;
                 case 'doublelaser':
-                    shot = new DoubleMachineGun({
+                    shot = new DoubleLaser({
+                        model: shotModel
+                    });
+                    break;
+                case 'rocketlauncher':
+                    shot = new Missile({
                         model: shotModel
                     });
                     break;
                 default: return;
                 }
 
-                window.battlefield.addObject(shot);
+                if (weapon.type === 'rocketlauncher') {
+                    window.battlefield.add(shot);
+                } else {
+                    window.battlefield.addObject(shot);
+                }
 
                 shot.fire(randX, randY, enemy.get('positionX'), enemy.get('positionY'), enemy.get('positionX') + enemy.get('width'), enemy.get('positionY') + enemy.get('height'));
             },

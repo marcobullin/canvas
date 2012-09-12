@@ -12,8 +12,14 @@ define(function () {
                 return;
             }
 
-            var dx = this.goalX - this.model.get('positionX'),
-                dy = this.goalY - this.model.get('positionY'),
+            if (this.model.get('enemy').get('isDestroyed') === true && this.model.get('weapon') === 'rocketlauncher') {
+                window.battlefield.remove(this.model.get('id'));
+            }
+
+            // var dx = this.goalX - this.model.get('positionX'),
+            //     dy = this.goalY - this.model.get('positionY'),
+            var dx = (this.model.get('weapon') === 'rocketlauncher') ? this.model.get('enemy').get('positionX') + this.model.get('enemy').get('width')/2 - this.model.get('positionX') : this.goalX - this.model.get('positionX'),
+                dy = (this.model.get('weapon') === 'rocketlauncher') ? this.model.get('enemy').get('positionY') + this.model.get('enemy').get('height')/2 - this.model.get('positionY') : this.goalY - this.model.get('positionY'),
                 distance = Math.sqrt(dx * dx + dy * dy),
                 moves = distance / (this.model.get('firespeed') * modifier),
                 x = dx / moves,
@@ -40,7 +46,11 @@ define(function () {
                     this.goalX = false;
                     this.goalY = false;
 
-                    window.battlefield.removeObject(this.model.get('id'));
+                    if (this.model.get('weapon') === 'rocketlauncher') {
+                        window.battlefield.remove(this.model.get('id'));
+                    } else {
+                        window.battlefield.removeObject(this.model.get('id'));
+                    }
                     if (obstacle.model.get('isAttackable') && !obstacle.model.get('isDestroyed')) {
                         var firepower = this.model.get('firepower');
                         // if (obstacle.model.get('currentShield') > 0) {
@@ -60,6 +70,10 @@ define(function () {
                 }
             }
 
+            if (this.model.get('weapon') === 'rocketlauncher') {
+                return;
+            }
+
             // shot reaches goal
             if (this.model.get('positionY') >= this.endY1 &&
                 this.model.get('positionY') <= this.endY2 &&
@@ -68,7 +82,12 @@ define(function () {
             ) {
                 this.goalX = false;
                 this.goalY = false;
-                window.battlefield.removeObject(this.model.get('id'));
+
+                if (this.model.get('weapon') === 'rocketlauncher') {
+                    window.battlefield.remove(this.model.get('id'));
+                } else {
+                    window.battlefield.removeObject(this.model.get('id'));
+                }
             }
         },
 

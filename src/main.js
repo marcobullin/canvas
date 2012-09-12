@@ -85,6 +85,14 @@ require([
 				key: 'alienFrigate',
 				src: 'images/alienFrigate.png'
 			},
+			{
+				key: 'rocketlauncher',
+				src: 'images/rocketlauncher.png'
+			},
+			{
+				key: 'missile',
+				src: 'images/missile.png'
+			}
 		];
 
 		var img = null,
@@ -171,7 +179,7 @@ require([
 				window.counter = 1;
 				for (var i in window.battlefield.items) {
 
-					if (window.battlefield.items[i].model.get('isAttackable')) {
+					if (window.battlefield.items[i].model.get('isUnit') && window.battlefield.items[i].model.get('isAttackable')) {
 						window.battlefield.items[i].stopScaning();
 					}
 				}
@@ -230,9 +238,10 @@ require([
 					if (!window.battlefield.items.hasOwnProperty(i)) {
                         continue;
                     }
+
 					var randX = Math.round(Math.random() * 1400);
 					var randY = Math.round(Math.random() * 800);
-					if (window.battlefield.items[i].model.get('isAttackable') && window.battlefield.items[i].model.get('owner') === 'computer' && window.battlefield.items[i].model.get('type') !== 'mothership') {
+					if (window.battlefield.items[i].model.get('isUnit') && window.battlefield.items[i].model.get('isAttackable') && window.battlefield.items[i].model.get('owner') === 'computer' && window.battlefield.items[i].model.get('type') !== 'mothership') {
 						window.battlefield.items[i].move(randX, randY);
 					}
 				}

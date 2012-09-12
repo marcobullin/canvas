@@ -12,6 +12,7 @@ define(function () {
             maxShield: 1000,
             speed: 20,
             isAttackable: true,
+            isUnit: true,
             type: 'mothership',
             soundDestroy: 'sounds/bigboom.mp3',
             soundHit: 'sounds/hit.mp3'
@@ -25,6 +26,7 @@ define(function () {
                     firerange: 2 * SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: SCOUT_FIREPOWER,
+                    firefrequence: 1000,
                     type: 'laser',
                     sound: 'sounds/laser.mp3',
                     width: 30,
@@ -36,6 +38,7 @@ define(function () {
                     firerange: 2 * SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: SCOUT_FIREPOWER,
+                    firefrequence: 1000,
                     type: 'laser',
                     sound: 'sounds/laser.mp3',
                     width: 30,
@@ -47,6 +50,7 @@ define(function () {
                     firerange: 2 * SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: SCOUT_FIREPOWER,
+                    firefrequence: 1000,
                     type: 'laser',
                     sound: 'sounds/laser.mp3',
                     width: 30,
@@ -58,10 +62,23 @@ define(function () {
                     firerange: 2 * SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: SCOUT_FIREPOWER,
+                    firefrequence: 1000,
                     type: 'laser',
                     sound: 'sounds/laser.mp3',
                     width: 30,
                     height: 30
+                },
+                {
+                    coordX: 0,
+                    coordY: 0,
+                    firerange: 2 * TANK_FIRERANGE,
+                    firespeed: SCOUT_FIRESPEED / 3,
+                    firepower: 10 * SCOUT_FIREPOWER,
+                    firefrequence: 3000,
+                    sound: 'sounds/laser.mp3',
+                    type: 'rocketlauncher',
+                    width: 50,
+                    height: 50
                 }
             ]);
         },

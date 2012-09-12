@@ -12,6 +12,7 @@ define(function () {
             maxShield: 100,
             speed: SCOUT_SPEED,
             isAttackable: true,
+            isUnit: true,
             type: 'lightFighter',
             soundDestroy: 'sounds/boom.mp3',
             soundHit: 'sounds/hit.mp3'
@@ -25,6 +26,7 @@ define(function () {
                     firerange: SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: SCOUT_FIREPOWER,
+                    firefrequence: 1000,
                     sound: 'sounds/laser.mp3',
                     type: 'laser',
                     width: 20,
@@ -36,6 +38,7 @@ define(function () {
                     firerange: SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: SCOUT_FIREPOWER,
+                    firefrequence: 1000,
                     sound: 'sounds/laser.mp3',
                     type: 'laser',
                     width: 20,
