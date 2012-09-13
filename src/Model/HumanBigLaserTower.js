@@ -1,20 +1,21 @@
 define(function () {
     var Model = Model || {};
-    Model.AlienLightFighter = Backbone.Model.extend({
+    Model.HumanBigLaserTower = Backbone.Model.extend({
         defaults: {
-            width: 50,
-            height: 50,
+            width: 40,
+            height: 40,
             originalWidth: 100,
             originalHeight: 100,
-            currentArmor:  100,
-            maxArmor:  100,
+            currentArmor:  70,
+            maxArmor:  70,
             currentShield: 100,
             maxShield: 100,
-            speed: SCOUT_SPEED,
+            speed: 0,
             isAttackable: true,
             isUnit: true,
-            headMoney: 25,
-            type: 'alienLightFighter',
+            price: 150,
+            headMoney: 60,
+            type: 'laserTower',
             soundDestroy: 'sounds/boom.mp3',
             soundHit: 'sounds/hit.mp3'
         },
@@ -22,28 +23,16 @@ define(function () {
         initialize: function () {
             this.set('weapons', [
                 {
-                    coordX: -7,
-                    coordY: -5,
-                    firerange: SCOUT_FIRERANGE,
+                    coordX: 0,
+                    coordY: 0,
+                    firerange: TANK_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
-                    firepower: SCOUT_FIREPOWER,
+                    firepower: TANK_FIREPOWER,
                     firefrequence: 1000,
                     sound: 'sounds/laser.mp3',
-                    type: 'laser',
-                    width: 20,
-                    height: 20
-                },
-                {
-                    coordX: 7,
-                    coordY: -5,
-                    firerange: SCOUT_FIRERANGE,
-                    firespeed: SCOUT_FIRESPEED,
-                    firepower: SCOUT_FIREPOWER,
-                    firefrequence: 1000,
-                    sound: 'sounds/laser.mp3',
-                    type: 'laser',
-                    width: 20,
-                    height: 20
+                    type: 'biglaser',
+                    width: 40,
+                    height: 40
                 }
             ]);
         },
@@ -70,5 +59,5 @@ define(function () {
         }
     });
 
-    return Model.AlienLightFighter;
+    return Model.HumanBigLaserTower;
 });

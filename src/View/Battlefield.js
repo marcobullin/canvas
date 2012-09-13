@@ -1,4 +1,10 @@
-define(function () {
+define([
+    'Model/HumanLaserTower',
+    'Model/HumanDoubleLaserTower',
+    'Model/HumanBigLaserTower',
+    'Model/HumanMissileTower',
+    'View/Tower'
+    ], function (HumanLaserTower, HumanDoubleLaserTower, HumanBigLaserTower, HumanMissileTower, Tower) {
     var Battlefield = Backbone.View.extend({
         el: 'body',
 
@@ -8,7 +14,9 @@ define(function () {
         selectedItems: [],
 
         events: {
-            'tap canvas': 'onClick'
+            'tap canvas': 'onClick',
+            'tap #items': 'onClickItems',
+            'tap .cancel': 'onCancel'
         },
 
         initialize: function () {
@@ -42,6 +50,23 @@ define(function () {
                 y = event.clientY + window.scrollY,
                 i, j,
                 clickedAnItem = false;
+
+            if (this.building) {
+                this.building.set('positionX', x - this.building.get('width') / 2);
+                this.building.set('positionY', y - this.building.get('height') / 2);
+                this.building.set('owner', 'user');
+
+                var tower = new Tower({
+                    model: this.building
+                });
+
+                window.battlefield.add(tower);
+                this.building = null;
+
+                $('#items').show();
+                $('#info').hide();
+                return;
+            }
 
             for (i = 0; i < this.items.length; i++) {
 
@@ -81,7 +106,7 @@ define(function () {
                             }
                         }
 
-                        $('#action_bar').attr('data-unitid', this.items[i].model.get('id'));
+                        $('#status_bar').attr('data-unitid', this.items[i].model.get('id'));
                         $('#spaceship').attr('src', window.GameImages[this.items[i].model.get('type')].src);
                         $('#spaceship').attr('width', this.items[i].model.get('originalWidth'));
                         $('#spaceship').attr('height', this.items[i].model.get('originalHeight'));
@@ -109,8 +134,6 @@ define(function () {
 
             // MOVE
             if (this.selectedItems.length > 0 && false === clickedAnItem) {
-                
-
                 for (j in this.selectedItems) {
                     if (this.selectedItems[j].model.get('follow')) {
                         var enemy = this.selectedItems[j].model.get('follow');
@@ -142,6 +165,47 @@ define(function () {
                     }
                 }
             }
+        },
+
+        onClickItems: function (event) {
+            var li = $(event.target).closest('li.tower'),
+                type = li.attr('data-type'),
+                model;
+
+            switch (type) {
+                case 'laserTower':
+                    model = new HumanLaserTower();
+                    break;
+                case 'doublelaserTower':
+                    model = new HumanDoubleLaserTower();
+                    break;
+                case 'biglaserTower':
+                    model = new HumanBigLaserTower();
+                    break;
+                case 'missileTower':
+                    model = new HumanMissileTower();
+                    break;
+            }
+
+            if (model.get('price') > window.Global.user.model.get('money')) {
+                alert('Not enought Money');
+                return;
+            }
+
+            window.Global.user.model.set('money', window.Global.user.model.get('money') - model.get('price'));
+
+            $('#items').hide();
+            $('#info').show();
+            model.set('id', ++window.counter);
+            this.building = model;
+        },
+
+        onCancel: function () {
+            window.Global.user.model.set('money', window.Global.user.model.get('money') + this.building.get('price'));
+            this.building = null;
+
+            $('#items').show();
+            $('#info').hide();
         },
 
         render: function () {

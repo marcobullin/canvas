@@ -5,6 +5,10 @@ define([
 		'use strict';
         var View = View || {};
         View.Laser = Shot.extend({
+        	initialize: function () {
+                this.model.set('type', 'laser');
+            },
+
 			draw: function (modifier) {
 				//this.model.set('id', Math.ceil(Math.random() * 9999999999999 * new Date().getTime()));
 

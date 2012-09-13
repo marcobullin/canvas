@@ -1,5 +1,4 @@
-define(
-    [
+define([
         'Model/Weapon/Shot',
         'View/Weapon/Laser',
         'View/Weapon/BigLaser',
@@ -9,7 +8,7 @@ define(
     function (ShotModel, Laser, BigLaser, DoubleLaser, Missile) {
         'use strict';
         var View = View || {};
-        View.SpaceShip = Backbone.View.extend({
+        View.Tower = Backbone.View.extend({
             scaning: {},
 
             /**
@@ -22,7 +21,6 @@ define(
                 this.model.on('change:isDestroyed', $.proxy(this.onDestroy, this));
                 this.model.on('change:currentShield', $.proxy(this.onHitShield, this));
                 this.model.on('change:currentArmor', $.proxy(this.onHitArmor, this));
-                this.model.on('follow', $.proxy(this.onFollow, this));
 
                 // reset weapon scaning
                 this.scaning = {};
@@ -103,11 +101,6 @@ define(
                             continue;
                         }
 
-                        // missiles cant attack missiles
-                        if (weapon.type === 'rocketlauncher' && items[i].model.get('type') === 'missile') {
-                            continue;
-                        }
-
                         if (this.isAttackable(items[i].model, weapon)) {
                             return this.attack(items[i].model, weapon);
                         }
@@ -126,26 +119,7 @@ define(
              * @return void
              */
             move: function (x, y) {
-                var direction,
-                    follower,
-                    i;
-
-                this.model.set('destinationPositionX', x - this.model.get('width') / 2);
-                this.model.set('destinationPositionY', y - this.model.get('height') / 2);
-
-                direction = Math.atan2(
-                        this.model.get('destinationPositionY') - this.model.get('positionY'),
-                        this.model.get('destinationPositionX') - this.model.get('positionX')
-                    ) - Math.PI / 2;
-
-                this.model.set('direction', direction);
-
-                follower = this.model.get('follower');
-                for (i in follower) {
-                    if (follower.hasOwnProperty(i)) {
-                        follower[i].trigger('follow', this.model);
-                    }
-                }
+                return;
             },
 
             /**
@@ -199,29 +173,6 @@ define(
             },
 
             /**
-             * Follow the enemy.
-             *
-             * @param object enemy
-             *
-             * @return void
-             */
-            onFollow: function (enemy) {
-                var x = enemy.get('destinationPositionX') + enemy.get('width') + Math.round(Math.random() * 200 + 50),
-                    y = enemy.get('destinationPositionY') + enemy.get('height') + Math.round(Math.random() * 200 + 50);
-
-                if (x > BATTLEFIELD_WIDTH) {
-                    x = BATTLEFIELD_WIDTH - this.model.get('width');
-                }
-
-                if (y > BATTLEFIELD_HEIGHT) {
-                    y = BATTLEFIELD_HEIGHT - this.model.get('height');
-                }
-
-                this.move(x, y);
-            },
-
-
-            /**
              * attack an enemy
              *
              * @param  object  enemy - model of enemy
@@ -243,6 +194,7 @@ define(
                 shotModel.set('firepower', weapon.firepower);
                 shotModel.set('firespeed', weapon.firespeed);
                 shotModel.set('angle', direction);
+                shotModel.set('weapon', weapon.type);
                 shotModel.set('enemy', enemy);
 
                 if (weapon.type === 'rocketlauncher') {
@@ -267,7 +219,7 @@ define(
                         model: shotModel
                     });
                     break;
-                case 'BigLaser':
+                case 'biglaser':
                     shot = new BigLaser({
                         model: shotModel
                     });
@@ -291,52 +243,7 @@ define(
                     window.battlefield.addObject(shot);
                 }
 
-                shot.fire(randX, randY, Math.floor(enemy.get('positionX')), Math.floor(enemy.get('positionY')), Math.floor(enemy.get('positionX')) + enemy.get('width'), Math.floor(enemy.get('positionY')) + enemy.get('height'));
-            },
-
-            /**
-             * Check if unit has to be moved and than update the position for rendering/drawing.
-             *
-             * @param integer modifier - time 
-             *
-             * @return void
-             */
-            updatePosition: function (modifier) {
-                if (this.model.get('destinationPositionX') === Math.round(this.model.get('positionX')) && this.model.get('destinationPositionY') === Math.round(this.model.get('positionY'))) {
-                    return;
-                }
-
-                var speed = this.model.get('speed') * modifier,
-                    speedX,
-                    speedY,
-                    a = Math.abs(this.model.get('destinationPositionX') - this.model.get('positionX')) / speed,
-                    b = Math.abs(this.model.get('destinationPositionY') - this.model.get('positionY')) / speed;
-
-                // set right speed for x and y distance
-                if (a >= b) {
-                    speedX = speed;
-                    speedY = (b / a) * speed;
-                } else {
-                    speedX = (a / b) * speed;
-                    speedY = speed;
-                }
-
-                // setting new postion
-                if (this.model.get('destinationPositionX') < this.model.get('positionX')) {
-                    this.model.set('positionX', (this.model.get('positionX') - speedX));
-                }
-
-                if (this.model.get('destinationPositionX') > this.model.get('positionX')) {
-                    this.model.set('positionX', (this.model.get('positionX') + speedX));
-                }
-
-                if (this.model.get('destinationPositionY') < this.model.get('positionY')) {
-                    this.model.set('positionY', (this.model.get('positionY') - speedY));
-                }
-
-                if (this.model.get('destinationPositionY') > this.model.get('positionY')) {
-                    this.model.set('positionY', (this.model.get('positionY') + speedY));
-                }
+                shot.fire(randX, randY, enemy.get('positionX'), enemy.get('positionY'), enemy.get('positionX') + enemy.get('width'), enemy.get('positionY') + enemy.get('height'));
             },
 
             /**
@@ -372,10 +279,6 @@ define(
                 }
                 this.model.set('follower', []);
 
-                if (this.model.get('owner') === 'computer') {
-                    window.Global.user.model.set('money', window.Global.user.model.get('money') + this.model.get('headMoney'));
-                }
-
                 // display explosion
                 animation = window.setInterval(function () {
                     window.battlefield.ctx.drawImage(
@@ -392,7 +295,7 @@ define(
 
                     if (x === (5 * 118)) {
                         window.clearInterval(animation);
-                        if (self.model.get('type') === 'alienMothership' || self.model.get('type') === 'mothership') {
+                        if (self.model.get('type') === 'mothership') {
                             $('[data-role="page"]').trigger('game_over', [self.model]);
                         }
                         return;
@@ -467,8 +370,6 @@ define(
                     weapons = this.model.get('weapons'),
                     key;
 
-                this.updatePosition(modifier);
-
                 // MARK SHIP AS SELECTED
                 if (this.model.get('selected')) {
                     window.battlefield.ctx.beginPath();
@@ -508,7 +409,5 @@ define(
                 }
             }
         });
-
-        return View.SpaceShip;
-    }
-);
+        return View.Tower;
+    });

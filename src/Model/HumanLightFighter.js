@@ -13,6 +13,7 @@ define(function () {
             speed: SCOUT_SPEED,
             isAttackable: true,
             isUnit: true,
+            headMoney: 25,
             type: 'lightFighter',
             soundDestroy: 'sounds/boom.mp3',
             soundHit: 'sounds/hit.mp3'

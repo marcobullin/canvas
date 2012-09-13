@@ -13,6 +13,7 @@ define(function () {
             speed:  40,
             isAttackable: true,
             isUnit: true,
+            headMoney: 100,
             type: 'destroyer',
             soundDestroy: 'sounds/bigboom.mp3',
             soundHit: 'sounds/hit.mp3'
@@ -75,7 +76,7 @@ define(function () {
                     firespeed: SCOUT_FIRESPEED,
                     firepower: 2 * SCOUT_FIREPOWER,
                     firefrequence: 1000,
-                    type: 'laser',
+                    type: 'doublelaser',
                     sound: 'sounds/laser.mp3',
                     width: 20,
                     height: 20

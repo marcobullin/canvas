@@ -5,6 +5,10 @@ define([
         'use strict';
         var View = View || {};
         View.Missile = Shot.extend({
+            initialize: function () {
+                this.model.set('type', 'missile');
+            },
+
             draw: function (modifier) {
                 this.update(modifier);
 

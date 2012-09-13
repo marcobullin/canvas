@@ -21,9 +21,13 @@ require([
 	'../order!Model/HumanMothership',
 	'../order!Model/AlienLightFighter',
 	'../order!Model/AlienHeavyFighter',
-	'../order!Model/AlienFrigate'
+	'../order!Model/AlienFrigate',
+	'../order!Model/AlienDestroyer',
+	'../order!Model/AlienMothership',
+	'../order!Model/User',
+	'../order!View/User'
 	],
-	function (_, Backbone, config, Battlefield, SpaceShip, HumanDestroyer, HumanFrigate, HumanHeavyFighter, HumanLightFighter, HumanMothership, AlienLightFighter, AlienHeavyFighter, AlienFrigate) {
+	function (_, Backbone, config, Battlefield, SpaceShip, HumanDestroyer, HumanFrigate, HumanHeavyFighter, HumanLightFighter, HumanMothership, AlienLightFighter, AlienHeavyFighter, AlienFrigate, AlienDestroyer, AlienMothership, UserModel, User) {
 		var images = [
 			{
 				key: 'map',
@@ -66,7 +70,7 @@ require([
 				src: 'images/doublelaser.png'
 			},
 			{
-				key: 'cannon',
+				key: 'biglaser',
 				src: 'images/cannon.png'
 			},
 			{
@@ -92,6 +96,18 @@ require([
 			{
 				key: 'missile',
 				src: 'images/missile.png'
+			},
+			{
+				key: 'laserTower',
+				src: 'images/laserTower.png'
+			},
+			{
+				key: 'alienDestroyer',
+				src: 'images/alienDestroyer.png'
+			},
+			{
+				key: 'alienMothership',
+				src: 'images/alienMothership.png'
 			}
 		];
 
@@ -140,6 +156,12 @@ require([
 				case 'alienFrigate':
 					model = new AlienFrigate();
 					break;
+				case 'alienDestroyer':
+					model = new AlienDestroyer();
+					break;
+				case 'alienMothership':
+					model = new AlienMothership();
+					break;
 			}
 
 			model.set('id', window.counter);
@@ -173,6 +195,12 @@ require([
 			window.battlefield = new Battlefield();
 			window.battlefield.render();
 
+			var userModel = new UserModel();
+			window.Global.user = new User({
+				model: userModel
+			});
+			userModel.set('money', 100);
+
 			window.level = 1;
 			window.counter = 1;
 			$('[data-role="page"]').on('game_over', function (event, model) {
@@ -200,6 +228,7 @@ require([
 		function run(level) {
 			window.battlefield.items = [];
 			clearInterval(this.action);
+			clearInterval(this.backupAction);
 
 			/**
 			 * USER
@@ -222,7 +251,7 @@ require([
 			for (var j = 0; j <  LEVEL[window.level].enemy.length; j++) {
 				var spaceship;
 
-				if (LEVEL[window.level].enemy[j] === 'mothership') {
+				if (LEVEL[window.level].enemy[j] === 'alienMothership') {
 				 	spaceship = create(LEVEL[window.level].enemy[j], 1200, 550, 'computer');
 				} else {
 					spaceship = create(LEVEL[window.level].enemy[j], 1050, 900 - (j + 1) * 50, 'computer');
@@ -241,11 +270,33 @@ require([
 
 					var randX = Math.round(Math.random() * 1400);
 					var randY = Math.round(Math.random() * 800);
-					if (window.battlefield.items[i].model.get('isUnit') && window.battlefield.items[i].model.get('isAttackable') && window.battlefield.items[i].model.get('owner') === 'computer' && window.battlefield.items[i].model.get('type') !== 'mothership') {
+					if (window.battlefield.items[i].model.get('isUnit') && window.battlefield.items[i].model.get('isAttackable') && window.battlefield.items[i].model.get('owner') === 'computer') {
 						window.battlefield.items[i].move(randX, randY);
 					}
 				}
 			}, 10000);
+
+			this.backupAction = setInterval(function () {
+				var spaceship;
+
+				switch (window.level) {
+					case 1:
+					case 2:
+					case 3:
+						spaceship = create('alienLightFighter', 1150, 550, 'computer');
+						break;
+					case 4:
+						spaceship = create('alienHeavyFighter', 1150, 550, 'computer');
+						break;
+					case 5:
+						spaceship = create('alienHeavyFighter', 1150, 550, 'computer');
+						break;
+					case 6:
+						spaceship = create('alienFrigate', 1150, 550, 'computer');
+						break;
+				}
+				window.battlefield.add(spaceship);
+			}, 30000);
 		}
 	}
 );

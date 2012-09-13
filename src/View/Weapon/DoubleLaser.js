@@ -5,9 +5,10 @@ define([
 		'use strict';
         var View = View || {};
         View.DoubleLaser = Shot.extend({
+        	initialize: function () {
+                this.model.set('type', 'doublelaser');
+            },
 			draw: function (modifier) {
-				//this.model.set('id', Math.ceil(Math.random() * 99999999999 * new Date().getTime()));
-
 				var width = 2,
 					height = 10;
 

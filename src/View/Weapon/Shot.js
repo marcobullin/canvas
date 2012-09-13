@@ -12,14 +12,12 @@ define(function () {
                 return;
             }
 
-            if (this.model.get('enemy').get('isDestroyed') === true && this.model.get('weapon') === 'rocketlauncher') {
+            if (this.model.get('enemy').get('isDestroyed') === true && this.model.get('type') === 'missile') {
                 window.battlefield.remove(this.model.get('id'));
             }
 
-            // var dx = this.goalX - this.model.get('positionX'),
-            //     dy = this.goalY - this.model.get('positionY'),
-            var dx = (this.model.get('weapon') === 'rocketlauncher') ? this.model.get('enemy').get('positionX') + this.model.get('enemy').get('width')/2 - this.model.get('positionX') : this.goalX - this.model.get('positionX'),
-                dy = (this.model.get('weapon') === 'rocketlauncher') ? this.model.get('enemy').get('positionY') + this.model.get('enemy').get('height')/2 - this.model.get('positionY') : this.goalY - this.model.get('positionY'),
+            var dx = (this.model.get('type') === 'missile') ? Math.floor(this.model.get('enemy').get('positionX')) + this.model.get('enemy').get('width')/2 - this.model.get('positionX') : this.goalX - this.model.get('positionX'),
+                dy = (this.model.get('type') === 'missile') ? Math.floor(this.model.get('enemy').get('positionY')) + this.model.get('enemy').get('height')/2 - this.model.get('positionY') : this.goalY - this.model.get('positionY'),
                 distance = Math.sqrt(dx * dx + dy * dy),
                 moves = distance / (this.model.get('firespeed') * modifier),
                 x = dx / moves,
@@ -46,7 +44,8 @@ define(function () {
                     this.goalX = false;
                     this.goalY = false;
 
-                    if (this.model.get('weapon') === 'rocketlauncher') {
+                    if (this.model.get('type') === 'missile') {
+                        this.model.set('isDestroyed', true);
                         window.battlefield.remove(this.model.get('id'));
                     } else {
                         window.battlefield.removeObject(this.model.get('id'));
@@ -70,10 +69,6 @@ define(function () {
                 }
             }
 
-            if (this.model.get('weapon') === 'rocketlauncher') {
-                return;
-            }
-
             // shot reaches goal
             if (this.model.get('positionY') >= this.endY1 &&
                 this.model.get('positionY') <= this.endY2 &&
@@ -83,7 +78,8 @@ define(function () {
                 this.goalX = false;
                 this.goalY = false;
 
-                if (this.model.get('weapon') === 'rocketlauncher') {
+                if (this.model.get('type') === 'missile') {
+                    this.model.set('isDestroyed', true);
                     window.battlefield.remove(this.model.get('id'));
                 } else {
                     window.battlefield.removeObject(this.model.get('id'));
