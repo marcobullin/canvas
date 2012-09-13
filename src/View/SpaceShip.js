@@ -22,6 +22,7 @@ define(
                 this.model.on('change:isDestroyed', $.proxy(this.onDestroy, this));
                 this.model.on('change:currentShield', $.proxy(this.onHitShield, this));
                 this.model.on('change:currentArmor', $.proxy(this.onHitArmor, this));
+                this.model.on('follow', $.proxy(this.onFollow, this));
 
                 // reset weapon scaning
                 this.scaning = {};
@@ -29,31 +30,47 @@ define(
                 // let weapons scan for enemies
                 var weapons = this.model.get('weapons'),
                     index,
-                    self = this,
                     key;
 
                 for (index in weapons) {
                     if (weapons.hasOwnProperty(index)) {
                         key = weapons[index].coordX + '_' + weapons[index].coordY;
-
-                        this.scaning[key] = window.setInterval($.proxy(this.scan, this, weapons[index]), Math.floor(Math.random() * 1000 +  weapons[index].firefrequence))// * 4000 + 50));
+                        this.scaning[key] = window.setInterval($.proxy(this.scan, this, weapons[index]), Math.floor(Math.random() * 1000 +  weapons[index].firefrequence));
                     }
                 }
+            },
 
-                this.model.on('follow', function (enemy) {
-                    var x = enemy.get('destinationPositionX') + enemy.get('width') + Math.round(Math.random() * 200 + 50),
-                        y = enemy.get('destinationPositionY') + enemy.get('height') + Math.round(Math.random() * 200 + 50);
-                    //var x = enemy.get('positionX') - (followerNumber * 50),
-                    //    y = enemy.get('positionY') + 100;
+            /**
+             * Checks if an enemy is attackable
+             *
+             * @param object enemy
+             * @param object weapon
+             *
+             * @return void
+             */
+            isAttackable: function (enemy, weapon) {
+                var x1 = enemy.get('positionX'),
+                    y1 = enemy.get('positionY'),
+                    x2 = enemy.get('positionX') + enemy.get('width'),
+                    y2 = enemy.get('positionY'),
+                    x3 = enemy.get('positionX') + enemy.get('width'),
+                    y3 = enemy.get('positionY') + enemy.get('height'),
+                    x4 = enemy.get('positionX'),
+                    y4 = enemy.get('positionY') + enemy.get('height'),
+                    r2 = weapon.firerange * weapon.firerange,
+                    centerX = weapon.positionX + weapon.width / 2,
+                    centerY = weapon.positionY + weapon.height / 2,
+                    destination1 = (x1 - centerX) * (x1 - centerX) + (y1 - centerY) * (y1 - centerY),
+                    destination2 = (x2 - centerX) * (x2 - centerX) + (y2 - centerY) * (y2 - centerY),
+                    destination3 = (x3 - centerX) * (x3 - centerX) + (y3 - centerY) * (y3 - centerY),
+                    destination4 = (x4 - centerX) * (x4 - centerX) + (y4 - centerY) * (y4 - centerY);
 
-                    if (x > BATTLEFIELD_WIDTH) {
-                        x = BATTLEFIELD_WIDTH - self.model.get('width');
-                    }
-                    if (y > BATTLEFIELD_HEIGHT) {
-                        y = BATTLEFIELD_HEIGHT - self.model.get('height');
-                    }
-                    self.move(x, y);
-                });
+                // check if one of this points is in range
+                if (destination1 < r2 || destination2 < r2 || destination3 < r2 || destination4 < r2) {
+                    return true;
+                }
+
+                return false;
             },
 
             /**
@@ -64,103 +81,32 @@ define(
              * @return void
              */
             scan: function (weapon) {
-                var items = window.battlefield.items,
-                    i,
-                    x1,
-                    x2,
-                    x3,
-                    x4,
-                    y1,
-                    y2,
-                    y3,
-                    y4,
-                    r2,
-                    centerX,
-                    centerY,
-                    destination1,
-                    destination2,
-                    destination3,
-                    destination4,
-                    attacking = false;
+                var enemy = this.model.get('follow'),
+                    items,
+                    i;
 
-                var enemy = this.model.get('follow');
-                if (enemy) {
-                    x1 = enemy.get('positionX');
-                    y1 = enemy.get('positionY');
-
-                    x2 = enemy.get('positionX') + enemy.get('width');
-                    y2 = enemy.get('positionY');
-
-                    x3 = enemy.get('positionX') + enemy.get('width');
-                    y3 = enemy.get('positionY') + enemy.get('height');
-
-                    x4 = enemy.get('positionX');
-                    y4 = enemy.get('positionY') + enemy.get('height');
-
-                    r2 = weapon.firerange * weapon.firerange;
-
-                    centerX = weapon.positionX + weapon.width / 2;
-                    centerY = weapon.positionY + weapon.height / 2;
-
-                    destination1 = (x1 - centerX) * (x1 - centerX) + (y1 - centerY) * (y1 - centerY);
-                    destination2 = (x2 - centerX) * (x2 - centerX) + (y2 - centerY) * (y2 - centerY);
-                    destination3 = (x3 - centerX) * (x3 - centerX) + (y3 - centerY) * (y3 - centerY);
-                    destination1 = (x4 - centerX) * (x4 - centerX) + (y4 - centerY) * (y4 - centerY);
-
-                    // check if one of this points is in range
-                    if (destination1 < r2 || destination2 < r2 || destination3 < r2 || destination4 < r2) {
-                        this.attack(enemy, weapon);
-                        attacking = true;
-                    }
+                if (enemy && this.isAttackable(enemy, weapon)) {
+                    return this.attack(enemy, weapon);
                 }
 
-                if (!attacking) {
-                    for (i in items) {
-                        if (items.hasOwnProperty(i)) {
-                            // do not attack your own units
-                            if (items[i].model.get('owner') === this.model.get('owner')) {
-                                continue;
-                            }
+                items = window.battlefield.items;
 
-                            // item is not attackable
-                            if (!items[i].model.get('isAttackable')) {
-                                continue;
-                            }
+                for (i in items) {
+                    if (items.hasOwnProperty(i)) {
+                        // do not attack your own units
+                        if (items[i].model.get('owner') === this.model.get('owner')) {
+                            continue;
+                        }
 
-                            x1 = items[i].model.get('positionX');
-                            y1 = items[i].model.get('positionY');
+                        // item is not attackable
+                        if (!items[i].model.get('isAttackable')) {
+                            continue;
+                        }
 
-                            x2 = items[i].model.get('positionX') + items[i].model.get('width');
-                            y2 = items[i].model.get('positionY');
-
-                            x3 = items[i].model.get('positionX') + items[i].model.get('width');
-                            y3 = items[i].model.get('positionY') + items[i].model.get('height');
-
-                            x4 = items[i].model.get('positionX');
-                            y4 = items[i].model.get('positionY') + items[i].model.get('height');
-
-                            r2 = weapon.firerange * weapon.firerange;
-
-                            centerX = weapon.positionX + weapon.width / 2;
-                            centerY = weapon.positionY + weapon.height / 2;
-
-                            destination1 = (x1 - centerX) * (x1 - centerX) + (y1 - centerY) * (y1 - centerY);
-                            destination2 = (x2 - centerX) * (x2 - centerX) + (y2 - centerY) * (y2 - centerY);
-                            destination3 = (x3 - centerX) * (x3 - centerX) + (y3 - centerY) * (y3 - centerY);
-                            destination1 = (x4 - centerX) * (x4 - centerX) + (y4 - centerY) * (y4 - centerY);
-
-                            // check if one of this points is in range
-                            if (destination1 < r2 || destination2 < r2 || destination3 < r2 || destination4 < r2) {
-                                this.attack(items[i].model, weapon);
-                                attacking = true;
-                                break;
-                            }
+                        if (this.isAttackable(items[i].model, weapon)) {
+                            return this.attack(items[i].model, weapon);
                         }
                     }
-                }
-
-                if (attacking === true) {
-                    return;
                 }
 
                 weapon.direction = null;
@@ -175,20 +121,25 @@ define(
              * @return void
              */
             move: function (x, y) {
+                var direction,
+                    follower,
+                    i;
+
                 this.model.set('destinationPositionX', x - this.model.get('width') / 2);
                 this.model.set('destinationPositionY', y - this.model.get('height') / 2);
 
-                var direction = Math.atan2(
-                    this.model.get('destinationPositionY') - this.model.get('positionY'),
-                    this.model.get('destinationPositionX') - this.model.get('positionX')
-                ) - Math.PI / 2;
+                direction = Math.atan2(
+                        this.model.get('destinationPositionY') - this.model.get('positionY'),
+                        this.model.get('destinationPositionX') - this.model.get('positionX')
+                    ) - Math.PI / 2;
 
                 this.model.set('direction', direction);
 
-                var follower = this.model.get('follower'),
-                    i;
+                follower = this.model.get('follower');
                 for (i in follower) {
-                    follower[i].trigger('follow', this.model);
+                    if (follower.hasOwnProperty(i)) {
+                        follower[i].trigger('follow', this.model);
+                    }
                 }
             },
 
@@ -225,12 +176,6 @@ define(
              * @return void
              */
             onHitArmor: function (model, value) {
-                // if (!this.hitSound) {
-                //     this.hitSound = new Audio(this.model.get('soundHit'));
-                // }
-
-                // this.hitSound.play();
-
                 var unitId = $('#action_bar').attr('data-unitid');
                 if (unitId == this.model.get('id')) {
                     var armor = 100 - (this.model.get('currentArmor') / this.model.get('maxArmor') * 100);
@@ -249,6 +194,29 @@ define(
             },
 
             /**
+             * Follow the enemy.
+             *
+             * @param object enemy
+             *
+             * @return void
+             */
+            onFollow: function (enemy) {
+                var x = enemy.get('destinationPositionX') + enemy.get('width') + Math.round(Math.random() * 200 + 50),
+                    y = enemy.get('destinationPositionY') + enemy.get('height') + Math.round(Math.random() * 200 + 50);
+
+                if (x > BATTLEFIELD_WIDTH) {
+                    x = BATTLEFIELD_WIDTH - this.model.get('width');
+                }
+
+                if (y > BATTLEFIELD_HEIGHT) {
+                    y = BATTLEFIELD_HEIGHT - this.model.get('height');
+                }
+
+                this.move(x, y);
+            },
+
+
+            /**
              * attack an enemy
              *
              * @param  object  enemy - model of enemy
@@ -257,12 +225,6 @@ define(
              * @return void
              */
             attack: function (enemy, weapon) {
-                // if (!this.shotSound) {
-                //     this.shotSound = new Audio(weapon.sound);
-                // }
-
-                // this.shotSound.play();
-
                 var shotModel = new ShotModel(),
                     direction = Math.atan2(enemy.get('positionY') + enemy.get('height') / 2 - weapon.positionY, enemy.get('positionX') + enemy.get('width') / 2 - weapon.positionX) - Math.PI / 2,
                     shot = null,
@@ -392,13 +354,8 @@ define(
                     dy = model.get('positionY') - 54,
                     dw = 118,
                     dh = 118,
-                    animation;
-
-                if (!this.dieSound) {
-                    this.dieSound = new Audio(this.model.get('soundDestroy'));
-                }
-
-                this.dieSound.play();
+                    animation,
+                    follower;
 
                 // removing unit/item from battlefield
                 window.battlefield.remove(this.model.get('id'));
@@ -406,7 +363,7 @@ define(
                 // clean all weapon scanings
                 this.stopScaning();
 
-                var follower = this.model.get('follower');
+                follower = this.model.get('follower');
                 for (i in follower) {
                     follower[i].set('follow', null);
                 }
@@ -414,6 +371,14 @@ define(
 
                 // display explosion
                 animation = window.setInterval(function () {
+                    console.log(x,
+                        y,
+                        w,
+                        h,
+                        dx,
+                        dy,
+                        dw,
+                        dh)
                     window.battlefield.ctx.drawImage(
                         window.GameImages.explosion,
                         x,

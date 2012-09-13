@@ -20,30 +20,30 @@ define(function () {
 
         initialize: function () {
             this.set('weapons', [
-                {
-                    coordX: -30,
-                    coordY: -38,
-                    firerange: TANK_FIRERANGE,
-                    firespeed: TANK_FIRESPEED,
-                    firepower: TANK_FIREPOWER,
-                    firefrequence: 1000,
-                    type: 'cannon',
-                    sound: 'sounds/laser.mp3',
-                    width: 30,
-                    height: 30
-                },
-                {
-                    coordX: 30,
-                    coordY: -38,
-                    firerange: TANK_FIRERANGE,
-                    firespeed: TANK_FIRESPEED,
-                    firepower: TANK_FIREPOWER,
-                    firefrequence: 1000,
-                    type: 'cannon',
-                    sound: 'sounds/laser.mp3',
-                    width: 30,
-                    height: 30
-                },
+                // {
+                //     coordX: -30,
+                //     coordY: -38,
+                //     firerange: TANK_FIRERANGE,
+                //     firespeed: TANK_FIRESPEED,
+                //     firepower: TANK_FIREPOWER,
+                //     firefrequence: 1000,
+                //     type: 'cannon',
+                //     sound: 'sounds/laser.mp3',
+                //     width: 30,
+                //     height: 30
+                // },
+                // {
+                //     coordX: 30,
+                //     coordY: -38,
+                //     firerange: TANK_FIRERANGE,
+                //     firespeed: TANK_FIRESPEED,
+                //     firepower: TANK_FIREPOWER,
+                //     firefrequence: 1000,
+                //     type: 'cannon',
+                //     sound: 'sounds/laser.mp3',
+                //     width: 30,
+                //     height: 30
+                // },
                 {
                     coordX: 0,
                     coordY: -38,
@@ -67,6 +67,30 @@ define(function () {
                     sound: 'sounds/laser.mp3',
                     width: 25,
                     height: 25
+                },
+                {
+                    coordX: 30,
+                    coordY: -38,
+                    firerange: 2 * TANK_FIRERANGE,
+                    firespeed: SCOUT_FIRESPEED / 3,
+                    firepower: 10 * SCOUT_FIREPOWER,
+                    firefrequence: 3000,
+                    sound: 'sounds/laser.mp3',
+                    type: 'rocketlauncher',
+                    width: 30,
+                    height: 30
+                },
+                {
+                    coordX: -30,
+                    coordY: -38,
+                    firerange: 2 * TANK_FIRERANGE,
+                    firespeed: SCOUT_FIRESPEED / 3,
+                    firepower: 10 * SCOUT_FIREPOWER,
+                    firefrequence: 3000,
+                    sound: 'sounds/laser.mp3',
+                    type: 'rocketlauncher',
+                    width: 30,
+                    height: 30
                 }
             ]);
         },

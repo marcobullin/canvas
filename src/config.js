@@ -36,7 +36,7 @@ var BATTLEFIELD_WIDTH = 1500,
 	LEVEL = {
 		1: {
 			user: ['mothership', 'lightFighter', 'lightFighter', 'lightFighter', 'heavyFighter', 'heavyFighter'],
-			enemy: ['mothership', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienHeavyFighter']
+			enemy: ['mothership','alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienHeavyFighter']
 		},
 		2: {
 			user: ['mothership', 'lightFighter', 'lightFighter', 'lightFighter', 'heavyFighter', 'heavyFighter', 'destroyer'],
