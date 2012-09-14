@@ -62,8 +62,14 @@ define(function () {
                         // } else {
                             obstacle.model.set('currentArmor', obstacle.model.get('currentArmor') - firepower);
                         // }
-
                     }
+                    window.battlefield.ctx.save();
+                    window.battlefield.ctx.beginPath();
+                    window.battlefield.ctx.arc(this.model.get('positionX'), this.model.get('positionY'), 4, 0, Math.PI*2, false);
+                    window.battlefield.ctx.fillStyle = "orange";
+                    window.battlefield.ctx.fill();
+                    window.battlefield.ctx.closePath();
+                    window.battlefield.ctx.restore();
 
                     return;
                 }
@@ -84,6 +90,14 @@ define(function () {
                 } else {
                     window.battlefield.removeObject(this.model.get('id'));
                 }
+
+                window.battlefield.ctx.save();
+                window.battlefield.ctx.beginPath();
+                window.battlefield.ctx.arc(this.model.get('positionX'), this.model.get('positionY'), 4, 0, Math.PI*2, false);
+                window.battlefield.ctx.fillStyle = "orange";
+                window.battlefield.ctx.fill();
+                window.battlefield.ctx.closePath();
+                window.battlefield.ctx.restore();
             }
         },
 
