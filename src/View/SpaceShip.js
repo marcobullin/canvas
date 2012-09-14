@@ -420,16 +420,16 @@ define(
                 weapon.positionX = newX;
                 weapon.positionY = newY;
 
-                // if (this.model.get('selected')) {
-                //     window.battlefield.ctx.beginPath();
-                //     window.battlefield.ctx.arc(weapon.positionX, weapon.positionY, weapon.firerange, 0, Math.PI*2, false);
-                //     window.battlefield.ctx.fillStyle = "rgba(255, 0, 0, 0.1)";
-                //     window.battlefield.ctx.fill();
-                //     window.battlefield.ctx.lineWidth = 1;
-                //     window.battlefield.ctx.strokeStyle = 'red';
-                //     window.battlefield.ctx.stroke();
-                //     window.battlefield.ctx.closePath();
-                // }
+                 if (this.model.get('selected')) {
+                     window.battlefield.ctx.beginPath();
+                     window.battlefield.ctx.arc(weapon.positionX, weapon.positionY, weapon.firerange, 0, Math.PI*2, false);
+                     window.battlefield.ctx.fillStyle = "rgba(255, 0, 0, 0.1)";
+                     window.battlefield.ctx.fill();
+                     window.battlefield.ctx.lineWidth = 1;
+                     window.battlefield.ctx.strokeStyle = 'red';
+                     window.battlefield.ctx.stroke();
+                     window.battlefield.ctx.closePath();
+                 }
 
                 window.battlefield.ctx.save();
 

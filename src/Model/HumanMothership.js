@@ -22,8 +22,8 @@ define(function () {
         initialize: function () {
             this.set('weapons', [
                 {
-                    coordX: 0,
-                    coordY: -90,
+                    coordX: 20,
+                    coordY: -40,
                     firerange: 2 * SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: SCOUT_FIREPOWER,
@@ -34,8 +34,8 @@ define(function () {
                     height: 30
                 },
                 {
-                    coordX: 0,
-                    coordY: 90,
+                    coordX: -20,
+                    coordY: -40,
                     firerange: 2 * SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: SCOUT_FIREPOWER,
@@ -46,8 +46,8 @@ define(function () {
                     height: 30
                 },
                 {
-                    coordX: -90,
-                    coordY: 0,
+                    coordX: -40,
+                    coordY: -10,
                     firerange: 2 * SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: SCOUT_FIREPOWER,
@@ -58,8 +58,8 @@ define(function () {
                     height: 30
                 },
                 {
-                    coordX: 80,
-                    coordY: -30,
+                    coordX: 40,
+                    coordY: -10,
                     firerange: 2 * SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: SCOUT_FIREPOWER,
@@ -70,16 +70,28 @@ define(function () {
                     height: 30
                 },
                 {
-                    coordX: 0,
-                    coordY: 0,
+                    coordX: -70,
+                    coordY: -50,
                     firerange: 2 * TANK_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED / 3,
                     firepower: 10 * SCOUT_FIREPOWER,
                     firefrequence: 3000,
                     sound: 'sounds/laser.mp3',
                     type: 'rocketlauncher',
-                    width: 50,
-                    height: 50
+                    width: 30,
+                    height: 30
+                },
+                {
+                    coordX: 70,
+                    coordY: -50,
+                    firerange: 2 * TANK_FIRERANGE,
+                    firespeed: SCOUT_FIRESPEED / 3,
+                    firepower: 10 * SCOUT_FIREPOWER,
+                    firefrequence: 3000,
+                    sound: 'sounds/laser.mp3',
+                    type: 'rocketlauncher',
+                    width: 30,
+                    height: 30
                 }
             ]);
         },
