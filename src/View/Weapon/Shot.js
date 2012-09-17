@@ -129,7 +129,7 @@ define(function () {
             var enemy = this.model.get('enemy');
 
             this.goalX = enemy.get('positionX') + enemy.get('width') / 2;
-            this.goalX = enemy.get('positionY') + enemy.get('height') / 2;
+            this.goalY = enemy.get('positionY') + enemy.get('height') / 2;
         },
 
         drawEplosion: function () {
@@ -145,8 +145,9 @@ define(function () {
         update: function (modifier) {
             var enemy = this.model.get('enemy'),
                 shotId = this.model.get('id'),
-                MxShot = this.model.get('positionX') + this.model.get('width') / 2,
-                MyShot = this.model.get('positionY') + this.model.get('height') / 2,
+                MxShot = this.model.get('positionX'),// + this.model.get('width') / 2,
+                MyShot = this.model.get('positionY'),// + this.model.get('height') / 2,
+                firepower = this.model.get('firepower'),
                 dx,
                 dy,
                 distance,
@@ -162,7 +163,8 @@ define(function () {
 
             // ENEMY IS ALREADY DESTROYED
             if (enemy.get('isDestroyed') === true) {
-                if (this.model.get('type') === 'missile')) {
+                this.model.set('isDestroyed', true);
+                if (this.model.get('type') === 'missile') {
                     window.battlefield.remove(shotId);
                 } else {
                     window.battlefield.removeObject(shotId);
@@ -176,8 +178,8 @@ define(function () {
             }
 
             if (this.model.get('type') === 'missile') {
-                dx = Math.floor(enemy.get('positionX') + enemy.get('width') / 2 - MxShot);
-                dy = Math.floor(enemy.get('positionY') + enemy.get('height') / 2 - MyShot);
+                dx = enemy.get('positionX') + enemy.get('width') / 2 - MxShot;
+                dy = enemy.get('positionY') + enemy.get('height') / 2 - MyShot;
             } else {
                 dx = this.goalX - MxShot;
                 dy = this.goalY - MyShot;
@@ -195,71 +197,45 @@ define(function () {
             for (i = 0; i < window.battlefield.items.length; i+=1) {
                 unit = window.battlefield.items[i];
 
-                if (this.model.get('positionY') >= obstacle.model.get('positionY') &&
-                    this.model.get('positionY') <= obstacle.model.get('positionY') + obstacle.model.get('height') &&
-                    this.model.get('positionX') >= obstacle.model.get('positionX') &&
-                    this.model.get('positionX') <= obstacle.model.get('positionX') + obstacle.model.get('width') &&
-                    obstacle.model.get('owner') !== this.model.get('owner')
+                // THE SHOT HITS THE ENEMY
+                if (this.model.get('positionY') >= unit.model.get('positionY') &&
+                    this.model.get('positionY') <= unit.model.get('positionY') + unit.model.get('height') &&
+                    this.model.get('positionX') >= unit.model.get('positionX') &&
+                    this.model.get('positionX') <= unit.model.get('positionX') + unit.model.get('width') &&
+                    unit.model.get('owner') !== this.model.get('owner')
                 ) {
                     this.goalX = false;
                     this.goalY = false;
 
-                    if (this.model.get('type') === 'missile') {
-                        this.model.set('isDestroyed', true);
-                        window.battlefield.remove(this.model.get('id'));
-                    } else {
-                        window.battlefield.removeObject(this.model.get('id'));
-                    }
-                    if (obstacle.model.get('isAttackable') && !obstacle.model.get('isDestroyed')) {
-                        var firepower = this.model.get('firepower');
-                        // if (obstacle.model.get('currentShield') > 0) {
-                        //     obstacle.model.set('currentShield', obstacle.model.get('currentShield') - firepower);
+                    this.model.set('isDestroyed', true);
 
-                        //     if (obstacle.model.get('currentShield') < 0) {
-                        //         firepower = Math.abs(obstacle.model.get('currentShield'));
-                        //         obstacle.model.set('currentArmor', obstacle.model.get('currentArmor') - firepower);
-                        //     }
-                        // } else {
-                            obstacle.model.set('currentArmor', obstacle.model.get('currentArmor') - firepower);
-                        // }
+                    if (this.model.get('type') === 'missile') {
+                        window.battlefield.remove(shotId);
+                    } else {
+                        window.battlefield.removeObject(shotId);
                     }
-                    window.battlefield.ctx.save();
-                    window.battlefield.ctx.beginPath();
-                    window.battlefield.ctx.arc(this.model.get('positionX'), this.model.get('positionY'), 4, 0, Math.PI*2, false);
-                    window.battlefield.ctx.fillStyle = "orange";
-                    window.battlefield.ctx.fill();
-                    window.battlefield.ctx.closePath();
-                    window.battlefield.ctx.restore();
+                     
+                    unit.model.set('currentArmor', unit.model.get('currentArmor') - firepower);
+                    this.drawEplosion();
 
                     return;
                 }
             }
 
-            // shot reaches goal
-            if (Math.floor(this.model.get('positionY')) >= Math.floor(this.endY1) &&
-                Math.floor(this.model.get('positionY')) <= Math.floor(this.endY2) &&
-                Math.floor(this.model.get('positionX')) >= Math.floor(this.endX1) &&
-                Math.floor(this.model.get('positionX')) <= Math.floor(this.endX2)
+            // SHOT REACHES GOAL
+            if (this.model.get('positionY') - 10 <= this.goalY &&
+                this.model.get('positionY') + 10 >= this.goalY &&
+                this.model.get('positionX') - 10 <= this.goalX &&
+                this.model.get('positionX') + 10 >= this.goalX &&
+                this.model.get('type') !== 'missile'                
             ) {
                 this.goalX = false;
                 this.goalY = false;
 
-                if (this.model.get('type') === 'missile') {
-                    this.model.set('isDestroyed', true);
-                    window.battlefield.remove(this.model.get('id'));
-                } else {
-                    window.battlefield.removeObject(this.model.get('id'));
-                }
-
-                window.battlefield.ctx.save();
-                window.battlefield.ctx.beginPath();
-                window.battlefield.ctx.arc(this.model.get('positionX'), this.model.get('positionY'), 4, 0, Math.PI*2, false);
-                window.battlefield.ctx.fillStyle = "orange";
-                window.battlefield.ctx.fill();
-                window.battlefield.ctx.closePath();
-                window.battlefield.ctx.restore();
+                window.battlefield.removeObject(shotId);
+                this.drawEplosion();
             }
-        },
+        }
 
 
     });

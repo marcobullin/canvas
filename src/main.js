@@ -108,6 +108,22 @@ require([
 			{
 				key: 'alienMothership',
 				src: 'images/alienMothership.png'
+			},
+			{
+				key: 'humanLaserShot',
+				src: 'images/humanLaserShot.png'
+			},
+			{
+				key: 'alienLaserShot',
+				src: 'images/alienLaserShot.png'
+			},
+			{
+				key: 'alienDoubleLaserShot',
+				src: 'images/alienDoubleLaserShot.png'
+			},
+			{
+				key: 'humanDoubleLaserShot',
+				src: 'images/humanDoubleLaserShot.png'
 			}
 		];
 

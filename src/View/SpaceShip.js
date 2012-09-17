@@ -38,7 +38,7 @@ define(
                 for (index in weapons) {
                     if (weapons.hasOwnProperty(index)) {
                         key = weapons[index].coordX + '_' + weapons[index].coordY;
-                        this.scaning[key] = window.setInterval($.proxy(this.scan, this, weapons[index]), Math.floor(Math.random() * 1000 +  weapons[index].firefrequence));
+                        this.scaning[key] = window.setInterval($.proxy(this.scan, this, weapons[index]), Math.floor(Math.random() * 500 +  weapons[index].firefrequence));
                     }
                 }
             },
