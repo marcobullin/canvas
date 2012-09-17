@@ -35,27 +35,45 @@ var BATTLEFIELD_WIDTH = 1500,
 
 	LEVEL = {
 		1: {
-			user: ['mothership', 'lightFighter', 'lightFighter', 'lightFighter', 'heavyFighter', 'heavyFighter'],
-			enemy: ['alienMothership','alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienHeavyFighter']
+			goal: 'destroy_all',
+			desc: 'Vernichten Sie die feindlichen Fighter!',
+			user: ['lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'heavyFighter'],
+			enemy: ['alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter']
 		},
 		2: {
-			user: ['mothership', 'lightFighter', 'lightFighter', 'lightFighter', 'heavyFighter', 'heavyFighter', 'destroyer'],
-			enemy: ['alienMothership', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienHeavyFighter', 'alienHeavyFighter']
+			goal: 'destroy_all',
+			desc: 'Vernichten Sie alle feindlichen Einheiten!',
+			user: ['lightFighter', 'lightFighter', 'heavyFighter', 'heavyFighter', 'heavyFighter'],
+			enemy: ['alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter']
 		},
 		3: {
-			user: ['mothership', 'lightFighter', 'lightFighter', 'heavyFighter', 'heavyFighter', 'heavyFighter', 'heavyFighter', 'destroyer'],
-			enemy: ['alienMothership', 'alienLightFighter', 'alienLightFighter', 'alienDestroyer', 'alienDestroyer']
+			goal: 'destroy_destroyer',
+			desc: 'Vernichten Sie den feindlichen Zerstörer!',
+			user: ['lightFighter', 'lightFighter', 'heavyFighter', 'heavyFighter', 'heavyFighter', 'heavyFighter'],
+			enemy: ['alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienDestroyer']
 		},
 		4: {
-			user: ['mothership', 'heavyFighter', 'heavyFighter', 'frigate', 'destroyer'],
-			enemy: ['alienMothership', 'alienLightFighter', 'alienLightFighter', 'alienFrigate', 'alienFrigate']
+			goal: 'destroy_frigate',
+			desc: 'Vernichten Sie die feindliche Fregatte!',
+			user: ['heavyFighter', 'heavyFighter', 'destroyer', 'destroyer'],
+			enemy: ['alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienHeavyFighter', 'alienHeavyFighter', 'alienFrigate']
 		},
 		5: {
+			goal: 'destroy_all',
+			desc: 'Vernichten Sie alle feindlichen Einheiten!',
 			user: ['mothership', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'lightFighter', 'frigate', 'destroyer'],
 			enemy: ['alienMothership', 'alienHeavyFighter', 'alienDestroyer', 'alienFrigate', 'alienFrigate']
 		},
 		6: {
+			goal: 'destroy_all',
+			desc: 'Vernichten Sie alle feindlichen Einheiten!',
 			user: ['mothership', 'destroyer', 'destroyer', 'destroyer', 'frigate'],
 			enemy: ['alienMothership', 'alienHeavyFighter', 'alienHeavyFighter', 'alienFrigate', 'alienDestroyer']
+		},
+		7: {
+			goal: 'destroy_all',
+			desc: 'Vernichten Sie alle feindlichen Einheiten!',
+			user: ['mothership', 'destroyer', 'destroyer', 'destroyer', 'frigate', 'frigate'],
+			enemy: ['alienMothership', 'alienMothership', 'alienHeavyFighter', 'alienHeavyFighter', 'alienHeavyFighter', 'alienHeavyFighter', 'alienFrigate', 'alienDestroyer', 'alienFrigate']
 		}
 	};

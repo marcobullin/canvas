@@ -203,45 +203,29 @@ require([
 
 			window.level = 1;
 			window.counter = 1;
-			$('[data-role="page"]').on('game_over', function (event, model) {
-				window.counter = 1;
-				for (var i in window.battlefield.items) {
-
-					if (window.battlefield.items[i].model.get('isUnit') && window.battlefield.items[i].model.get('isAttackable')) {
-						window.battlefield.items[i].stopScaning();
-					}
-				}
-				if (model.get('owner') === 'computer') {
-					alert('You Won!');
-					window.level += 1;
-				} else {
-					alert('You LOSE!');
-				}
-				run();
-			});
+			
+			$('[data-role="page"]').on('check_goal', checkGoal);
 			run();
 
 			then = Date.now();
 			window.battlefield.update();
 		}
 
-		function run(level) {
+		function run() {
+			alert(LEVEL[window.level].desc);
 			window.battlefield.items = [];
 			clearInterval(this.action);
-			clearInterval(this.backupAction);
+			// clearInterval(this.backupAction);
 
 			/**
 			 * USER
 			 */
+			var oldHeight = 50,
+				spaceship;
 			for (var j = 0; j < LEVEL[window.level].user.length; j++) {
-				var spaceship;
-
-				if (LEVEL[window.level].user[j] === 'mothership') {
-				 	spaceship = create(LEVEL[window.level].user[j], 50, 50, 'user');
-				} else {
-					spaceship = create(LEVEL[window.level].user[j], 350, (j + 1) * 50, 'user');
-				}
-
+				spaceship = create(LEVEL[window.level].user[j], 50, oldHeight, 'user');
+				oldHeight += spaceship.model.get('height');
+				
 				window.battlefield.add(spaceship);
 			}
 
@@ -252,9 +236,9 @@ require([
 				var spaceship;
 
 				if (LEVEL[window.level].enemy[j] === 'alienMothership') {
-				 	spaceship = create(LEVEL[window.level].enemy[j], 1200, 550, 'computer');
+				 	spaceship = create(LEVEL[window.level].enemy[j], 1050, 550, 'computer');
 				} else {
-					spaceship = create(LEVEL[window.level].enemy[j], 1050, 900 - (j + 1) * 50, 'computer');
+					spaceship = create(LEVEL[window.level].enemy[j], 1200, 900 - (j + 1) * 50, 'computer');
 				}
 
 				window.battlefield.add(spaceship);
@@ -276,27 +260,134 @@ require([
 				}
 			}, 10000);
 
-			this.backupAction = setInterval(function () {
-				var spaceship;
+			// this.backupAction = setInterval(function () {
+			// 	var spaceship;
 
-				switch (window.level) {
-					case 1:
-					case 2:
-					case 3:
-						spaceship = create('alienLightFighter', 1150, 550, 'computer');
-						break;
-					case 4:
-						spaceship = create('alienHeavyFighter', 1150, 550, 'computer');
-						break;
-					case 5:
-						spaceship = create('alienHeavyFighter', 1150, 550, 'computer');
-						break;
-					case 6:
-						spaceship = create('alienFrigate', 1150, 550, 'computer');
-						break;
+			// 	switch (window.level) {
+			// 		case 1:
+			// 		case 2:
+			// 		case 3:
+			// 			spaceship = create('alienLightFighter', 1150, 550, 'computer');
+			// 			break;
+			// 		case 4:
+			// 			spaceship = create('alienHeavyFighter', 1150, 550, 'computer');
+			// 			break;
+			// 		case 5:
+			// 			spaceship = create('alienHeavyFighter', 1150, 550, 'computer');
+			// 			break;
+			// 		case 6:
+			// 			spaceship = create('alienFrigate', 1150, 550, 'computer');
+			// 			break;
+			// 	}
+			// 	window.battlefield.add(spaceship);
+			// }, 30000);
+		}
+
+		function checkGoal(event, model) {
+			var owner = model.get('owner'),
+				goal = LEVEL[window.level].goal,
+				humansLeft = [],
+				aliensLeft = [],
+				towersLeft = false,
+				unit,
+				i;
+
+			// if users mothership is destroyed -> game over
+			if (owner === 'user' && model.get('type') === 'mothership') {
+				alert('YOU LOSE!');
+				return run();
+			}
+
+			for (i in battlefield.items) {
+				if (battlefield.items.hasOwnProperty(i)) {
+					unit = battlefield.items[i].model;
+					
+					if (unit.get('type') === 'missile') {
+						continue;
+					}
+
+					if (unit.get('owner') === 'user') {
+						humansLeft.push(unit);
+						continue
+					}
+
+					aliensLeft.push(unit);
 				}
-				window.battlefield.add(spaceship);
-			}, 30000);
+			}
+
+			// USER LOST ALL UNITS
+			if (humansLeft.length === 0) {
+				alert('YOU LOSE!');
+				$('[data-role="page"]').trigger('stop_scanning_for_enemies');
+				return run();		
+			}
+
+			/**
+			 * GOAL DESTROY ALL DEFENSE TOWERS
+			 */
+			if (goal === 'destroy_towers') {
+				for (i in aliensLeft) {
+					if (aliensLeft.hasOwnProperty(i)) {
+						if (aliensLeft[i].get('type') === 'alienLaserTower' ||
+							aliensLeft[i].get('type') === 'alienDoubleLaserTower' ||
+							aliensLeft[i].get('type') === 'alienBigLaserTower' ||
+							aliensLeft[i].get('type') === 'alienMissileTower'
+						) {
+							towersLeft = true;
+							break;
+						}
+					}
+				}
+
+				if (towersLeft === false) {
+					alert('Victory!');
+					$('[data-role="page"]').trigger('stop_scanning_for_enemies');
+					window.level += 1;
+					return run();	
+				}
+
+				return;
+			}
+
+			/**
+			 * GOAL DESTROY THE ALIEN DESTROYER
+			 */
+			if (goal === 'destroy_destroyer') {
+				if (model.get('type') === 'alienDestroyer') {
+					alert('Victory!');
+					$('[data-role="page"]').trigger('stop_scanning_for_enemies');
+					window.level += 1;
+					return run();
+				}
+				return;
+			}
+
+			/**
+			 * GOAL DESTROY THE ALIEN DESTROYER
+			 */
+			if (goal === 'destroy_frigate') {
+				if (model.get('type') === 'alienFrigate') {
+					alert('Victory!');
+					$('[data-role="page"]').trigger('stop_scanning_for_enemies');
+					window.level += 1;
+					return run();
+				}
+				return;
+			}
+
+			/**
+			 * GOAL DESTROY ALL ENEMIES
+			 */
+			if (goal === 'destroy_all') {
+				if (aliensLeft.length === 0) {
+					alert('Victory!');
+					$('[data-role="page"]').trigger('stop_scanning_for_enemies');
+					window.level += 1;
+					return run();	
+				}
+
+				return;
+			}
 		}
 	}
 );

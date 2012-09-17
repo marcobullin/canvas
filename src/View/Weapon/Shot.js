@@ -76,10 +76,10 @@ define(function () {
             }
 
             // shot reaches goal
-            if (this.model.get('positionY') >= this.endY1 &&
-                this.model.get('positionY') <= this.endY2 &&
-                this.model.get('positionX') >= this.endX1 &&
-                this.model.get('positionX') <= this.endX2
+            if (Math.floor(this.model.get('positionY')) >= Math.floor(this.endY1) &&
+                Math.floor(this.model.get('positionY')) <= Math.floor(this.endY2) &&
+                Math.floor(this.model.get('positionX')) >= Math.floor(this.endX1) &&
+                Math.floor(this.model.get('positionX')) <= Math.floor(this.endX2)
             ) {
                 this.goalX = false;
                 this.goalY = false;

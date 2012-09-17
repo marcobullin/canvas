@@ -21,6 +21,7 @@ define([
                 this.model.on('change:isDestroyed', $.proxy(this.onDestroy, this));
                 this.model.on('change:currentShield', $.proxy(this.onHitShield, this));
                 this.model.on('change:currentArmor', $.proxy(this.onHitArmor, this));
+                $('[data-role="page"]').on('stop_scanning_for_enemies', $.proxy(this.stopScaning, this));
 
                 // reset weapon scaning
                 this.scaning = {};
@@ -294,10 +295,11 @@ define([
                     );
 
                     if (x === (5 * 118)) {
-                        window.clearInterval(animation);
-                        if (self.model.get('type') === 'mothership') {
-                            $('[data-role="page"]').trigger('game_over', [self.model]);
-                        }
+                        // window.clearInterval(animation);
+                        // if (self.model.get('type') === 'mothership') {
+                        //     $('[data-role="page"]').trigger('game_over', [self.model]);
+                        // }
+                        $('[data-role="page"]').trigger('check_goal', [self.model]);
                         return;
                     }
                     x += 118;
