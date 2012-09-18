@@ -60,7 +60,6 @@ define(function () {
 
             for (i in follower) {
                 if (enemyModel === follower[i]) {
-                    console.log('removing...');
                     delete follower[i];
                 }
             }

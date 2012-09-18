@@ -3,9 +3,10 @@ define([
         'View/Weapon/Laser',
         'View/Weapon/BigLaser',
         'View/Weapon/DoubleLaser',
-        'View/Weapon/Missile'
+        'View/Weapon/Missile',
+        'Model/Math'
     ],
-    function (ShotModel, Laser, BigLaser, DoubleLaser, Missile) {
+    function (ShotModel, Laser, BigLaser, DoubleLaser, Missile, Mathematic) {
         'use strict';
         var View = View || {};
         View.Tower = Backbone.View.extend({
@@ -21,7 +22,7 @@ define([
                 this.model.on('change:isDestroyed', $.proxy(this.onDestroy, this));
                 this.model.on('change:currentShield', $.proxy(this.onHitShield, this));
                 this.model.on('change:currentArmor', $.proxy(this.onHitArmor, this));
-                $('[data-role="page"]').on('stop_scanning_for_enemies', $.proxy(this.stopScaning, this));
+                $('body').on('stop_scanning_for_enemies', $.proxy(this.stopScaning, this));
 
                 // reset weapon scaning
                 this.scaning = {};
@@ -48,24 +49,37 @@ define([
              * @return void
              */
             isAttackable: function (enemy, weapon) {
-                var x1 = enemy.get('positionX'),
-                    y1 = enemy.get('positionY'),
-                    x2 = enemy.get('positionX') + enemy.get('width'),
-                    y2 = enemy.get('positionY'),
-                    x3 = enemy.get('positionX') + enemy.get('width'),
-                    y3 = enemy.get('positionY') + enemy.get('height'),
-                    x4 = enemy.get('positionX'),
-                    y4 = enemy.get('positionY') + enemy.get('height'),
-                    r2 = weapon.firerange * weapon.firerange,
-                    centerX = weapon.positionX + weapon.width / 2,
-                    centerY = weapon.positionY + weapon.height / 2,
-                    destination1 = (x1 - centerX) * (x1 - centerX) + (y1 - centerY) * (y1 - centerY),
-                    destination2 = (x2 - centerX) * (x2 - centerX) + (y2 - centerY) * (y2 - centerY),
-                    destination3 = (x3 - centerX) * (x3 - centerX) + (y3 - centerY) * (y3 - centerY),
-                    destination4 = (x4 - centerX) * (x4 - centerX) + (y4 - centerY) * (y4 - centerY);
+                var Px,
+                    Py,
+                    Mx = weapon.positionX + weapon.width / 2,
+                    My = weapon.positionY + weapon.height / 2,
+                    radius = weapon.firerange * weapon.firerange;
 
-                // check if one of this points is in range
-                if (destination1 < r2 || destination2 < r2 || destination3 < r2 || destination4 < r2) {
+                Px = enemy.get('positionX');
+                Py = enemy.get('positionY');
+
+                if (Mathematic.isPointInCircle(Px, Py, Mx, My, radius)) {
+                    return true;
+                }
+
+                Px = enemy.get('positionX') + enemy.get('width');
+                Py = enemy.get('positionY');
+
+                if (Mathematic.isPointInCircle(Px, Py, Mx, My, radius)) {
+                    return true;
+                }
+
+                Px = enemy.get('positionX') + enemy.get('width');
+                Py = enemy.get('positionY') + enemy.get('height');
+
+                if (Mathematic.isPointInCircle(Px, Py, Mx, My, radius)) {
+                    return true;
+                }
+
+                Px = enemy.get('positionX');
+                Py = enemy.get('positionY') + enemy.get('height');
+
+                if (Mathematic.isPointInCircle(Px, Py, Mx, My, radius)) {
                     return true;
                 }
 
@@ -182,20 +196,21 @@ define([
              * @return void
              */
             attack: function (enemy, weapon) {
-                var shotModel = new ShotModel(),
-                    direction = Math.atan2(enemy.get('positionY') + enemy.get('height') / 2 - weapon.positionY, enemy.get('positionX') + enemy.get('width') / 2 - weapon.positionX) - Math.PI / 2,
-                    shot = null,
-                    randX = Math.floor(Math.random() * enemy.get('width') + enemy.get('positionX')),
-                    randY = Math.floor(Math.random() * enemy.get('height') + enemy.get('positionY'));
+                var Px1 = weapon.positionX,
+                    Py1 = weapon.positionY,
+                    Px2 = enemy.get('positionX') + enemy.get('width') / 2,
+                    Py2 = enemy.get('positionY') + enemy.get('height') / 2,
+                    angle = Mathematic.getAngle(Px1, Py1, Px2, Py2),
+                    shotModel = new ShotModel(),
+                    shot = null;
 
                 shotModel.set('id', ++window.counter);
                 shotModel.set('owner', this.model.get('owner'));
-                shotModel.set('positionX', weapon.positionX + (weapon.width / 2));
-                shotModel.set('positionY', weapon.positionY + (weapon.height / 2));
+                shotModel.set('positionX', weapon.positionX);
+                shotModel.set('positionY', weapon.positionY);
                 shotModel.set('firepower', weapon.firepower);
                 shotModel.set('firespeed', weapon.firespeed);
-                shotModel.set('angle', direction);
-                shotModel.set('weapon', weapon.type);
+                shotModel.set('angle', angle);
                 shotModel.set('enemy', enemy);
 
                 if (weapon.type === 'rocketlauncher') {
@@ -212,7 +227,7 @@ define([
                     });
                 }
 
-                weapon.direction = direction;
+                weapon.direction = angle;
 
                 switch (weapon.type) {
                 case 'laser':
@@ -244,7 +259,7 @@ define([
                     window.battlefield.addObject(shot);
                 }
 
-                shot.fire(randX, randY, enemy.get('positionX'), enemy.get('positionY'), enemy.get('positionX') + enemy.get('width'), enemy.get('positionY') + enemy.get('height'));
+                shot.fire();
             },
 
             /**
@@ -282,23 +297,19 @@ define([
 
                 // display explosion
                 animation = window.setInterval(function () {
-                    window.battlefield.ctx.drawImage(
-                        window.GameImages.explosion,
-                        x,
-                        y,
-                        w,
-                        h,
-                        dx,
-                        dy,
-                        dw,
-                        dh
-                    );
+                    // window.battlefield.ctx.drawImage(
+                    //     window.GameImages.explosion,
+                    //     x,
+                    //     y,
+                    //     w,
+                    //     h,
+                    //     dx,
+                    //     dy,
+                    //     dw,
+                    //     dh
+                    // );
 
                     if (x === (5 * 118)) {
-                        // window.clearInterval(animation);
-                        // if (self.model.get('type') === 'mothership') {
-                        //     $('[data-role="page"]').trigger('game_over', [self.model]);
-                        // }
                         $('[data-role="page"]').trigger('check_goal', [self.model]);
                         return;
                     }

@@ -124,6 +124,14 @@ require([
 			{
 				key: 'humanDoubleLaserShot',
 				src: 'images/humanDoubleLaserShot.png'
+			},
+			{
+				key: 'humanBigLaserShot',
+				src: 'images/humanBigLaserShot.png'
+			},
+			{
+				key: 'alienBigLaserShot',
+				src: 'images/alienBigLaserShot.png'
 			}
 		];
 
@@ -143,6 +151,11 @@ require([
 				}
 			}(i);
 		}
+
+		$('#start').unbind('tap.start').bind('tap.start', function () {
+			$('#dialog').hide();
+			run();
+		});
 
 		function create(type, x, y, owner) {
 			var model;
@@ -215,23 +228,30 @@ require([
 			window.Global.user = new User({
 				model: userModel
 			});
-			userModel.set('money', 100);
+			userModel.set('money', 500);
 
 			window.level = 1;
 			window.counter = 1;
 			
 			$('[data-role="page"]').on('check_goal', checkGoal);
-			run();
+			missionDescription();
 
 			then = Date.now();
 			window.battlefield.update();
 		}
+		
+		function missionDescription() {
+			$('body').trigger('stop_scanning_for_enemies');
+
+			$('#dialog').show();
+			$('#description').html(LEVEL[window.level].desc.main);
+			$('#goals').html(LEVEL[window.level].desc.goals.join('<br/>'));
+			$('#hints').html(LEVEL[window.level].desc.hints.join('<br/>'));
+		}
 
 		function run() {
-			alert(LEVEL[window.level].desc);
 			window.battlefield.items = [];
 			clearInterval(this.action);
-			// clearInterval(this.backupAction);
 
 			/**
 			 * USER
@@ -260,8 +280,6 @@ require([
 				window.battlefield.add(spaceship);
 			}
 
-
-
 			this.action = setInterval(function () {
 				for (var i in window.battlefield.items) {
 					if (!window.battlefield.items.hasOwnProperty(i)) {
@@ -275,28 +293,6 @@ require([
 					}
 				}
 			}, 10000);
-
-			// this.backupAction = setInterval(function () {
-			// 	var spaceship;
-
-			// 	switch (window.level) {
-			// 		case 1:
-			// 		case 2:
-			// 		case 3:
-			// 			spaceship = create('alienLightFighter', 1150, 550, 'computer');
-			// 			break;
-			// 		case 4:
-			// 			spaceship = create('alienHeavyFighter', 1150, 550, 'computer');
-			// 			break;
-			// 		case 5:
-			// 			spaceship = create('alienHeavyFighter', 1150, 550, 'computer');
-			// 			break;
-			// 		case 6:
-			// 			spaceship = create('alienFrigate', 1150, 550, 'computer');
-			// 			break;
-			// 	}
-			// 	window.battlefield.add(spaceship);
-			// }, 30000);
 		}
 
 		function checkGoal(event, model) {
@@ -311,7 +307,7 @@ require([
 			// if users mothership is destroyed -> game over
 			if (owner === 'user' && model.get('type') === 'mothership') {
 				alert('YOU LOSE!');
-				return run();
+				return missionDescription();
 			}
 
 			for (i in battlefield.items) {
@@ -334,8 +330,7 @@ require([
 			// USER LOST ALL UNITS
 			if (humansLeft.length === 0) {
 				alert('YOU LOSE!');
-				$('[data-role="page"]').trigger('stop_scanning_for_enemies');
-				return run();		
+				return missionDescription();		
 			}
 
 			/**
@@ -357,9 +352,8 @@ require([
 
 				if (towersLeft === false) {
 					alert('Victory!');
-					$('[data-role="page"]').trigger('stop_scanning_for_enemies');
 					window.level += 1;
-					return run();	
+					return missionDescription();	
 				}
 
 				return;
@@ -371,9 +365,8 @@ require([
 			if (goal === 'destroy_destroyer') {
 				if (model.get('type') === 'alienDestroyer') {
 					alert('Victory!');
-					$('[data-role="page"]').trigger('stop_scanning_for_enemies');
 					window.level += 1;
-					return run();
+					return missionDescription();
 				}
 				return;
 			}
@@ -384,9 +377,8 @@ require([
 			if (goal === 'destroy_frigate') {
 				if (model.get('type') === 'alienFrigate') {
 					alert('Victory!');
-					$('[data-role="page"]').trigger('stop_scanning_for_enemies');
 					window.level += 1;
-					return run();
+					return missionDescription();
 				}
 				return;
 			}
@@ -397,9 +389,8 @@ require([
 			if (goal === 'destroy_all') {
 				if (aliensLeft.length === 0) {
 					alert('Victory!');
-					$('[data-role="page"]').trigger('stop_scanning_for_enemies');
 					window.level += 1;
-					return run();	
+					return missionDescription();	
 				}
 
 				return;

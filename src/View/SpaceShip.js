@@ -25,7 +25,7 @@ define(
                 this.model.on('change:currentArmor', $.proxy(this.onHitArmor, this));
                 this.model.on('follow', $.proxy(this.onFollow, this));
 
-                $('[data-role="page"]').on('stop_scanning_for_enemies', $.proxy(this.stopScaning, this));
+                $('body').on('stop_scanning_for_enemies', $.proxy(this.stopScaning, this));
 
                 // reset weapon scaning
                 this.scaning = {};
@@ -250,14 +250,12 @@ define(
                     Py2 = enemy.get('positionY') + enemy.get('height') / 2,
                     angle = Mathematic.getAngle(Px1, Py1, Px2, Py2),
                     shotModel = new ShotModel(),
-                    shot = null,
-                    randX = Math.floor(Math.random() * enemy.get('width') + enemy.get('positionX')),
-                    randY = Math.floor(Math.random() * enemy.get('height') + enemy.get('positionY'));
+                    shot = null;
 
                 shotModel.set('id', ++window.counter);
                 shotModel.set('owner', this.model.get('owner'));
-                shotModel.set('positionX', weapon.positionX + (weapon.width / 2));
-                shotModel.set('positionY', weapon.positionY + (weapon.height / 2));
+                shotModel.set('positionX', weapon.positionX);
+                shotModel.set('positionY', weapon.positionY);
                 shotModel.set('firepower', weapon.firepower);
                 shotModel.set('firespeed', weapon.firespeed);
                 shotModel.set('angle', angle);
@@ -309,7 +307,7 @@ define(
                     window.battlefield.addObject(shot);
                 }
 
-                shot.fire(randX, randY, Math.floor(enemy.get('positionX')), Math.floor(enemy.get('positionY')), Math.floor(enemy.get('positionX')) + enemy.get('width'), Math.floor(enemy.get('positionY')) + enemy.get('height'));
+                shot.fire();
             },
 
             /**
@@ -410,10 +408,6 @@ define(
 
                     if (x === (5 * 118)) {
                         window.clearInterval(animation);
-                        // if (self.model.get('type') === 'alienMothership' || self.model.get('type') === 'mothership') {
-                        //     $('[data-role="page"]').trigger('game_over', [self.model]);
-                        // }
-
                         $('[data-role="page"]').trigger('check_goal', [self.model]);
                         return;
                     }

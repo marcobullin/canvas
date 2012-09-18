@@ -21,30 +21,6 @@ define(function () {
 
         initialize: function () {
             this.set('weapons', [
-                // {
-                //     coordX: -25,
-                //     coordY: -30,
-                //     firerange: TANK_FIRERANGE,
-                //     firespeed: TANK_FIRESPEED,
-                //     firepower: TANK_FIREPOWER,
-                //     firefrequence: 1000,
-                //     type: 'cannon',
-                //     sound: 'sounds/laser.mp3',
-                //     width: 30,
-                //     height: 30
-                // },
-                // {
-                //     coordX: 25,
-                //     coordY: -30,
-                //     firerange: TANK_FIRERANGE,
-                //     firespeed: TANK_FIRESPEED,
-                //     firepower: TANK_FIREPOWER,
-                //     firefrequence: 1000,
-                //     type: 'cannon',
-                //     sound: 'sounds/laser.mp3',
-                //     width: 30,
-                //     height: 30
-                // },
                 {
                     coordX: -25,
                     coordY: -30,
@@ -133,7 +109,6 @@ define(function () {
 
             for (i in follower) {
                 if (enemyModel === follower[i]) {
-                    console.log('removing...');
                     delete follower[i];
                 }
             }

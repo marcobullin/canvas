@@ -107,6 +107,23 @@
 				color: #fff;
 				font-size: 12px;
 			}
+
+			#dialog {
+				display: none;
+				position: fixed;
+				width: 100%;
+				height: 100%;
+				z-index: 3;
+			}
+
+			#content {
+				margin: 10% auto;
+				width: 50%;
+				background-color: black;
+				border: 5px solid silver;
+				padding: 5px;
+				color: white;
+			}
 		</style>
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
 		<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
@@ -165,5 +182,18 @@
 				</li>
 			</ul>
 		</div>
+
+		<div id="dialog">
+			<div id="content">
+				<p>Missionsbeschreibung:</p>
+				<p id="description"></p>
+				<p>Zusammenfassung:</p>
+				<p id="goals"></p>
+				<p>Tips:</p>
+				<p id="hints"></p>
+				<input type="button" id="start" value="Mission starten">
+			</div>
+		</div>
+
 	</body>
 </html>

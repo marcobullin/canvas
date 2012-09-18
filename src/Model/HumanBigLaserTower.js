@@ -27,7 +27,7 @@ define(function () {
                     coordY: 0,
                     firerange: TANK_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
-                    firepower: TANK_FIREPOWER,
+                    firepower: 1.5 * TANK_FIREPOWER,
                     firefrequence: 1000,
                     sound: 'sounds/laser.mp3',
                     type: 'biglaser',
@@ -50,7 +50,6 @@ define(function () {
 
             for (i in follower) {
                 if (enemyModel === follower[i]) {
-                    console.log('removing...');
                     delete follower[i];
                 }
             }
