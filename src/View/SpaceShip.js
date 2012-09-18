@@ -154,12 +154,12 @@ define(
                 this.model.set('destinationPositionY', Py2);
                 this.model.set('direction', Mathematic.getAngle(Px1, Py1, Px2, Py2));
 
-                follower = this.model.get('follower');
-                for (i in follower) {
-                    if (follower.hasOwnProperty(i)) {
-                        follower[i].trigger('follow', this.model);
-                    }
-                }
+                // follower = this.model.get('follower');
+                // for (i in follower) {
+                //     if (follower.hasOwnProperty(i)) {
+                //         follower[i].trigger('follow', this.model);
+                //     }
+                // }
             },
 
             /**
@@ -220,8 +220,8 @@ define(
              * @return void
              */
             onFollow: function (enemy) {
-                var x = enemy.get('destinationPositionX') + enemy.get('width') + Math.round(Math.random() * 200 + 50),
-                    y = enemy.get('destinationPositionY') + enemy.get('height') + Math.round(Math.random() * 200 + 50);
+                var x = enemy.get('positionX') + this.model.get('distanceX'),
+                    y = enemy.get('positionY') + this.model.get('distanceY');
 
                 if (x > BATTLEFIELD_WIDTH) {
                     x = BATTLEFIELD_WIDTH - this.model.get('width');
@@ -353,6 +353,14 @@ define(
                 if (this.model.get('destinationPositionY') > this.model.get('positionY')) {
                     this.model.set('positionY', (this.model.get('positionY') + speedY));
                 }
+
+
+                var follower = this.model.get('follower');
+                for (i in follower) {
+                    if (follower.hasOwnProperty(i)) {
+                        follower[i].trigger('follow', this.model);
+                    }
+                }
             },
 
             /**
@@ -408,7 +416,7 @@ define(
 
                     if (x === (5 * 118)) {
                         window.clearInterval(animation);
-                        $('[data-role="page"]').trigger('check_goal', [self.model]);
+                        $('body').trigger('check_goal', [self.model]);
                         return;
                     }
                     x += 118;

@@ -11,7 +11,7 @@ define([
         items: [],
         objects: [],
 
-        selectedItems: [],
+        selectedItem: null,
 
         events: {
             'tap canvas': 'onClick',
@@ -78,92 +78,79 @@ define([
                 ) {
 
                     if ('user' !== this.items[i].model.get('owner')) {
-                        // MOVE AND ATTACK
-                        if (this.selectedItems.length > 0) {
-                            for (j in this.selectedItems) {
-                                if (this.selectedItems[j].model.get('follow')) {
-                                    var enemy = this.selectedItems[j].model.get('follow');
-                                    enemy.removeFollower(this.selectedItems[j].model);
-                                }
-
-                                this.selectedItems[j].model.set('follow', this.items[i].model);
-                                this.items[i].model.addFollower(this.selectedItems[j].model);
-
-                                this.selectedItems[j].model.trigger('follow', this.items[i].model);
+                        /**
+                         * MOVE AND ATTACK
+                         */
+                        if (this.selectedItem) {
+                            if (this.selectedItem.model.get('follow')) {
+                                var enemy = this.selectedItem.model.get('follow');
+                                enemy.removeFollower(this.selectedItem.model);
                             }
+
+                            var minusX = Math.round(Math.random()),
+                                minusY = Math.round(Math.random());
+                            this.selectedItem.model.set('follow', this.items[i].model);
+                            this.selectedItem.model.set('distanceX', Math.random() * (minusX ? -1 : 1) * 200 + this.items[i].model.get('width'));
+                            this.selectedItem.model.set('distanceY', Math.random() * (minusY ? -1 : 1) * 200 + this.items[i].model.get('width'));
+                            this.items[i].model.addFollower(this.selectedItem.model);
+
+                            this.selectedItem.model.trigger('follow', this.items[i].model);
+
                             clickedAnItem = true;
-                            //return;
                         }
-
-                    // SELECT AN UNIT
-                    } else {
-                        // deselect previous item
-                        if (this.selectedItems.length > 0 && ! (17 in window.Global.keysDown)) {
-                            for (j in this.selectedItems) {
-                                //this.selectedItems[j].model.set('attackEnemy', false);
-                                this.selectedItems[j].model.set('selected', false);
-                                delete this.selectedItems[j];
-                            }
-                        }
-
-                        $('#status_bar').attr('data-unitid', this.items[i].model.get('id'));
-                        $('#spaceship').attr('src', window.GameImages[this.items[i].model.get('type')].src);
-                        $('#spaceship').attr('width', this.items[i].model.get('originalWidth'));
-                        $('#spaceship').attr('height', this.items[i].model.get('originalHeight'));
-                        $('#spaceship').show();
-
-                        var weapons = this.items[i].model.get('weapons'),
-                            index,
-                            html = [];
-                        for (index in weapons) {
-                            html.push('<li><img width="25" height="25" src="' + window.GameImages[weapons[index].type].src + '"></li>');
-                        }
-
-                        $('#weapons').html(html.join('')).show();
-                        var armor = 100 - (this.items[i].model.get('currentArmor') / this.items[i].model.get('maxArmor') * 100);
-                        $('#currentArmor').css({height: armor});
-                        $('#armor').show();
-
-                        this.selectedItems.push(this.items[i]);
-                        this.items[i].model.set('selected', true);
-                        clickedAnItem = true;
                         break;
                     }
+
+                    /**
+                     * SELECT AN UNIT
+                     */
+
+                    // deselect previous item
+                    if (this.selectedItem) {
+                        this.selectedItem.model.set('selected', false);
+                        this.selectedItem = null;
+                    }
+
+                    this.selectedItem = this.items[i];
+                    this.items[i].model.set('selected', true);
+                    clickedAnItem = true;
+
+                    /**
+                     * RENDER FOR STATUSBAR
+                     */
+
+                    $('#status_bar').attr('data-unitid', this.items[i].model.get('id'));
+                    $('#spaceship').attr('src', window.GameImages[this.items[i].model.get('type')].src);
+                    $('#spaceship').attr('width', this.items[i].model.get('originalWidth'));
+                    $('#spaceship').attr('height', this.items[i].model.get('originalHeight'));
+                    $('#spaceship').show();
+
+                    var weapons = this.items[i].model.get('weapons'),
+                        index,
+                        html = [];
+                    for (index in weapons) {
+                        html.push('<li><img width="25" height="25" src="' + window.GameImages[weapons[index].type].src + '"></li>');
+                    }
+
+                    $('#weapons').html(html.join('')).show();
+                    var armor = 100 - (this.items[i].model.get('currentArmor') / this.items[i].model.get('maxArmor') * 100);
+                    $('#currentArmor').css({height: armor});
+                    $('#armor').show();
+                    break;
                 }
             }
 
-            // MOVE
-            if (this.selectedItems.length > 0 && false === clickedAnItem) {
-                for (j in this.selectedItems) {
-                    if (this.selectedItems[j].model.get('follow')) {
-                        var enemy = this.selectedItems[j].model.get('follow');
-                        enemy.removeFollower(this.selectedItems[j].model);
-                        this.selectedItems[j].model.set('follow', null);
-                    }
-
-                    var yh = y -50,
-                    xh = x -50;
-                    this.selectedItems[j].model.set('attackEnemy', false);
-                    this.selectedItems[j].move(x, y);
-
-                    // BLOCK FORMATION
-                    if (j % 2) {
-                        y+=50;
-                        x-=50;
-                    } else {
-                        x+=50;
-                    }
-
-                    if (y > BATTLEFIELD_HEIGHT) {
-                        yh -= 50;
-                        y = yh;
-                    }
-
-                    if (x > BATTLEFIELD_WIDTH) {
-                        xh += 50;
-                        x = xh;
-                    }
+            /**
+             * MOVE TO CLICKED POSITION
+             */
+            if (this.selectedItem && false === clickedAnItem) {
+                if (this.selectedItem.model.get('follow')) {
+                    var enemy = this.selectedItem.model.get('follow');
+                    enemy.removeFollower(this.selectedItem.model);
+                    this.selectedItem.model.set('follow', null);
                 }
+
+                this.selectedItem.move(x, y);
             }
         },
 

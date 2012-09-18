@@ -232,8 +232,7 @@ require([
 
 			window.level = 1;
 			window.counter = 1;
-			
-			$('[data-role="page"]').on('check_goal', checkGoal);
+
 			missionDescription();
 
 			then = Date.now();
@@ -241,12 +240,14 @@ require([
 		}
 		
 		function missionDescription() {
+			$('body').off('check_goal');
 			$('body').trigger('stop_scanning_for_enemies');
 
 			$('#dialog').show();
 			$('#description').html(LEVEL[window.level].desc.main);
 			$('#goals').html(LEVEL[window.level].desc.goals.join('<br/>'));
 			$('#hints').html(LEVEL[window.level].desc.hints.join('<br/>'));
+			$('body').on('check_goal', checkGoal);
 		}
 
 		function run() {
@@ -257,20 +258,19 @@ require([
 			 * USER
 			 */
 			var oldHeight = 50,
-				spaceship;
-			for (var j = 0; j < LEVEL[window.level].user.length; j++) {
+				spaceship,
+				j;
+			for (j = 0; j < LEVEL[window.level].user.length; j++) {
 				spaceship = create(LEVEL[window.level].user[j], 50, oldHeight, 'user');
 				oldHeight += spaceship.model.get('height');
-				
+
 				window.battlefield.add(spaceship);
 			}
 
 			/**
 			 * COMPUTER
 			 */
-			for (var j = 0; j <  LEVEL[window.level].enemy.length; j++) {
-				var spaceship;
-
+			for (j = 0; j <  LEVEL[window.level].enemy.length; j++) {
 				if (LEVEL[window.level].enemy[j] === 'alienMothership') {
 				 	spaceship = create(LEVEL[window.level].enemy[j], 1050, 550, 'computer');
 				} else {
@@ -296,6 +296,7 @@ require([
 		}
 
 		function checkGoal(event, model) {
+			console.log('LEVEL = ', level);
 			var owner = model.get('owner'),
 				goal = LEVEL[window.level].goal,
 				humansLeft = [],
@@ -330,7 +331,7 @@ require([
 			// USER LOST ALL UNITS
 			if (humansLeft.length === 0) {
 				alert('YOU LOSE!');
-				return missionDescription();		
+				return missionDescription();
 			}
 
 			/**
@@ -351,7 +352,6 @@ require([
 				}
 
 				if (towersLeft === false) {
-					alert('Victory!');
 					window.level += 1;
 					return missionDescription();	
 				}
@@ -364,7 +364,6 @@ require([
 			 */
 			if (goal === 'destroy_destroyer') {
 				if (model.get('type') === 'alienDestroyer') {
-					alert('Victory!');
 					window.level += 1;
 					return missionDescription();
 				}
@@ -376,7 +375,6 @@ require([
 			 */
 			if (goal === 'destroy_frigate') {
 				if (model.get('type') === 'alienFrigate') {
-					alert('Victory!');
 					window.level += 1;
 					return missionDescription();
 				}
@@ -388,7 +386,6 @@ require([
 			 */
 			if (goal === 'destroy_all') {
 				if (aliensLeft.length === 0) {
-					alert('Victory!');
 					window.level += 1;
 					return missionDescription();	
 				}

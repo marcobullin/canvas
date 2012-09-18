@@ -310,7 +310,7 @@ define([
                     // );
 
                     if (x === (5 * 118)) {
-                        $('[data-role="page"]').trigger('check_goal', [self.model]);
+                        $('body').trigger('check_goal', [self.model]);
                         return;
                     }
                     x += 118;
