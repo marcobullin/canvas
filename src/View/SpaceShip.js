@@ -220,6 +220,12 @@ define(
              * @return void
              */
             onFollow: function (enemy) {
+                if (this.following === true) {
+                    return;
+                }
+
+                this.following = true;
+
                 var x = enemy.get('positionX') + this.model.get('distanceX'),
                     y = enemy.get('positionY') + this.model.get('distanceY');
 
@@ -232,6 +238,11 @@ define(
                 }
 
                 this.move(x, y);
+
+                var self = this;
+                window.setTimeout(function () {
+                    self.following = false;
+                }, 50);
             },
 
 
