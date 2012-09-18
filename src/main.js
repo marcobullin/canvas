@@ -240,7 +240,7 @@ require([
 		}
 		
 		function missionDescription() {
-			$('body').off('check_goal');
+			$('body').off('check_goal', checkGoal);
 			$('body').trigger('stop_scanning_for_enemies');
 
 			$('#dialog').show();
