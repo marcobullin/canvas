@@ -7,19 +7,20 @@ define([
         View.BigLaser = Shot.extend({
         	initialize: function () {
                 this.model.set('type', 'biglaser');
+                this.game = this.options.game;
             },
 			draw: function (modifier) {
 				this.update(modifier);
 
-				window.battlefield.ctx.save();
-                window.battlefield.ctx.translate(this.model.get('positionX'), this.model.get('positionY'));
-                window.battlefield.ctx.rotate(this.model.get('angle'));
+				this.game.battlefield.ctx.save();
+                this.game.battlefield.ctx.translate(this.model.get('positionX'), this.model.get('positionY'));
+                this.game.battlefield.ctx.rotate(this.model.get('angle'));
                 if (this.model.get('owner') === 'user') {
-                	window.battlefield.ctx.drawImage(window.GameImages['humanBigLaserShot'], 0, 0, 10, 20);
+                	this.game.battlefield.ctx.drawImage(this.game.getImage('humanBigLaserShot'), 0, 0, 10, 20);
                 } else {
-                	window.battlefield.ctx.drawImage(window.GameImages['alienBigLaserShot'], 0, 0, 10, 20);
+                	this.game.battlefield.ctx.drawImage(this.game.getImage('alienBigLaserShot'), 0, 0, 10, 20);
                 }
-                window.battlefield.ctx.restore();
+                this.game.battlefield.ctx.restore();
 			}
 		});
 

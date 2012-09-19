@@ -13,12 +13,15 @@ define(
         View.SpaceShip = Backbone.View.extend({
             scaning: {},
 
+            game: null,
+
             /**
              * init stuff
              *
              * @return void
              */
             initialize: function () {
+                this.game = this.options.game;
                 // events
                 this.model.on('change:isDestroyed', $.proxy(this.onDestroy, this));
                 this.model.on('change:currentShield', $.proxy(this.onHitShield, this));
@@ -105,7 +108,7 @@ define(
                     return this.attack(enemy, weapon);
                 }
 
-                items = window.battlefield.items;
+                items = this.game.battlefield.items;
 
                 for (i in items) {
                     if (items.hasOwnProperty(i)) {
@@ -171,8 +174,8 @@ define(
              * @return void
              */
             onHitShield: function (model, value) {
-                window.battlefield.ctx.beginPath();
-                window.battlefield.ctx.arc(
+                this.game.battlefield.ctx.beginPath();
+                this.game.battlefield.ctx.arc(
                     this.model.get('positionX') + this.model.get('width') / 2,
                     this.model.get('positionY') + this.model.get('height') / 2,
                     this.model.get('width') / 2 + 5,
@@ -181,9 +184,9 @@ define(
                     false
                 );
 
-                window.battlefield.ctx.fillStyle = "rgba(17, 92, 177, 0.4)";
-                window.battlefield.ctx.fill();
-                window.battlefield.ctx.closePath();
+                this.game.battlefield.ctx.fillStyle = "rgba(17, 92, 177, 0.4)";
+                this.game.battlefield.ctx.fill();
+                this.game.battlefield.ctx.closePath();
             },
 
             /**
@@ -223,12 +226,12 @@ define(
                 var x = enemy.get('positionX') + this.model.get('distanceX'),
                     y = enemy.get('positionY') + this.model.get('distanceY');
 
-                if (x > BATTLEFIELD_WIDTH) {
-                    x = BATTLEFIELD_WIDTH - this.model.get('width');
+                if (x > this.game.battlefield.canvas.width) {
+                    x = this.game.battlefield.canvas.width - this.model.get('width');
                 }
 
-                if (y > BATTLEFIELD_HEIGHT) {
-                    y = BATTLEFIELD_HEIGHT - this.model.get('height');
+                if (y > this.game.battlefield.canvas.height) {
+                    y = this.game.battlefield.canvas.height - this.model.get('height');
                 }
 
                 this.move(x, y);
@@ -250,9 +253,10 @@ define(
                     Py2 = enemy.get('positionY') + enemy.get('height') / 2,
                     angle = Mathematic.getAngle(Px1, Py1, Px2, Py2),
                     shotModel = new ShotModel(),
-                    shot = null;
+                    shot = null,
+                    self = this;
 
-                shotModel.set('id', ++window.counter);
+                shotModel.set('id', ++this.game.idCounter);
                 shotModel.set('owner', this.model.get('owner'));
                 shotModel.set('positionX', weapon.positionX);
                 shotModel.set('positionY', weapon.positionY);
@@ -270,7 +274,7 @@ define(
                     shotModel.set('isDestroyed', false);
                     shotModel.on('change:currentArmor', function (model, value) {
                         if (value <= 0) {
-                            window.battlefield.remove(shotModel.get('id'));
+                            self.game.battlefield.remove(shotModel.get('id'));
                         }
                     });
                 }
@@ -280,31 +284,35 @@ define(
                 switch (weapon.type) {
                 case 'laser':
                     shot = new Laser({
-                        model: shotModel
+                        model: shotModel,
+                        game: this.game
                     });
                     break;
-                case 'BigLaser':
+                case 'biglaser':
                     shot = new BigLaser({
-                        model: shotModel
+                        model: shotModel,
+                        game: this.game
                     });
                     break;
                 case 'doublelaser':
                     shot = new DoubleLaser({
-                        model: shotModel
+                        model: shotModel,
+                        game: this.game
                     });
                     break;
                 case 'rocketlauncher':
                     shot = new Missile({
-                        model: shotModel
+                        model: shotModel,
+                        game: this.game
                     });
                     break;
                 default: return;
                 }
 
                 if (weapon.type === 'rocketlauncher') {
-                    window.battlefield.add(shot);
+                    this.game.battlefield.add(shot);
                 } else {
-                    window.battlefield.addObject(shot);
+                    this.game.battlefield.addObject(shot);
                 }
 
                 shot.fire();
@@ -385,7 +393,7 @@ define(
                     follower;
 
                 // removing unit/item from battlefield
-                window.battlefield.remove(this.model.get('id'));
+                this.game.battlefield.remove(this.model.get('id'));
 
                 // clean all weapon scanings
                 this.stopScaning();
@@ -397,7 +405,7 @@ define(
                 this.model.set('follower', []);
 
                 if (this.model.get('owner') === 'computer') {
-                    window.Global.user.model.set('money', window.Global.user.model.get('money') + this.model.get('headMoney'));
+                    this.game.user.model.set('money', this.game.user.model.get('money') + this.model.get('headMoney'));
                 }
 
                 // display explosion
@@ -453,16 +461,16 @@ define(
                  //     window.battlefield.ctx.closePath();
                  // }
 
-                window.battlefield.ctx.save();
+                this.game.battlefield.ctx.save();
 
-                window.battlefield.ctx.translate(newX, newY);
+                this.game.battlefield.ctx.translate(newX, newY);
                 if (weapon.direction) {
-                    window.battlefield.ctx.rotate(weapon.direction);
+                    this.game.battlefield.ctx.rotate(weapon.direction);
                 } else {
-                    window.battlefield.ctx.rotate(this.model.get('direction'));
+                    this.game.battlefield.ctx.rotate(this.model.get('direction'));
                 }
-                window.battlefield.ctx.drawImage(window.GameImages[weapon.type], -weapon.width / 2, -weapon.height / 2, weapon.width, weapon.height);
-                window.battlefield.ctx.restore();
+                this.game.battlefield.ctx.drawImage(this.game.getImage(weapon.type), -weapon.width / 2, -weapon.height / 2, weapon.width, weapon.height);
+                this.game.battlefield.ctx.restore();
             },
 
             stopScaning: function () {
@@ -477,7 +485,7 @@ define(
             /**
              * Drawing everything. The spaceship, the armor, the shield and the weapons.
              *
-             * @param integer modifier - time 
+             * @param integer modifier - time
              *
              * @return void
              */
@@ -493,34 +501,34 @@ define(
 
                 // MARK SHIP AS SELECTED
                 if (this.model.get('selected')) {
-                    window.battlefield.ctx.beginPath();
-                    window.battlefield.ctx.arc(this.model.get('positionX') + this.model.get('width') / 2, this.model.get('positionY') + this.model.get('height') / 2, this.model.get('width') / 2 + 2, 0, Math.PI * 2, false);
-                    window.battlefield.ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
-                    window.battlefield.ctx.fill();
-                    window.battlefield.ctx.lineWidth = 1;
-                    window.battlefield.ctx.strokeStyle = 'green';
-                    window.battlefield.ctx.stroke();
-                    window.battlefield.ctx.closePath();
+                    this.game.battlefield.ctx.beginPath();
+                    this.game.battlefield.ctx.arc(this.model.get('positionX') + this.model.get('width') / 2, this.model.get('positionY') + this.model.get('height') / 2, this.model.get('width') / 2 + 2, 0, Math.PI * 2, false);
+                    this.game.battlefield.ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
+                    this.game.battlefield.ctx.fill();
+                    this.game.battlefield.ctx.lineWidth = 1;
+                    this.game.battlefield.ctx.strokeStyle = 'green';
+                    this.game.battlefield.ctx.stroke();
+                    this.game.battlefield.ctx.closePath();
                 }
 
                 // ROTATE
-                window.battlefield.ctx.save();
-                window.battlefield.ctx.translate(this.model.get('positionX') + this.model.get('width') / 2, this.model.get('positionY') + this.model.get('height') / 2);
-                window.battlefield.ctx.rotate(this.model.get('direction'));
+                this.game.battlefield.ctx.save();
+                this.game.battlefield.ctx.translate(this.model.get('positionX') + this.model.get('width') / 2, this.model.get('positionY') + this.model.get('height') / 2);
+                this.game.battlefield.ctx.rotate(this.model.get('direction'));
 
                 // ARMOR BAR
-                window.battlefield.ctx.fillStyle = 'red';
-                window.battlefield.ctx.fillRect(x, y - 4, this.model.get('width'), 4);
-                window.battlefield.ctx.fillStyle = 'green';
-                window.battlefield.ctx.fillRect(x, y - 4, armor, 4);
+                this.game.battlefield.ctx.fillStyle = 'red';
+                this.game.battlefield.ctx.fillRect(x, y - 4, this.model.get('width'), 4);
+                this.game.battlefield.ctx.fillStyle = 'green';
+                this.game.battlefield.ctx.fillRect(x, y - 4, armor, 4);
 
                 // SHIELD BAR
-                window.battlefield.ctx.fillStyle = '#115cb1';
-                window.battlefield.ctx.fillRect(x, y - 8, shield, 4);
+                this.game.battlefield.ctx.fillStyle = '#115cb1';
+                this.game.battlefield.ctx.fillRect(x, y - 8, shield, 4);
 
                 // SPACESHIP
-                window.battlefield.ctx.drawImage(window.GameImages[this.model.get('type')], x, y, this.model.get('width'), this.model.get('height'));
-                window.battlefield.ctx.restore();
+                this.game.battlefield.ctx.drawImage(this.game.getImage(this.model.get('type')), x, y, this.model.get('width'), this.model.get('height'));
+                this.game.battlefield.ctx.restore();
 
                 // WEAPONS
                 for (key in weapons) {

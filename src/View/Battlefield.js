@@ -13,26 +13,29 @@ define([
 
         selectedItem: null,
 
+        game: null,
+
+        canvas: null,
+
+        ctx: null,
+
         events: {
             'tap canvas': 'onClick',
             'tap #items': 'onClickItems',
             'tap .cancel': 'onCancel'
         },
 
-        initialize: function () {
-            var canvas = document.createElement('canvas'),
-                ctx = canvas.getContext('2d');
+        initialize: function (game) {
+            this.game = game;
 
-            canvas.width = BATTLEFIELD_WIDTH;
-            canvas.height = BATTLEFIELD_HEIGHT;
-            canvas.style.zIndex = 0;
-            canvas.style.position = 'absolute';
+            _.bindAll(this, 'onClick', 'updateDrawings');
 
-            ctx.fillStyle = "black";
-            ctx.fillRect(0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
+            this.canvas = document.createElement('canvas');
+            this.canvas.width = window.outerWidth;
+            this.canvas.height = window.outerHeight;
 
-            this.el.appendChild(canvas);
-            _.bindAll(this, 'onClick');
+            this.ctx = this.canvas.getContext('2d');
+            $('#game_map').html(this.canvas);
         },
 
         add: function (item) {
@@ -57,10 +60,11 @@ define([
                 this.building.set('owner', 'user');
 
                 var tower = new Tower({
-                    model: this.building
+                    model: this.building,
+                    game: this.game
                 });
 
-                window.battlefield.add(tower);
+                this.add(tower);
                 this.building = null;
 
                 $('#items').show();
@@ -120,7 +124,7 @@ define([
                      */
 
                     $('#status_bar').attr('data-unitid', this.items[i].model.get('id'));
-                    $('#spaceship').attr('src', window.GameImages[this.items[i].model.get('type')].src);
+                    $('#spaceship').attr('src', this.game.getImage(this.items[i].model.get('type')).src);
                     $('#spaceship').attr('width', this.items[i].model.get('originalWidth'));
                     $('#spaceship').attr('height', this.items[i].model.get('originalHeight'));
                     $('#spaceship').show();
@@ -129,7 +133,7 @@ define([
                         index,
                         html = [];
                     for (index in weapons) {
-                        html.push('<li><img width="25" height="25" src="' + window.GameImages[weapons[index].type].src + '"></li>');
+                        html.push('<li><img width="25" height="25" src="' + this.game.getImage(weapons[index].type).src + '"></li>');
                     }
 
                     $('#weapons').html(html.join('')).show();
@@ -174,61 +178,85 @@ define([
                     break;
             }
 
-            if (model.get('price') > window.Global.user.model.get('money')) {
+            if (model.get('price') > this.game.user.model.get('money')) {
                 alert('Not enought Money');
                 return;
             }
 
-            window.Global.user.model.set('money', window.Global.user.model.get('money') - model.get('price'));
+            this.game.user.model.set('money', this.game.user.model.get('money') - model.get('price'));
 
             $('#items').hide();
             $('#info').show();
-            model.set('id', ++window.counter);
+            model.set('id', ++this.game.idCounter);
             this.building = model;
         },
 
         onCancel: function () {
-            window.Global.user.model.set('money', window.Global.user.model.get('money') + this.building.get('price'));
+            this.game.user.model.set('money', this.game.user.model.get('money') + this.building.get('price'));
             this.building = null;
 
             $('#items').show();
             $('#info').hide();
         },
 
-        render: function () {
-            this.canvas = document.createElement('canvas'),
-            this.ctx = this.canvas.getContext('2d');
+        // render: function () {
+        //     this.canvas = document.createElement('canvas'),
+        //     this.ctx = this.canvas.getContext('2d');
 
-            this.canvas.width = BATTLEFIELD_WIDTH;
-            this.canvas.height = BATTLEFIELD_HEIGHT;
-            this.canvas.style.zIndex = 1;
-            this.canvas.style.position = 'absolute';
+        //     this.canvas.width = BATTLEFIELD_WIDTH;
+        //     this.canvas.height = BATTLEFIELD_HEIGHT;
+        //     this.canvas.style.zIndex = 1;
+        //     this.canvas.style.position = 'absolute';
 
-            this.el.appendChild(this.canvas);
-        },
+        //     this.el.appendChild(this.canvas);
+        // },
 
-        update: function () {
-            var now = Date.now(),
-                delta = now - then,
+        // update: function () {
+        //     var now = Date.now(),
+        //         delta = now - then,
+        //         modifier = delta / 1000,
+        //         i;
+
+        //     window.battlefield.ctx.clearRect(0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
+
+        //     for (i in window.battlefield.objects) {
+        //         if (window.battlefield.objects.hasOwnProperty(i)) {
+        //             window.battlefield.objects[i].draw(modifier);
+        //         }
+        //     }
+
+        //     for (i in window.battlefield.items) {
+        //         if (window.battlefield.items.hasOwnProperty(i)) {
+        //             window.battlefield.items[i].draw(modifier);
+        //         }
+        //     }
+
+        //     then = now;
+        //     requestAnimationFrame(window.battlefield.update);
+        // },
+
+        updateDrawings: function () {
+            var newTimestamp = Date.now(),
+                delta = newTimestamp - this.game.timestamp,
                 modifier = delta / 1000,
                 i;
 
-            window.battlefield.ctx.clearRect(0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            for (i in window.battlefield.objects) {
-                if (window.battlefield.objects.hasOwnProperty(i)) {
-                    window.battlefield.objects[i].draw(modifier);
+            for (i in this.objects) {
+                if (this.objects.hasOwnProperty(i)) {
+                    this.objects[i].draw(modifier);
                 }
             }
 
-            for (i in window.battlefield.items) {
-                if (window.battlefield.items.hasOwnProperty(i)) {
-                    window.battlefield.items[i].draw(modifier);
+            for (i in this.items) {
+                if (this.items.hasOwnProperty(i)) {
+                    this.items[i].draw(modifier);
                 }
             }
 
-            then = now;
-            requestAnimationFrame(window.battlefield.update);
+            this.game.timestamp = newTimestamp;
+            requestAnimationFrame(this.updateDrawings);
         },
 
 
