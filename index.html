@@ -17,118 +17,6 @@
 				list-style: none;
 			}
 
-			#status_bar {
-				position: fixed;
-				left: 0;
-				bottom: 40px;
-				height: 100px;
-				width: 180px;
-				border-top: 3px solid silver;
-				border-right: 3px solid silver;
-				border-bottom: 3px solid silver;
-				background-color: black;
-				z-index: 2;
-			}
-
-			#action_bars {
-				position: fixed;
-				right: 0;
-				bottom: 40px;
-				height: 100px;
-				width: 204px;
-				border-top: 3px solid silver;
-				border-left: 3px solid silver;
-				border-bottom: 3px solid silver;
-				background-color: black;
-				z-index: 2;
-			}
-
-			#spaceship {
-				display: none;
-				z-index: 2;
-				position: absolute;
-			}
-
-			#weapons {
-				margin: 0;
-				padding: 0;
-				float: left;
-				width: 77px;
-				display: none;
-			}
-
-			#weapons li {
-				float: left;
-			}
-
-			#armor {
-				z-index: 1;
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				background-color: rgba(0, 255, 0, 0.3);
-				display: none;
-			}
-
-			#currentArmor {
-				position: absolute;
-				width: 100%;
-				height: 100px;
-				background-color: rgba(255, 0, 0, 1);
-			}
-
-			#items > li {
-				float: left;
-				position: relative;
-				border-right: 1px solid silver;
-			}
-
-			#items > li.not_enough_money {
-				opacity: 0.2;
-			}
-
-			#items p {
-				margin: 0;
-				padding: 0;
-				text-align: center;
-				color: #fff;
-				font-size: 12px;
-
-			}
-
-			#money {
-				border-bottom: 1px solid silver;
-				color: #fff;
-				font-size: 15px;
-				padding: 6px
-			}
-
-			#info {
-				display: none;
-				color: #fff;
-				font-size: 12px;
-			}
-
-			#dialog {
-				display: none;
-				position: fixed;
-				width: 100%;
-				height: 100%;
-				z-index: 3;
-			}
-
-			#content {
-				margin: 10% auto;
-				width: 50%;
-				background-color: black;
-				border: 5px solid silver;
-				padding: 5px;
-				color: white;
-			}
-
-
-
-
 			#loading {
 				color: white;
 				font-size: 24pt;
@@ -179,8 +67,42 @@
 				bottom: 0;
 				left: 0;
 				width: 100%;
-				height: 150px;
+				height: 105px;
 				border-top: 1px solid silver;
+				background-color: rgba(58, 49, 37, 0.9);
+			}
+
+			#action_bar #items > li {
+				float: left;
+				position: relative;
+				border-right: 1px solid silver;
+				padding-bottom: 5px;
+			}
+
+			#action_bar #items > li.not_enough_money {
+				opacity: 0.2;
+			}
+
+			#action_bar #items p {
+				margin: 0;
+				padding: 0;
+				text-align: center;
+				color: #fff;
+				font-size: 12px;
+
+			}
+
+			#action_bar #money {
+				border-bottom: 1px solid silver;
+				color: #fff;
+				font-size: 15px;
+				padding: 6px
+			}
+
+			#action_bar #info {
+				display: none;
+				color: #fff;
+				font-size: 12px;
 			}
 
 			#game_map {
@@ -199,7 +121,7 @@
 				margin-top: -175px;
 				border: 1px solid silver;
 				display: none;
-				background-color: rgba(0, 245, 255, 0.3)
+				background-color: rgba(58, 49, 37, 0.9);
 			}
 
 			#mission h1, #mission h2 {
@@ -310,44 +232,45 @@
 		<!-- GAME AREA -->
 		<div id="game_area">
 			<div id="game_map"></div>
-			<div id="action_bar" data-unitid="">
-				
-			<div id="money"></div>
-			<div id="info">
-				Click on the battlefield to place the item.
-				<button class="cancel">Cancel</button>
-			</div>
-			<ul id="items">
-				<li data-type="laserTower" data-price="50" class="tower">
-					<img width="50" height="50" src="images/laserTower.png">
-					<ul style="position: absolute; top: 10px; left: 10px;">
-						<li><img width="30" height="30" src="images/laser.png"></li>
-					</ul>
-					<p>$50</p>
-				</li>
-				<li data-type="doublelaserTower" data-price="100" class="tower">
-					<img width="50" height="50" src="images/laserTower.png">
-					<ul style="position: absolute; top: 10px; left: 10px;">
-						<li><img width="30" height="30" src="images/doublelaser.png"></li>
-					</ul>
-					<p>$100</p>
-				</li>
-				<li data-type="biglaserTower" data-price="150" class="tower">
-					<img width="50" height="50" src="images/laserTower.png">
-					<ul style="position: absolute; top: 5px; left: 5px;">
-						<li><img width="40" height="40" src="images/cannon.png"></li>
-					</ul>
-					<p>$150</p>
-				</li>
-				<li data-type="missileTower" data-price="250" class="tower">
-					<img width="50" height="50" src="images/laserTower.png">
-					<ul style="position: absolute; top: 5px; left: 5px;">
-						<li><img width="40" height="40" src="images/rocketlauncher.png"></li>
-					</ul>
-					<p>$250</p>
-				</li>
-			</ul>
-		
+			<div id="action_bar">
+				<!-- money -->
+				<div id="money"></div>
+
+				<div id="info">
+					Click on the battlefield to place the item.
+					<button class="cancel">Cancel</button>
+				</div>
+
+				<ul id="items">
+					<li data-type="laserTower" data-price="50" class="tower">
+						<img width="50" height="50" src="images/laserTower.png">
+						<ul style="position: absolute; top: 10px; left: 10px;">
+							<li><img width="30" height="30" src="images/laser.png"></li>
+						</ul>
+						<p>$50</p>
+					</li>
+					<li data-type="doublelaserTower" data-price="100" class="tower">
+						<img width="50" height="50" src="images/laserTower.png">
+						<ul style="position: absolute; top: 10px; left: 10px;">
+							<li><img width="30" height="30" src="images/doublelaser.png"></li>
+						</ul>
+						<p>$100</p>
+					</li>
+					<li data-type="biglaserTower" data-price="150" class="tower">
+						<img width="50" height="50" src="images/laserTower.png">
+						<ul style="position: absolute; top: 5px; left: 5px;">
+							<li><img width="40" height="40" src="images/cannon.png"></li>
+						</ul>
+						<p>$150</p>
+					</li>
+					<li data-type="missileTower" data-price="250" class="tower">
+						<img width="50" height="50" src="images/laserTower.png">
+						<ul style="position: absolute; top: 5px; left: 5px;">
+							<li><img width="40" height="40" src="images/rocketlauncher.png"></li>
+						</ul>
+						<p>$250</p>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</body>

@@ -118,28 +118,6 @@ define([
                     this.selectedItem = this.items[i];
                     this.items[i].model.set('selected', true);
                     clickedAnItem = true;
-
-                    /**
-                     * RENDER FOR STATUSBAR
-                     */
-
-                    $('#status_bar').attr('data-unitid', this.items[i].model.get('id'));
-                    $('#spaceship').attr('src', this.game.getImage(this.items[i].model.get('type')).src);
-                    $('#spaceship').attr('width', this.items[i].model.get('originalWidth'));
-                    $('#spaceship').attr('height', this.items[i].model.get('originalHeight'));
-                    $('#spaceship').show();
-
-                    var weapons = this.items[i].model.get('weapons'),
-                        index,
-                        html = [];
-                    for (index in weapons) {
-                        html.push('<li><img width="25" height="25" src="' + this.game.getImage(weapons[index].type).src + '"></li>');
-                    }
-
-                    $('#weapons').html(html.join('')).show();
-                    var armor = 100 - (this.items[i].model.get('currentArmor') / this.items[i].model.get('maxArmor') * 100);
-                    $('#currentArmor').css({height: armor});
-                    $('#armor').show();
                     break;
                 }
             }
@@ -198,42 +176,6 @@ define([
             $('#items').show();
             $('#info').hide();
         },
-
-        // render: function () {
-        //     this.canvas = document.createElement('canvas'),
-        //     this.ctx = this.canvas.getContext('2d');
-
-        //     this.canvas.width = BATTLEFIELD_WIDTH;
-        //     this.canvas.height = BATTLEFIELD_HEIGHT;
-        //     this.canvas.style.zIndex = 1;
-        //     this.canvas.style.position = 'absolute';
-
-        //     this.el.appendChild(this.canvas);
-        // },
-
-        // update: function () {
-        //     var now = Date.now(),
-        //         delta = now - then,
-        //         modifier = delta / 1000,
-        //         i;
-
-        //     window.battlefield.ctx.clearRect(0, 0, BATTLEFIELD_WIDTH, BATTLEFIELD_HEIGHT);
-
-        //     for (i in window.battlefield.objects) {
-        //         if (window.battlefield.objects.hasOwnProperty(i)) {
-        //             window.battlefield.objects[i].draw(modifier);
-        //         }
-        //     }
-
-        //     for (i in window.battlefield.items) {
-        //         if (window.battlefield.items.hasOwnProperty(i)) {
-        //             window.battlefield.items[i].draw(modifier);
-        //         }
-        //     }
-
-        //     then = now;
-        //     requestAnimationFrame(window.battlefield.update);
-        // },
 
         updateDrawings: function () {
             var newTimestamp = Date.now(),
