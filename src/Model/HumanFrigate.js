@@ -3,7 +3,7 @@ define(function () {
     Model.HumanFrigate = Backbone.Model.extend({
         defaults: {
             width: 100,
-            height: 100,
+            height: 200,
             originalWidth: 100,
             originalHeight: 100,
             currentArmor:  200,
@@ -22,8 +22,8 @@ define(function () {
         initialize: function () {
             this.set('weapons', [
                 {
-                    coordX: 0,
-                    coordY: -38,
+                    coordX: -18,
+                    coordY: 5,
                     firerange: SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: 2 * SCOUT_FIREPOWER,
@@ -34,8 +34,8 @@ define(function () {
                     height: 25
                 },
                 {
-                    coordX: 0,
-                    coordY: 45,
+                    coordX: -18,
+                    coordY: 25,
                     firerange: SCOUT_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED,
                     firepower: 2 * SCOUT_FIREPOWER,
@@ -46,28 +46,64 @@ define(function () {
                     height: 25
                 },
                 {
-                    coordX: 30,
-                    coordY: -38,
+                    coordX: 15,
+                    coordY: 5,
+                    firerange: SCOUT_FIRERANGE,
+                    firespeed: SCOUT_FIRESPEED,
+                    firepower: 2 * SCOUT_FIREPOWER,
+                    firefrequence: 1000,
+                    type: 'doublelaser',
+                    sound: 'sounds/laser.mp3',
+                    width: 25,
+                    height: 25
+                },
+                {
+                    coordX: 15,
+                    coordY: 25,
+                    firerange: SCOUT_FIRERANGE,
+                    firespeed: SCOUT_FIRESPEED,
+                    firepower: 2 * SCOUT_FIREPOWER,
+                    firefrequence: 1000,
+                    type: 'doublelaser',
+                    sound: 'sounds/laser.mp3',
+                    width: 25,
+                    height: 25
+                },
+                {
+                    coordX: -2,
+                    coordY: 80,
+                    firerange: TANK_FIRERANGE,
+                    firespeed: SCOUT_FIRESPEED,
+                    firepower: 1.5 * TANK_FIREPOWER,
+                    firefrequence: 1000,
+                    type: 'biglaser',
+                    sound: 'sounds/laser.mp3',
+                    width: 30,
+                    height: 30
+                },
+                {
+                    coordX: 28,
+                    coordY: -75,
                     firerange: 2 * TANK_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED / 3,
                     firepower: 10 * SCOUT_FIREPOWER,
                     firefrequence: 3000,
                     sound: 'sounds/laser.mp3',
                     type: 'rocketlauncher',
-                    width: 30,
-                    height: 30
+                    width: 20,
+                    height: 20
                 },
                 {
                     coordX: -30,
-                    coordY: -38,
+                    coordY: -75,
                     firerange: 2 * TANK_FIRERANGE,
                     firespeed: SCOUT_FIRESPEED / 3,
                     firepower: 10 * SCOUT_FIREPOWER,
                     firefrequence: 3000,
                     sound: 'sounds/laser.mp3',
                     type: 'rocketlauncher',
-                    width: 30,
-                    height: 30
+                    width: 20,
+                    height: 20
                 }
             ]);
         },

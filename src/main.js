@@ -51,7 +51,7 @@ require([
 			},
 			{
 				key: 'frigate',
-				src: 'images/tank.png'
+				src: 'images/fregatte.png'
 			},
 			{
 				key: 'destroyer',
