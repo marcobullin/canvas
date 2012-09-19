@@ -1,6 +1,6 @@
 define(function () {
     var levels = {
-        1: {
+        8: {
             goal: 'destroy_all',
             desc: {
                 main: 'Guten Morgen Kommandant. Unsere Sateliten zeichneten unbekannte Flugobjekte im Sektor Sieben auf. Ich werde Ihnen ein kleines Geschwader an Abfangjägern zur Verfügung stellen um der Sache auf den Grund zu gehen. Sollten Sie angegriffen werden, dann sind Sie befugt mit allen militärischen Mitteln zurückzuschlagen. Alles verstanden?',
@@ -404,7 +404,7 @@ define(function () {
                 }
             ]
         },
-        6: {
+        1: {
             goal: 'destroy_all',
             desc: {
                 main: 'Die Alien haben sich aus diesem Sektor ersteinmal zurückgezogen. Doch kein Grund für Luftsprünge Kommandant! Wir haben viele gute Männer und Schiffe in dieser Schlacht verloren. Scheinbar unbeeindruckt versuchen die Alien nun den vorstoß auf einen anderen Sektor dafür ziehen Sie vier Fregatten aus diesem Sektor ab um Ihre Einheiten in Sektor 5 zu verstärken. Kümmern Sie sich um diese Fregatten!',
@@ -415,8 +415,91 @@ define(function () {
                     '- Schiffe die sich vom Verbund gelöst haben sind leichter Ziele'
                 ]
             },
-            usersUnits: ['heavyFighter', 'heavyFighter', 'destroyer', 'destroyer', 'destroyer', 'frigate'],
-            enemy: ['alienFrigate', 'alienFrigate', 'alienFrigate', 'alienFrigate']
+            usersUnits: [
+                {
+                    spaceship: 'destroyer',
+                    x: 200,
+                    y: 50
+                },
+                {
+                    spaceship: 'destroyer',
+                    x: 200,
+                    y: 200
+                },
+                {
+                    spaceship: 'frigate',
+                    x: 50,
+                    y: 50
+                },
+                {
+                    spaceship: 'destroyer',
+                    x: 200,
+                    y: 400
+                },
+                {
+                    spaceship: 'destroyer',
+                    x: 200,
+                    y: 550
+                },
+                {
+                    spaceship: 'frigate',
+                    x: 50,
+                    y: 400
+                },
+                {
+                    spaceship: 'heavyFighter',
+                    x: 300,
+                    y: 150
+                },
+                {
+                    spaceship: 'heavyFighter',
+                    x: 300,
+                    y: 500
+                }
+
+            ],
+            alienUnits: [
+                {
+                    spaceship: 'alienFrigate',
+                    x: 1450,
+                    y: 100
+                },
+                {
+                    spaceship: 'alienFrigate',
+                    x: 1450,
+                    y: 300
+                },
+                {
+                    spaceship: 'alienFrigate',
+                    x: 1450,
+                    y: 500
+                },
+                {
+                    spaceship: 'alienFrigate',
+                    x: 1450,
+                    y: 700
+                },
+                {
+                    spaceship: 'alienLightFighter',
+                    x: 1400,
+                    y: 50
+                },
+                {
+                    spaceship: 'alienLightFighter',
+                    x: 1400,
+                    y: 250
+                },
+                {
+                    spaceship: 'alienLightFighter',
+                    x: 1400,
+                    y: 450
+                },
+                {
+                    spaceship: 'alienLightFighter',
+                    x: 1400,
+                    y: 650
+                }
+            ]
         },
         7: {
             goal: 'destroy_all',
