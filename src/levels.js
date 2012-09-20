@@ -1,6 +1,6 @@
 define(function () {
     var levels = {
-        8: {
+        1: {
             goal: 'destroy_all',
             desc: {
                 main: 'Guten Morgen Kommandant. Unsere Sateliten zeichneten unbekannte Flugobjekte im Sektor Sieben auf. Ich werde Ihnen ein kleines Geschwader an Abfangjägern zur Verfügung stellen um der Sache auf den Grund zu gehen. Sollten Sie angegriffen werden, dann sind Sie befugt mit allen militärischen Mitteln zurückzuschlagen. Alles verstanden?',
@@ -49,27 +49,37 @@ define(function () {
                 {
                     spaceship: 'alienLightFighter',
                     x: 1500,
-                    y: 150
+                    y: 150,
+                    dx: 400,
+                    dy: 150
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1450,
-                    y: 200
+                    y: 200,
+                    dx: 350,
+                    dy: 200
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1400,
-                    y: 250
+                    y: 250,
+                    dx: 300,
+                    dy: 250
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1450,
-                    y: 300
+                    y: 300,
+                    dx: 350,
+                    dy: 300
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1500,
-                    y: 350
+                    y: 350,
+                    dx: 400,
+                    dy: 350
                 }
             ]
         },
@@ -121,37 +131,51 @@ define(function () {
                 {
                     spaceship: 'alienLightFighter',
                     x: 1500,
-                    y: 150
+                    y: 150,
+                    dx: 400,
+                    dy: 150
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1450,
-                    y: 200
+                    y: 200,
+                    dx: 350,
+                    dy: 200
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1500,
-                    y: 250
+                    y: 250,
+                    dx: 400,
+                    dy: 250
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1450,
-                    y: 350
+                    y: 350,
+                    dx: 350,
+                    dy: 350
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1450,
-                    y: 400
+                    y: 400,
+                    dx: 350,
+                    dy: 400
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1450,
-                    y: 450
+                    y: 450,
+                    dx: 350,
+                    dy: 450
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1450,
-                    y: 500
+                    y: 500,
+                    dx: 350,
+                    dy: 500
                 }
             ]
         },
@@ -204,32 +228,44 @@ define(function () {
                 {
                     spaceship: 'alienLightFighter',
                     x: 1500,
-                    y: 150
+                    y: 150,
+                    dx: 400,
+                    dy: 150
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1400,
-                    y: 250
+                    y: 250,
+                    dx: 300,
+                    dy: 250
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1350,
-                    y: 350
+                    y: 350,
+                    dx: 250,
+                    dy: 350
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1400,
-                    y: 450
+                    y: 450,
+                    dx: 300,
+                    dy: 450
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1500,
-                    y: 550
+                    y: 550,
+                    dx: 400,
+                    dy: 550
                 },
                 {
                     spaceship: 'alienDestroyer',
                     x: 1550,
-                    y: 350
+                    y: 350,
+                    dx: 450,
+                    dy: 350
                 }
             ]
 
@@ -282,37 +318,51 @@ define(function () {
                 {
                     spaceship: 'alienLightFighter',
                     x: 1400,
-                    y: 150
+                    y: 150,
+                    dx: 400,
+                    dy: 150
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1500,
-                    y: 150
+                    y: 150,
+                    dx: 500,
+                    dy: 150
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1600,
-                    y: 150
+                    y: 150,
+                    dx: 600,
+                    dy: 150
                 },
                 {
                     spaceship: 'alienFrigate',
                     x: 1500,
-                    y: 300
+                    y: 300,
+                    dx: 500,
+                    dy: 300
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1400,
-                    y: 450
+                    y: 450,
+                    dx: 400,
+                    dy: 450
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1500,
-                    y: 450
+                    y: 450,
+                    dx: 500,
+                    dy: 450
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1600,
-                    y: 450
+                    y: 450,
+                    dx: 600,
+                    dy: 450
                 }
             ]
         },
@@ -365,46 +415,76 @@ define(function () {
                 {
                     spaceship: 'alienDestroyer',
                     x: 1400,
-                    y: 100
+                    y: 100,
+                    dx: 400,
+                    dy: 100
                 },
                 {
                     spaceship: 'alienDestroyer',
-                    x: 1500,
-                    y: 500
+                    x: 1400,
+                    y: 500,
+                    dx: 500,
+                    dy: 500
                 },
                 {
                     spaceship: 'alienFrigate',
                     x: 1500,
-                    y: 100
+                    y: 100,
+                    dx: 500,
+                    dy: 100
                 },
                 {
                     spaceship: 'alienFrigate',
                     x: 1500,
-                    y: 500
+                    y: 500,
+                    dx: 500,
+                    dy: 500
+                },
+                {
+                    spaceship: 'alienHeavyFighter',
+                    x: 1250,
+                    y: 600,
+                    dx: 250,
+                    dy: 600
                 },
                 {
                     spaceship: 'alienHeavyFighter',
                     x: 1450,
-                    y: 600
+                    y: 600,
+                    dx: 450,
+                    dy: 600
                 },
                 {
                     spaceship: 'alienHeavyFighter',
                     x: 1350,
-                    y: 600
+                    y: 600,
+                    dx: 350,
+                    dy: 600
+                },
+                {
+                    spaceship: 'alienHeavyFighter',
+                    x: 1250,
+                    y: 200,
+                    dx: 250,
+                    dy: 200
                 },
                 {
                     spaceship: 'alienHeavyFighter',
                     x: 1450,
-                    y: 200
+                    y: 200,
+                    dx: 450,
+                    dy: 200
                 },
                 {
                     spaceship: 'alienHeavyFighter',
                     x: 1350,
-                    y: 200
+                    y: 200,
+                    dx: 350,
+                    dy: 200
                 }
             ]
         },
-        1: {
+        6: {
             goal: 'destroy_all',
             desc: {
                 main: 'Die Alien haben sich aus diesem Sektor ersteinmal zurückgezogen. Doch kein Grund für Luftsprünge Kommandant! Wir haben viele gute Männer und Schiffe in dieser Schlacht verloren. Scheinbar unbeeindruckt versuchen die Alien nun den vorstoß auf einen anderen Sektor dafür ziehen Sie vier Fregatten aus diesem Sektor ab um Ihre Einheiten in Sektor 5 zu verstärken. Kümmern Sie sich um diese Fregatten!',
@@ -462,42 +542,58 @@ define(function () {
                 {
                     spaceship: 'alienFrigate',
                     x: 1450,
-                    y: 100
+                    y: 100,
+                    dx: 450,
+                    dy: 100
                 },
                 {
                     spaceship: 'alienFrigate',
                     x: 1450,
-                    y: 300
+                    y: 300,
+                    dx: 450,
+                    dy: 300
                 },
                 {
                     spaceship: 'alienFrigate',
                     x: 1450,
-                    y: 500
+                    y: 500,
+                    dx: 450,
+                    dy: 500
                 },
                 {
                     spaceship: 'alienFrigate',
                     x: 1450,
-                    y: 700
+                    y: 700,
+                    dx: 450,
+                    dy: 700
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1400,
-                    y: 50
+                    y: 50,
+                    dx: 400,
+                    dy: 50
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1400,
-                    y: 250
+                    y: 250,
+                    dx: 400,
+                    dy: 250
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1400,
-                    y: 450
+                    y: 450,
+                    dx: 400,
+                    dy: 450
                 },
                 {
                     spaceship: 'alienLightFighter',
                     x: 1400,
-                    y: 650
+                    y: 650,
+                    dx: 400,
+                    dy: 650
                 }
             ]
         },
@@ -512,8 +608,107 @@ define(function () {
                     '- feindlich Fregatten haben im hinteren Bereich Ihre Schwachstelle'
                 ]
             },
-            usersUnits: ['destroyer', 'destroyer', 'frigate', 'frigate', 'heavyFighter', 'heavyFighter', 'heavyFighter', 'heavyFighter'],
-            enemy: ['alienMothership', 'alienLightFighter', 'alienLightFighter', 'alienLightFighter', 'alienHeavyFighter', 'alienHeavyFighter', 'alienHeavyFighter', 'alienHeavyFighter', 'alienFrigate', 'alienDestroyer', 'alienFrigate']
+            usersUnits: [
+                {
+                    spaceship: 'frigate',
+                    x: 50,
+                    y: 50
+                },
+                {
+                    spaceship: 'frigate',
+                    x: 50,
+                    y: 250
+                },
+                {
+                    spaceship: 'destroyer',
+                    x: 150,
+                    y: 100
+                },
+                {
+                    spaceship: 'destroyer',
+                    x: 150,
+                    y: 200
+                },
+                {
+                    spaceship: 'heavyFighter',
+                    x: 300,
+                    y: 50
+                },
+                {
+                    spaceship: 'heavyFighter',
+                    x: 300,
+                    y: 150
+                },
+                {
+                    spaceship: 'heavyFighter',
+                    x: 300,
+                    y: 250
+                },
+                {
+                    spaceship: 'heavyFighter',
+                    x: 300,
+                    y: 350
+                }
+
+            ],
+            alienUnits: [
+                {
+                    spaceship: 'alienMothership',
+                    x: 1500,
+                    y: 600,
+                    dx: 1000,
+                    dy: 600
+                },
+                {
+                    spaceship: 'alienFrigate',
+                    x: 1350,
+                    y: 300,
+                    dx: 600,
+                    dy: 300
+                },
+                {
+                    spaceship: 'alienFrigate',
+                    x: 1350,
+                    y: 600,
+                    dx: 600,
+                    dy: 600
+                },
+                {
+                    spaceship: 'alienLightFighter',
+                    x: 1400,
+                    y: 400,
+                    dx: 400,
+                    dy: 400
+                },
+                {
+                    spaceship: 'alienLightFighter',
+                    x: 1500,
+                    y: 400,
+                    dx: 500,
+                    dy: 400
+                },
+                {
+                    spaceship: 'alienLightFighter',
+                    x: 1300,
+                    y: 400,
+                    dx: 300,
+                    dy: 400
+                },
+                {
+                    spaceship: 'alienLightFighter',
+                    x: 1600,
+                    y: 400,
+                    dx: 600,
+                    dy: 400
+                },
+                {
+                    spaceship: 'alienDestroyer',
+                    x: 1450,
+                    y: 250,
+                    dx: 450,
+                    dy: 250
+                }
+            ]
         }
     };
 

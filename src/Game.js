@@ -178,6 +178,9 @@ define(
                 this.idCounter = 0;
                 window.clearInterval(this.action);
 
+                this.timestamp = Date.now();
+                this.battlefield.updateDrawings();
+
                 var spaceship,
                     self = this,
                     i;
@@ -192,22 +195,22 @@ define(
                 for (i = 0; i < levels[this.currentLevel].alienUnits.length; i += 1) {
                     spaceship = this.createUnit(levels[this.currentLevel].alienUnits[i], 'computer');
                     this.battlefield.add(spaceship);
+                    spaceship.move(levels[this.currentLevel].alienUnits[i].dx, levels[this.currentLevel].alienUnits[i].dy);
                 }
-
-                this.timestamp = Date.now();
-                this.battlefield.updateDrawings();
 
                 $('#game_area').fadeIn('slow');
 
+                var randX,
+                    randY;
                 this.action = setInterval(function () {
                     for (i in self.battlefield.items) {
                         if (!self.battlefield.items.hasOwnProperty(i)) {
                             continue;
                         }
 
-                        var randX = Math.round(Math.random() * 1400);
-                        var randY = Math.round(Math.random() * 800);
                         if (self.battlefield.items[i].model.get('isUnit') && self.battlefield.items[i].model.get('isAttackable') && self.battlefield.items[i].model.get('owner') === 'computer') {
+                            randX = Math.round(Math.random() * 1400);
+                            randY = Math.round(Math.random() * 800);
                             self.battlefield.items[i].move(randX, randY);
                         }
                     }
@@ -223,6 +226,7 @@ define(
             },
 
             onWin: function () {
+                console.log('You Win');
                 this.currentLevel++;
                 this.showMission();
                 return;

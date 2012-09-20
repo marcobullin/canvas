@@ -41,7 +41,7 @@ define(
                 for (index in weapons) {
                     if (weapons.hasOwnProperty(index)) {
                         key = weapons[index].coordX + '_' + weapons[index].coordY;
-                        this.scaning[key] = window.setInterval($.proxy(this.scan, this, weapons[index]), Math.floor(Math.random() * 500 +  weapons[index].firefrequence));
+                        this.scaning[key] = window.setInterval($.proxy(this.scan, this, weapons[index]), Math.floor(Math.random() * 1000 +  weapons[index].firefrequence));
                     }
                 }
             },
@@ -198,20 +198,8 @@ define(
              * @return void
              */
             onHitArmor: function (model, value) {
-                var unitId = $('#status_bar').attr('data-unitid');
-                if (unitId == this.model.get('id')) {
-                    var armor = 100 - (this.model.get('currentArmor') / this.model.get('maxArmor') * 100);
-                    $('#currentArmor').css({height: armor});
-                }
-
-                if (value <= 0) {
+                if (value <= 0 && !model.get('isDestroyed')) {
                     model.set('isDestroyed', true);
-
-                    if (unitId == this.model.get('id')) {
-                        $('#spaceship').hide();
-                        $('#armor').hide();
-                        $('#weapons').hide();
-                    }
                 }
             },
 
