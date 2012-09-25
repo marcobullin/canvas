@@ -244,6 +244,21 @@ define(
              * @return void
              */
             attack: function (enemy, weapon) {
+
+                if (weapon.type === 'biglaser') {
+
+                    if (!this.attackSound) {
+                        this.attackSound = new Audio('sounds/CANNON_F.WAV');
+                    }
+                } else {
+                    if (!this.attackSound) {
+                        this.attackSound = new Audio('sounds/SHOOTING.WAV');
+                    }
+                }
+                if (this.attackSound.pause){
+                    this.attackSound.play();
+                }
+
                 var Px1 = weapon.positionX,
                     Py1 = weapon.positionY,
                     Px2 = enemy.get('positionX') + enemy.get('width') / 2,
@@ -376,6 +391,15 @@ define(
              * @return void
              */
             onDestroy: function (model) {
+
+                if (!this.destroySound) {
+                    this.destroySound = new Audio('sounds/CRASH.WAV');
+                }
+            
+                if (this.destroySound.pause){
+                    this.destroySound.play();
+                }
+
                 var i,
                     j,
                     follower,
