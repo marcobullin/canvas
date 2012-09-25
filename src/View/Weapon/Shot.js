@@ -11,10 +11,18 @@ define(function () {
         },
 
         drawEplosion: function () {
+            var radius =  20,
+                color1 = 'rgba(255, 255, 0, 0.7)',
+                color2 = 'rgba(255,0,0, 0.2)',
+                gradient = this.game.battlefield.ctx.createRadialGradient(this.model.get('positionX'), this.model.get('positionY'), 0, this.model.get('positionX'), this.model.get('positionY'), radius / 2);
+
+            gradient.addColorStop(0.5, color1);
+            gradient.addColorStop(1, color2);
+
             this.game.battlefield.ctx.save();
             this.game.battlefield.ctx.beginPath();
-            this.game.battlefield.ctx.arc(this.model.get('positionX'), this.model.get('positionY'), 4, 0, Math.PI*2, false);
-            this.game.battlefield.ctx.fillStyle = "orange";
+            this.game.battlefield.ctx.arc(this.model.get('positionX'), this.model.get('positionY'), radius, 0, Math.PI*2, false);
+            this.game.battlefield.ctx.fillStyle = gradient;
             this.game.battlefield.ctx.fill();
             this.game.battlefield.ctx.closePath();
             this.game.battlefield.ctx.restore();
@@ -92,7 +100,7 @@ define(function () {
                     } else {
                         this.game.battlefield.removeObject(shotId);
                     }
-                     
+
                     unit.model.set('currentArmor', unit.model.get('currentArmor') - firepower);
                     this.drawEplosion();
 

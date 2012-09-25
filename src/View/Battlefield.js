@@ -31,8 +31,8 @@ define([
             _.bindAll(this, 'onClick', 'updateDrawings');
 
             this.canvas = document.createElement('canvas');
-            this.canvas.width = window.outerWidth;
-            this.canvas.height = window.outerHeight;
+            this.canvas.width = 1500;//window.outerWidth;
+            this.canvas.height = 1000;//window.outerHeight;
 
             this.ctx = this.canvas.getContext('2d');
             $('#game_map').html(this.canvas);
@@ -185,19 +185,20 @@ define([
 
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            for (i in this.objects) {
-                if (this.objects.hasOwnProperty(i)) {
-                    this.objects[i].draw(modifier);
-                }
-            }
-
             for (i in this.items) {
                 if (this.items.hasOwnProperty(i)) {
                     this.items[i].draw(modifier);
                 }
             }
 
+            for (i in this.objects) {
+                if (this.objects.hasOwnProperty(i)) {
+                    this.objects[i].draw(modifier);
+                }
+            }
+
             this.game.timestamp = newTimestamp;
+
             requestAnimationFrame(this.updateDrawings);
         },
 

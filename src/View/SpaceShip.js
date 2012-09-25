@@ -44,6 +44,8 @@ define(
                         this.scaning[key] = window.setInterval($.proxy(this.scan, this, weapons[index]), Math.floor(Math.random() * 1000 +  weapons[index].firefrequence));
                     }
                 }
+
+                _.bindAll(this, 'drawExplosion');
             },
 
             /**
@@ -145,8 +147,7 @@ define(
              * @return void
              */
             move: function (x, y) {
-                var direction,
-                    follower,
+                var follower,
                     i,
                     Px1 = this.model.get('positionX'),
                     Py1 = this.model.get('positionY'),
@@ -156,13 +157,6 @@ define(
                 this.model.set('destinationPositionX', Px2);
                 this.model.set('destinationPositionY', Py2);
                 this.model.set('direction', Mathematic.getAngle(Px1, Py1, Px2, Py2));
-
-                // follower = this.model.get('follower');
-                // for (i in follower) {
-                //     if (follower.hasOwnProperty(i)) {
-                //         follower[i].trigger('follow', this.model);
-                //     }
-                // }
             },
 
             /**
@@ -199,7 +193,7 @@ define(
              */
             onHitArmor: function (model, value) {
                 if (value <= 0 && !model.get('isDestroyed')) {
-                    model.set('isDestroyed', true);
+                    this.explode = true;
                 }
             },
 
@@ -214,6 +208,14 @@ define(
                 var x = enemy.get('positionX') + this.model.get('distanceX'),
                     y = enemy.get('positionY') + this.model.get('distanceY');
 
+                if (x < 0) {
+                    x = this.model.get('width') / 2;
+                }
+
+                if (y < 0) {
+                    y = this.model.get('height') / 2;
+                }
+
                 if (x > this.game.battlefield.canvas.width) {
                     x = this.game.battlefield.canvas.width - this.model.get('width');
                 }
@@ -221,6 +223,13 @@ define(
                 if (y > this.game.battlefield.canvas.height) {
                     y = this.game.battlefield.canvas.height - this.model.get('height');
                 }
+
+                this.game.battlefield.ctx.beginPath();
+                this.game.battlefield.ctx.moveTo(this.model.get('positionX') + this.model.get('width') / 2, this.model.get('positionY') + this.model.get('height') / 2);
+                this.game.battlefield.ctx.lineTo(enemy.get('positionX') + enemy.get('width') / 2, enemy.get('positionY') + enemy.get('height') / 2);
+                this.game.battlefield.ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+                this.game.battlefield.ctx.stroke();
+                this.game.battlefield.ctx.closePath();
 
                 this.move(x, y);
             },
@@ -314,9 +323,9 @@ define(
              * @return void
              */
             updatePosition: function (modifier) {
-                if (this.model.get('destinationPositionX') === Math.round(this.model.get('positionX')) && this.model.get('destinationPositionY') === Math.round(this.model.get('positionY'))) {
-                    return;
-                }
+                // if (this.model.get('destinationPositionX') === Math.round(this.model.get('positionX')) && this.model.get('destinationPositionY') === Math.round(this.model.get('positionY'))) {
+                //     return;
+                // }
 
                 var speed = this.model.get('speed') * modifier,
                     speedX,
@@ -368,17 +377,9 @@ define(
              */
             onDestroy: function (model) {
                 var i,
-                    self = this,
-                    x = 0,
-                    y = 0,
-                    w = 118,
-                    h = 118,
-                    dx = model.get('positionX') - 54,
-                    dy = model.get('positionY') - 54,
-                    dw = 118,
-                    dh = 118,
-                    animation,
-                    follower;
+                    j,
+                    follower,
+                    newFollower = [];
 
                 // removing unit/item from battlefield
                 this.game.battlefield.remove(this.model.get('id'));
@@ -396,27 +397,68 @@ define(
                     this.game.user.model.set('money', this.game.user.model.get('money') + this.model.get('headMoney'));
                 }
 
-                // display explosion
-                animation = window.setInterval(function () {
-                    // window.battlefield.ctx.drawImage(
-                    //     window.GameImages.explosion,
-                    //     x,
-                    //     y,
-                    //     w,
-                    //     h,
-                    //     dx,
-                    //     dy,
-                    //     dw,
-                    //     dh
-                    // );
-
-                    if (x === (5 * 118)) {
-                        window.clearInterval(animation);
-                        $('body').trigger('check_goal', [self.model]);
-                        return;
+                for (i = 0; i < this.game.battlefield.items.length; i += 1) {
+                    if (this.game.battlefield.items[i].model.get('owner') === this.model.get('owner')) {
+                        continue;
                     }
-                    x += 118;
-                }, 10);
+
+                    if (!this.game.battlefield.items[i].model.get('follower')) {
+                        continue;
+                    }
+
+                    follower = this.game.battlefield.items[i].model.get('follower');
+
+                    newFollower = [];
+                    for (j = 0; j < follower.length; j+=1) {
+                        if (!follower[j]) {
+                            continue;
+                        }
+                        if (follower[j].get('id') === this.model.get('id')) {
+                            continue;
+                        }
+
+                        newFollower.push(follower[j]);
+                    }
+
+                    this.game.battlefield.items[i].model.set('follower', newFollower);
+                }
+
+                if (this.model.get('selected')) {
+                    this.model.set('selected', false);
+                    this.game.battlefield.selectedItem = null;
+                }
+
+                $('body').trigger('check_goal', [this.model]);
+            },
+
+            z: 4,
+            drawExplosion: function () {
+                this.mx = this.mx ? this.mx : this.model.get('positionX') + this.model.get('width') / 2;
+                this.my = this.my ? this.my : this.model.get('positionY') + this.model.get('height') / 2;
+
+                var radius = 2 * this.model.get('height'),
+                    color1 = 'rgba(255, 255, 0, 0.7)',
+                    color2 = 'rgba(255,0,0, 0.2)',
+                    color3 = 'rgba(0,0,0, 0.4)',
+                    gradient = this.game.battlefield.ctx.createRadialGradient(this.mx, this.my, 0, this.mx, this.my, radius / this.z);
+
+                gradient.addColorStop(0.4, color1);
+                gradient.addColorStop(0.7, color2);
+                gradient.addColorStop(1, color3);
+
+                this.game.battlefield.ctx.beginPath();
+                this.game.battlefield.ctx.arc(this.mx, this.my, radius, 0, Math.PI * 2, false);
+                this.game.battlefield.ctx.fillStyle = gradient;
+                this.game.battlefield.ctx.fill();
+                this.game.battlefield.ctx.closePath();
+
+                this.z -= 0.2;
+
+                if (this.z <= 1) {
+                    this.explode = false;
+                    this.model.set('isDestroyed', true);
+                    return;
+                }
             },
 
             /**
@@ -478,6 +520,11 @@ define(
              * @return void
              */
             draw: function (modifier) {
+                if (this.explode) {
+                    this.drawExplosion();
+                    return;
+                }
+
                 var armor = this.model.get('width') / 100 * (this.model.get('currentArmor') / this.model.get('maxArmor') * 100),
                     shield = 0,//this.model.get('width') / 100 * (this.model.get('currentShield') / this.model.get('maxShield') * 100),
                     x = (-1 * this.model.get('width') / 2),
@@ -489,13 +536,18 @@ define(
 
                 // MARK SHIP AS SELECTED
                 if (this.model.get('selected')) {
+                    var radius = 2 * this.model.get('height'),
+                        color2 = 'rgba(0, 255, 0, 0.3)',
+                        color1 = 'rgba(255, 255, 0, 0.3)',
+                        gradient = this.game.battlefield.ctx.createRadialGradient(this.model.get('positionX') + this.model.get('width') / 2, this.model.get('positionY') + this.model.get('height') / 2, 0, this.model.get('positionX') + this.model.get('width') / 2, this.model.get('positionY') + this.model.get('height') / 2, radius / 2);
+
+                    gradient.addColorStop(0, color1);
+                    gradient.addColorStop(1, color2);
+
                     this.game.battlefield.ctx.beginPath();
-                    this.game.battlefield.ctx.arc(this.model.get('positionX') + this.model.get('width') / 2, this.model.get('positionY') + this.model.get('height') / 2, this.model.get('width') / 2 + 2, 0, Math.PI * 2, false);
-                    this.game.battlefield.ctx.fillStyle = "rgba(0, 255, 0, 0.5)";
+                    this.game.battlefield.ctx.arc(this.model.get('positionX') + this.model.get('width') / 2, this.model.get('positionY') + this.model.get('height') / 2, this.model.get('width'), 0, Math.PI * 2, false);
+                    this.game.battlefield.ctx.fillStyle = gradient;
                     this.game.battlefield.ctx.fill();
-                    this.game.battlefield.ctx.lineWidth = 1;
-                    this.game.battlefield.ctx.strokeStyle = 'green';
-                    this.game.battlefield.ctx.stroke();
                     this.game.battlefield.ctx.closePath();
                 }
 
