@@ -2,7 +2,7 @@ define(function () {
     var images = [
         {
             key: 'map',
-            src: 'images/stone2.jpeg'
+            src: 'images/battlefield.jpg'
         },
         {
             key: 'obstacle',

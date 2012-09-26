@@ -49,14 +49,18 @@ define(
 
             timestamp: null,
 
+            purchasedUnits: [],
+
             events: {
                 'tap .start_game': 'onStartGame',
+                'tap .goto_hangar': 'onHangar',
                 'tap .play': 'onPlay',
-                'tap .cancel': 'onCancel'
+                'tap .cancel': 'onCancel',
+                'tap #available_units': 'onBuyUnit'
             },
 
             initialize: function () {
-                _.bindAll(this, 'showMission', 'onGameEvent', 'onWin', 'onLose');
+                _.bindAll(this, 'showMission', 'onGameEvent', 'onWin', 'onLose', 'onBuyUnit');
                 this._loadImages();
 
                 $('body').on('check_goal', this.onGameEvent);
@@ -66,7 +70,7 @@ define(
                 this.user = new UserView({
                     model: userModel
                 });
-                userModel.set('money', 100);
+                userModel.set('money', 7000);
 
                 this.battlefield = new Battlefield(this);
             },
@@ -105,6 +109,52 @@ define(
 
             showMainMenu: function () {
                 $('#main_menu').fadeIn('slow');
+            },
+
+            onBuyUnit: function (event) {
+                var img = $(event.target).closest('img');
+
+                if (img.length === 0) {
+                    return;
+                }
+
+                var price = parseInt(img.parent('li').attr('data-price'), 10);
+                if (this.user.model.get('money') < price) {
+                    return;
+                }
+
+                this.user.model.set('money', this.user.model.get('money') - price);
+
+                this.purchasedUnits.push({
+                    spaceship: img.attr('data-type'),
+                    x: Math.round(Math.random() * 100 + 100),
+                    y: this.purchasedUnits.length * 50 + 50
+                });
+
+                $('#selected_units').append('<li><img width="' + img.width() +'" height="' + img.height() +'" src="' + img.attr('src') + '"></li>');
+            },
+
+            onHangar: function () {
+                $('#mission').fadeOut('slow');
+                $('#hangar').fadeIn('slow');
+
+                var i = 0,
+                    html = [];
+                this.purchasedUnits = [];
+                for (i; i < this.battlefield.items.length; i += 1) {
+                    if (this.battlefield.items[i].model.get('owner') === 'user') {
+                        this.purchasedUnits.push({
+                            spaceship: this.battlefield.items[i].model.get('type'),
+                            x: 100,
+                            y: this.purchasedUnits.length * 50
+                        });
+
+                        var img = $('img[data-type="' + this.battlefield.items[i].model.get('type') + '"]');
+                        html.push('<li><img width="' + img.width() +'" height="' + img.height() +'" src="' + img.attr('src') + '"></li>');
+                    }
+                }
+
+                $('#selected_units').html(html.join(''));
             },
 
             onStartGame: function () {
@@ -172,7 +222,7 @@ define(
             },
 
             onPlay: function () {
-                $('#mission').fadeOut('slow');
+                $('#hangar').fadeOut('slow');
                 this.battlefield.items = [];
                 this.battlefield.objects = [];
                 this.idCounter = 0;
@@ -186,8 +236,12 @@ define(
                     i;
 
                 // USER UNITS
-                for (i = 0; i < levels[this.currentLevel].usersUnits.length; i += 1) {
-                    spaceship = this.createUnit(levels[this.currentLevel].usersUnits[i], 'user');
+                // for (i = 0; i < levels[this.currentLevel].usersUnits.length; i += 1) {
+                //     spaceship = this.createUnit(levels[this.currentLevel].usersUnits[i], 'user');
+                //     this.battlefield.add(spaceship);
+                // }
+                for (i = 0; i < this.purchasedUnits.length; i += 1) {
+                    spaceship = this.createUnit(this.purchasedUnits[i], 'user');
                     this.battlefield.add(spaceship);
                 }
 
@@ -223,6 +277,7 @@ define(
 
             onLose: function () {
                 console.log('You Lose');
+                this.showMission();
             },
 
             onWin: function () {

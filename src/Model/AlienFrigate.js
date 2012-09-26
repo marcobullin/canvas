@@ -13,7 +13,7 @@ define(function () {
             speed: TANK_SPEED / 2,
             isAttackable: true,
             isUnit: true,
-            headMoney: 200,
+            headMoney: 2000,
             type: 'alienFrigate',
             soundDestroy: 'sounds/bigboom.mp3',
             soundHit: 'sounds/hit.mp3'

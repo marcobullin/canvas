@@ -13,7 +13,7 @@ define(function () {
             speed:  40,
             isAttackable: true,
             isUnit: true,
-            headMoney: 100,
+            headMoney: 1800,
             type: 'alienDestroyer',
             soundDestroy: 'sounds/bigboom.mp3',
             soundHit: 'sounds/hit.mp3'

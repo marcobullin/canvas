@@ -7,9 +7,9 @@ define(function () {
         },
 
         updateMoney: function (model, value) {
-            $('#money').html('Rescourcen: $' + value);
+            $('#current_money').html('Rescourcen: $' + value);
 
-            var lis = $('[data-price]'),
+            var lis = $('#available_units li'),
                 li,
                 i;
             for (i = 0; i < lis.length; i++) {

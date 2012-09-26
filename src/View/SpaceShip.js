@@ -246,17 +246,28 @@ define(
             attack: function (enemy, weapon) {
 
                 if (weapon.type === 'biglaser') {
+                    if (!this.cannonSound) {
+                        this.cannonSound = new Audio('sounds/CANNON_F.WAV');
+                    }
+                    if (this.cannonSound.pause) {
+                        this.cannonSound.play();
+                    }
+                } else if (weapon.type === 'laser' || weapon.type === 'doublelaser') {
+                    if (!this.laserSound) {
+                        this.laserSound = new Audio('sounds/SHOOTING.WAV');
+                    }
 
-                    if (!this.attackSound) {
-                        this.attackSound = new Audio('sounds/CANNON_F.WAV');
+                    if (this.laserSound.pause){
+                        this.laserSound.play();
                     }
-                } else {
-                    if (!this.attackSound) {
-                        this.attackSound = new Audio('sounds/SHOOTING.WAV');
+                } else if (weapon.type === 'rocketlauncher') {
+                    if (!this.rocketlauncherSound) {
+                        this.rocketlauncherSound = new Audio('sounds/MISSILE.WAV');
                     }
-                }
-                if (this.attackSound.pause){
-                    this.attackSound.play();
+
+                    if (this.rocketlauncherSound.pause){
+                        this.rocketlauncherSound.play();
+                    }
                 }
 
                 var Px1 = weapon.positionX,

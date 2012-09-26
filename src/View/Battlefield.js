@@ -30,12 +30,34 @@ define([
 
             _.bindAll(this, 'onClick', 'updateDrawings');
 
+            var tmpCanvas = document.createElement('canvas'),
+                tmpCtx,
+                self = this;
+            tmpCanvas.width = window.outerWidth;
+            tmpCanvas.height = window.outerHeight;
+            tmpCanvas.style.position = 'absolute';
+            tmpCanvas.style.top = '0';
+            tmpCanvas.style.left = '0';
+            tmpCanvas.style.zIndex = '1';
+
+            tmpCtx = tmpCanvas.getContext('2d');
+            $('#game_map').append(tmpCanvas);
+
+            window.setTimeout(function () {
+                tmpCtx.drawImage(self.game.getImage('map'), 0, 0, window.outerWidth, window.outerHeight);
+            }, 1000);
+
+
             this.canvas = document.createElement('canvas');
             this.canvas.width = 1500;//window.outerWidth;
             this.canvas.height = 1000;//window.outerHeight;
+            this.canvas.style.position = 'absolute';
+            this.canvas.style.top = '0';
+            this.canvas.style.left = '0';
+            this.canvas.style.zIndex = '2';
 
             this.ctx = this.canvas.getContext('2d');
-            $('#game_map').html(this.canvas);
+            $('#game_map').append(this.canvas);
         },
 
         add: function (item) {
@@ -126,7 +148,7 @@ define([
              * MOVE TO CLICKED POSITION
              */
             if (this.selectedItem && false === clickedAnItem) {
-                if (this.selectedItem.model.get('follow')) {
+               if (this.selectedItem.model.get('follow')) {
                     var enemy = this.selectedItem.model.get('follow');
                     enemy.removeFollower(this.selectedItem.model);
                     this.selectedItem.model.set('follow', null);
