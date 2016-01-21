@@ -3,15 +3,269 @@
 	<head>
 		<style type="text/css">
 			body {
+				padding: 0;
+				background-color: black;
+			}
+
+			canvas {
+				margin-bottom: 120px;
+			}
+
+			ul {
 				margin: 0;
 				padding: 0;
+				list-style: none;
+			}
+
+			#loading {
+				color: white;
+				font-size: 24pt;
+				width: 300px;
+				height: 50px;
+				line-height: 50px;
+				text-align: center;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				line-height: 100%;
+				margin-left: -150px;
+				margin-top: -25px;
+			}
+
+			#main_menu {
+				color: white;
+				font-size: 24pt;
+				width: 300px;
+				height: 50px;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				line-height: 100%;
+				margin-left: -150px;
+				margin-top: -25px;
+				border: 1px solid silver;
+				display: none;
+				line-height: 50px;
+				text-align: center;
+			}
+
+			#main_menu li {
+				cursor: pointer;
+			}
+
+			#game_area {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				display: none;
+			}
+
+			#action_bar {
+				position: fixed;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 105px;
+				border-top: 1px solid silver;
+				background-color: rgba(58, 49, 37, 0.9);
+			}
+
+			#action_bar #items > li {
+				float: left;
+				position: relative;
+				border-right: 1px solid silver;
+				padding-bottom: 5px;
+			}
+
+			#action_bar #items > li.not_enough_money {
+				opacity: 0.2;
+			}
+
+			#action_bar #items p {
+				margin: 0;
+				padding: 0;
+				text-align: center;
+				color: #fff;
+				font-size: 12px;
+
+			}
+
+			#action_bar #money {
+				border-bottom: 1px solid silver;
+				color: #fff;
+				font-size: 15px;
+				padding: 6px
+			}
+
+			#action_bar #info {
+				display: none;
+				color: #fff;
+				font-size: 12px;
+			}
+
+			#game_map {
+				width: 100%;
+				height: 100%;
+			}
+
+			#mission {
+				color: white;
+				width: 500px;
+				height: 350px;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				margin-left: -250px;
+				margin-top: -175px;
+				border: 1px solid silver;
+				display: none;
+				background-color: rgba(58, 49, 37, 0.9);
+			}
+
+			#mission h1, #mission h2 {
+				margin: 5px;
+				font-size: 24px;
+			}
+
+			#mission p {
+				font-size: 12px;
+				margin: 5px;
+				text-align: justify;
+			}
+
+
+
+
+
+
+			#available_units li {
+				border: 1px solid silver;
+				float: left;
+				width: 100px;
+				height: 130px;
+				position: relative;
+				background-color: rgba(255, 255, 255, 0.1);
+			}
+
+			#available_units > li.not_enough_money {
+				opacity: 0.2;
+			}
+
+			#available_units img {
+				display: block;
+				margin: 0 auto;
+			}
+
+			img#fighter, img#bomber, img#destroyer {
+				margin-top: 30px;
+			}
+
+			#available_units p {
+				color: white;
+				position: absolute;
+				bottom: 0;
+				right: 0;
+				left: 0;
+				margin: 0;
+				padding: 2px 0 2px 25px;
+				border-top: 1px solid silver;
+			}
+
+			#selected_units {
+				border: 1px solid silver;
+				width: 508px;
+				height: 200px;
+				background-color: rgba(255, 255, 255, 0.1);
+			}
+
+			#selected_units li {
+				float: left;
+				margin: 5px;
+			}
+
+			#hangar {
+				color: white;
+				width: 510px;
+				height: 335px;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				margin-left: -250px;
+				margin-top: -165px;
+				display: none;
+			}
+
+			#current_money {
+				border-left: 1px solid silver;
+				border-right: 1px solid silver;
+				padding: 2px;
 			}
 		</style>
-		<script type="text/javascript" src="astar.js"></script>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		
+		<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="jquery.mobile-1.1.1.min.js"></script>
+		<!--<script type="text/javascript" src="zepto.min.js"></script>-->
 
 		<script data-main="src/main" src="require-min.js"></script>
 	</head>
-	<body>
+	<body data-role="page">
+
+		<!-- LOADING -->
+		<div id="loading"></div>
+		
+		<!-- MAIN MENU -->
+		<ul id="main_menu">
+			<li class="start_game">Start</li>
+		</ul>
+
+		<div id="mission">
+			<h1>Mission</h2>
+			<p id="description"></p>
+			<h2>Zusammenfassung</h2>
+			<p id="goals"></p>
+			<h2>Hinweise</h2>
+			<p id="hints"></p>
+
+			<button class="goto_hangar">Flotte zusammenstellen</button>
+			<button class="cancel">Mission abbrechen</button>
+		</div>
+
+		<div id="hangar">
+			<ul id="selected_units">
+			</ul>
+			<div id="current_money">
+				Money: $10000
+			</div>
+			<ul id="available_units">
+				<li data-price="600">
+					<img data-type="lightFighter" id="fighter" width="50" height="50" src="images/scout.png">
+					<p>$600</p>
+				</li>
+				<li data-price="1500">
+					<img data-type="heavyFighter" id="bomber" width="50" height="50" src="images/bomber.png">
+					<p>$1500</p>
+				</li>
+				<li data-price="5000">
+					<img data-type="destroyer" id="destroyer" width="75" height="50" src="images/battleship.png">
+					<p>$5000</p>
+				</li>
+				<li data-price="10000">
+					<img data-type="frigate" width="50" height="100" src="images/fregatte.png">
+					<p>$10000</p>
+				</li>
+				<li data-price="15000">
+					<img data-type="mothership" width="100" height="100" src="images/mothership.png">
+					<p>$15000</p>
+				</li>
+			</ul>
+			<button class="play">In die Schlacht</button>
+		</div>
+
+		<!-- GAME AREA -->
+		<div id="game_area">
+			<div id="game_map"></div>
+		</div>
 	</body>
 </html>

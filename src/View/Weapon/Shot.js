@@ -1,78 +1,129 @@
 define(function () {
     var Shot = Backbone.View.extend({
-        hitSound: null,
+        goalX: false,
+        goalY: false,
 
-        /**
-         * This method updates the position of the current shot and checks
-         * if something is hit.
-         *
-         * @param  {integer} goalX [description]
-         * @param  {integer} goalY [description]
-         * @param  {integer} endX1 [description]
-         * @param  {integer} endY1 [description]
-         * @param  {integer} endX2 [description]
-         * @param  {integer} endY2 [description]
-         *
-         * @return void
-         */
-        fire: function (goalX, goalY, endX1, endY1, endX2, endY2) {
-            var self = this,
-                action;
+        fire: function () {
+            var enemy = this.model.get('enemy');
 
-            action = setInterval(function () {
-                var dx = goalX - self.model.get('positionX'),
-                    dy = goalY - self.model.get('positionY'),
-                    distance = Math.sqrt(dx * dx + dy * dy),
-                    moves = distance / self.model.get('firespeed'),
-                    x = dx / moves,
-                    y = dy / moves,
-                    i,
-                    obstacle;
+            this.goalX = enemy.get('positionX') + enemy.get('width') / 2;
+            this.goalY = enemy.get('positionY') + enemy.get('height') / 2;
+        },
 
-                self.model.set('positionX', self.model.get('positionX') + x);
-                self.model.set('positionY', self.model.get('positionY') + y);
+        drawEplosion: function () {
+            var radius =  20,
+                color1 = 'rgba(255, 255, 0, 0.7)',
+                color2 = 'rgba(255,0,0, 0.2)',
+                gradient = this.game.battlefield.ctx.createRadialGradient(this.model.get('positionX'), this.model.get('positionY'), 0, this.model.get('positionX'), this.model.get('positionY'), radius / 2);
 
-                // check if something is hit
-                for (i = 0; i < window.battlefield.items.length; i+=1) {
-                    obstacle = window.battlefield.items[i];
+            gradient.addColorStop(0.5, color1);
+            gradient.addColorStop(1, color2);
 
-                    if (self.model.get('positionY') >= obstacle.model.get('positionY') &&
-                        self.model.get('positionY') <= obstacle.model.get('positionY') + obstacle.model.get('height') &&
-                        self.model.get('positionX') >= obstacle.model.get('positionX') &&
-                        self.model.get('positionX') <= obstacle.model.get('positionX') + obstacle.model.get('width') &&
-                        obstacle.model.get('owner') !== self.model.get('owner')
-                    ) {
-                        clearInterval(action);
-                        window.battlefield.remove(self.model.get('id'));
+            this.game.battlefield.ctx.save();
+            this.game.battlefield.ctx.beginPath();
+            this.game.battlefield.ctx.arc(this.model.get('positionX'), this.model.get('positionY'), radius, 0, Math.PI*2, false);
+            this.game.battlefield.ctx.fillStyle = gradient;
+            this.game.battlefield.ctx.fill();
+            this.game.battlefield.ctx.closePath();
+            this.game.battlefield.ctx.restore();
+        },
 
-                        if (obstacle.model.get('isAttackable') && !obstacle.model.get('isDestroyed')) {
-                            if (!self.hitSound) {
-                                self.hitSound = new Audio(obstacle.model.get('sound').hit);
-                            }
+        update: function (modifier) {
+            var enemy = this.model.get('enemy'),
+                shotId = this.model.get('id'),
+                MxShot = this.model.get('positionX'),// + this.model.get('width') / 2,
+                MyShot = this.model.get('positionY'),// + this.model.get('height') / 2,
+                firepower = this.model.get('firepower'),
+                dx,
+                dy,
+                distance,
+                moves,
+                newX,
+                newY,
+                i,
+                unit;
 
-                            self.hitSound.play();
-                            obstacle.model.set('protection', obstacle.model.get('protection') - self.model.get('firepower'));
+            if (false === this.goalX && false === this.goalY) {
+                return;
+            }
 
-                            if (obstacle.model.get('protection') <= 0) {
-                                obstacle.destroy();
-                            }
-                        }
-
-                        return;
-                    }
+            // ENEMY IS ALREADY DESTROYED
+            if (enemy.get('isDestroyed') === true) {
+                this.model.set('isDestroyed', true);
+                if (this.model.get('type') === 'missile') {
+                    this.game.battlefield.remove(shotId);
+                } else {
+                    this.game.battlefield.removeObject(shotId);
                 }
 
-                // shot reaches goal
-                if (self.model.get('positionY') >= endY1 &&
-                    self.model.get('positionY') <= endY2 &&
-                    self.model.get('positionX') >= endX1 &&
-                    self.model.get('positionX') <= endX2
+                this.drawEplosion();
+
+                this.goalX = false;
+                this.goalY = false;
+                return;
+            }
+
+            if (this.model.get('type') === 'missile') {
+                dx = enemy.get('positionX') + enemy.get('width') / 2 - MxShot;
+                dy = enemy.get('positionY') + enemy.get('height') / 2 - MyShot;
+            } else {
+                dx = this.goalX - MxShot;
+                dy = this.goalY - MyShot;
+            }
+
+            distance = Math.sqrt(dx * dx + dy * dy);
+            moves = distance / (this.model.get('firespeed') * modifier);
+            newX = dx / moves;
+            newY = dy / moves;
+
+            this.model.set('positionX', this.model.get('positionX') + newX);
+            this.model.set('positionY', this.model.get('positionY') + newY);
+
+            // check if something is hit
+            for (i = 0; i < this.game.battlefield.items.length; i+=1) {
+                unit = this.game.battlefield.items[i];
+
+                // THE SHOT HITS THE ENEMY
+                if (this.model.get('positionY') >= unit.model.get('positionY') &&
+                    this.model.get('positionY') <= unit.model.get('positionY') + unit.model.get('height') &&
+                    this.model.get('positionX') >= unit.model.get('positionX') &&
+                    this.model.get('positionX') <= unit.model.get('positionX') + unit.model.get('width') &&
+                    unit.model.get('owner') !== this.model.get('owner')
                 ) {
-                    clearInterval(action);
-                    window.battlefield.remove(self.model.get('id'));
+                    this.goalX = false;
+                    this.goalY = false;
+
+                    this.model.set('isDestroyed', true);
+
+                    if (this.model.get('type') === 'missile') {
+                        this.game.battlefield.remove(shotId);
+                    } else {
+                        this.game.battlefield.removeObject(shotId);
+                    }
+
+                    unit.model.set('currentArmor', unit.model.get('currentArmor') - firepower);
+                    this.drawEplosion();
+
+                    return;
                 }
-            }, 10);
+            }
+
+            // SHOT REACHES GOAL
+            if (this.model.get('positionY') - 10 <= this.goalY &&
+                this.model.get('positionY') + 10 >= this.goalY &&
+                this.model.get('positionX') - 10 <= this.goalX &&
+                this.model.get('positionX') + 10 >= this.goalX &&
+                this.model.get('type') !== 'missile'
+            ) {
+                this.goalX = false;
+                this.goalY = false;
+
+                this.game.battlefield.removeObject(shotId);
+                this.drawEplosion();
+            }
         }
+
+
     });
 
     return Shot;
